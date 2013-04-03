@@ -1,1 +1,24 @@
-Hello World!
+
+Delta Wing
+
+Installation
+------------
+
+1. Install node
+2. Install node package manager
+3. npm install socket.io
+
+
+Running
+-------
+
+1. Open terminal and navigate to directory.
+2. Run the command: 'sudo node server.js'
+3. In a modern browser, navigate to 'localhost'
+
+
+Contacts
+--------
+
+So far it's just me. If you're interested in helping out and have any questions please
+send me an email at storr@storrdev.com.
