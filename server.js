@@ -9,6 +9,8 @@ var players = [];
 
 app.listen(80);
 
+// Comment to show that this file is different.
+
 io.configure(function() {
 	io.set('transports', ['websocket']);
 	io.set('log level', 2);

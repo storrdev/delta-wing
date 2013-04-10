@@ -50,7 +50,6 @@ function mov(e) {
 function click() {
 	Game.projectile = new Projectile(projId, mouseX, mouseY, 8);
 	Game.projectiles.push(Game.projectile);
-	//console.log('# of projectiles: ' + Game.projectiles.length);
 	projId++;
 }
 
@@ -115,14 +114,10 @@ Game.start = function() {
 	
 	Game.projectiles = new Array();
 	
-	//socket = io.connect('http://54.244.122.210:80');
 	socket = io.connect('localhost');
 	setEventHandlers();
 	
 	Game.remotePlayers = new Array();
-	
-	var remotePlayer = new Player(2500,1500);
-	Game.remotePlayers.push(remotePlayer);
 	
 	loadBackground('levels/test/bg.jpg', Game._onEachFrame(Game.run));
 };
@@ -231,11 +226,9 @@ Game.update = function() {
 		lastRun = new Date().getTime();
 		fps = 1/delta;
 	}
-	Game.player.update();
-	//if (Game.projectile) { Game.projectile.update(); }
-	
+
 	if (Game.player.update()) {
-		//console.log(Game.player.getX());
+		console.log('player update');
 		socket.emit('move player', {x: Game.player.getX(), y: Game.player.getY(), angle: Game.player.getAngle()});
 	}
 	
@@ -286,7 +279,7 @@ function Projectile(domId, xInput, yInput, speed) {
 
 // Here is the construct for the Player() object
 function Player(x, y) {
-  	this.thrust = 5;
+  	this.thrust = 10;
   	this.deltaX = 0;
   	this.deltaY = 0;
   	this.angle = 0;
