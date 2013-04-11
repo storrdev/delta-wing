@@ -48,7 +48,7 @@ function mov(e) {
 }
 
 function click() {
-	Game.projectile = new Projectile(projId, mouseX, mouseY, 8);
+	Game.projectile = new Projectile(projId, mouseX, mouseY, 12 + Game.player.getSpeed());
 	Game.projectiles.push(Game.projectile);
 	projId++;
 }
@@ -118,6 +118,8 @@ Game.start = function() {
 	setEventHandlers();
 	
 	Game.remotePlayers = new Array();
+	
+	var bgImg = new Image();
 	
 	loadBackground('levels/test/bg.jpg', Game._onEachFrame(Game.run));
 };
@@ -228,7 +230,6 @@ Game.update = function() {
 	}
 
 	if (Game.player.update()) {
-		console.log('player update');
 		socket.emit('move player', {x: Game.player.getX(), y: Game.player.getY(), angle: Game.player.getAngle()});
 	}
 	
@@ -243,8 +244,8 @@ Game.update = function() {
 // Construct for Projectile() object
 function Projectile(domId, xInput, yInput, speed) {
 	this.domId = '';
-	this.x = Game.width/2;
-  	this.y = Game.height/2;
+	this.x = Game.player.x + Game.width/2;
+  	this.y = Game.player.y + Game.height/2;
   	this.speed = 1;
   	
   	this.init = function() {
@@ -255,7 +256,7 @@ function Projectile(domId, xInput, yInput, speed) {
   	}
   	this.draw = function() {
   		Game.context.beginPath();
-  		Game.context.arc(this.x, this.y, 5, 0, Math.PI*2, true);
+  		Game.context.arc(this.x - Game.player.x, this.y - Game.player.y, 5, 0, Math.PI*2, true);
   		Game.context.fillStyle = 'red';
       	Game.context.fill();
   		Game.context.stroke();
@@ -271,6 +272,13 @@ function Projectile(domId, xInput, yInput, speed) {
   		
   		this.x += deltaX;
   		this.y += deltaY;
+  		
+  		if (this.x < 0 || this.x > bgImg.width || this.y < 0 || this.y > bgImg.height) {
+  			var projIndex = Game.projectiles.indexOf(this);
+  			Game.projectiles.splice(projIndex, 1);
+  		}
+  		
+  		//console.log(this.domId + ": " + this.speed);
   		
   	}
   	
@@ -321,16 +329,18 @@ function Player(x, y) {
 				parseInt(Game.remotePlayers[i].x + Game.remotePlayers[i].fighterImg.width/2) > parseInt(Game.player.x - this.fighterImg.width/2) &&
 				parseInt(Game.remotePlayers[i].y - Game.remotePlayers[i].fighterImg.height/2) < parseInt(Game.player.y + this.fighterImg.height/2) &&
 				parseInt(Game.remotePlayers[i].y + Game.remotePlayers[i].fighterImg.height/2) > parseInt(Game.player.y - this.fighterImg.height/2)) {
-					console.log('collision detected');
+					this.oldDeltaX *= -.6;
+					this.oldDeltaY *= -.6;
 			}
 		}
 
 		this.angle = getAngle(mouseX, Game.width/2, mouseY, Game.height/2);
 		
+		this.deltaX = mouseX - Game.width/2;
+		this.deltaY = mouseY - Game.height/2;
+		
+		
 		if (Key.isDown(Key.UP) || Key.isDown(Key.DOWN) || Key.isDown(Key.LEFT) || Key.isDown(Key.RIGHT)) {
-			this.deltaX = mouseX - Game.width/2;
-			this.deltaY = mouseY - Game.height/2;
-			
 			// This handles the strafing movement
 			if (Key.isDown(Key.LEFT)) {
 				strafeX = this.deltaY;
@@ -387,7 +397,6 @@ function Player(x, y) {
 			// Edge of map clip checking
 			// Left side of map
 			if ((this.x + this.oldDeltaX) <= 0) {
-				//this.mapX = 0;
 				if (this.oldDeltaX < 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
 			}
 			// Right side of map
@@ -410,6 +419,9 @@ function Player(x, y) {
 		//Change Player object's map position
 		this.x += this.oldDeltaX;
 		this.y += this.oldDeltaY;
+		
+		//console.log("angle: " + this.angle);
+		//console.log("speed: " + this.getSpeed());
 		
 		return (this.prevX != this.mapX || this.prevY != this.mapY) ? true : false;
 	}
@@ -437,6 +449,10 @@ function Player(x, y) {
 	this.setAngle = function(newAngle) {
 		this.angle = newAngle;
 	};
+	
+	this.getSpeed = function() {
+		return Math.sqrt(this.oldDeltaX * this.oldDeltaX + this.oldDeltaY * this.oldDeltaY);
+	}
 	
 	this.init();
 }
