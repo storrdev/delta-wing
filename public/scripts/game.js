@@ -13,6 +13,7 @@ var Key = {
   UP: 87,
   RIGHT: 68,
   DOWN: 83,
+  
 
   isDown: function(keyCode) {
 	return this._pressed[keyCode];
@@ -48,7 +49,7 @@ function mov(e) {
 }
 
 function click() {
-	Game.projectile = new Projectile(projId, mouseX, mouseY, 12 + Game.player.getSpeed());
+	Game.projectile = new Projectile(projId, mouseX, mouseY, Game.player.oldDeltaX, Game.player.oldDeltaY, 12);
 	Game.projectiles.push(Game.projectile);
 	projId++;
 }
@@ -242,16 +243,20 @@ Game.update = function() {
 };
 
 // Construct for Projectile() object
-function Projectile(domId, xInput, yInput, speed) {
+function Projectile(domId, xInput, yInput, shipDeltaX, shipDeltaY, speed) {
 	this.domId = '';
 	this.x = Game.player.x + Game.width/2;
   	this.y = Game.player.y + Game.height/2;
+  	this.shipDeltaX = 0;
+  	this.shipDeltaY = 0;
   	this.speed = 1;
   	
   	this.init = function() {
   		if (domId) { this.domId = domId; }
   		if (xInput) { this.xInput = xInput; }
   		if (yInput) { this.yInput = yInput; }
+  		if (shipDeltaX) { this.shipDeltaX = shipDeltaX; }
+  		if (shipDeltaY) { this.shipDeltaY = shipDeltaY; }
   		if (speed) { this.speed = speed; }
   	}
   	this.draw = function() {
@@ -264,22 +269,24 @@ function Projectile(domId, xInput, yInput, speed) {
   	this.update = function() {
   		deltaX = this.xInput - Game.width/2;
   		deltaY = this.yInput - Game.height/2;
-  		
+
   		mag = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
   		
   		deltaX = deltaX / mag * this.speed;
   		deltaY = deltaY / mag * this.speed;
   		
+  		// Accounts for ship movement's effect on projectile
+  		deltaX = deltaX + this.shipDeltaX;
+		deltaY = deltaY + this.shipDeltaY;
+  		
   		this.x += deltaX;
   		this.y += deltaY;
   		
+  		// Removes projectiles from the array when they leave the map
   		if (this.x < 0 || this.x > bgImg.width || this.y < 0 || this.y > bgImg.height) {
   			var projIndex = Game.projectiles.indexOf(this);
   			Game.projectiles.splice(projIndex, 1);
   		}
-  		
-  		//console.log(this.domId + ": " + this.speed);
-  		
   	}
   	
   	this.init();
