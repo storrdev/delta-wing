@@ -1,11 +1,13 @@
 var app = require('http').createServer(handler), 
 	io = require('socket.io').listen(app),
 	fs = require('fs'),
-	Player = require('./Player').Player;
+	Player = require('./Player').Player,
+	Projectile = require('./Projectile').Projectile;
   
 var url     =   require('url');
 var path    =   require('path');
 var players = [];
+var projectiles = [];
 
 app.listen(80);
 
@@ -74,6 +76,7 @@ function onSocketConnection(client) {
 	client.on('disconnect', onClientDisconnect);
 	client.on('new player', onNewPlayer);
 	client.on('move player', onMovePlayer);
+	client.on('new projectile', onNewProjectile);
 };
 
 function onClientDisconnect() {
@@ -121,6 +124,16 @@ function onMovePlayer(data) {
 	movePlayer.setAngle(data.angle);
 
 	this.broadcast.emit("move player", {id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY(), angle: movePlayer.getAngle()});
+};
+
+function onNewProjectile(data) {
+	var newProjectile = new Projectile(data.x, data.y, data.playerId);
+	newProjectile.id = this.id;
+	
+	this.broadcast.emit('new projectile', {id: newProjectile.id, playerId: newProjectile.getPlayerId(), x: newProjectile.getX(), y: newProjectile.getY()});;
+	
+	projectiles.push(newProjectile);
+
 };
 
 
