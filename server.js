@@ -127,10 +127,10 @@ function onMovePlayer(data) {
 };
 
 function onNewProjectile(data) {
-	var newProjectile = new Projectile(data.x, data.y, data.playerId);
-	newProjectile.id = this.id;
+	var newProjectile = new Projectile(data.x, data.y, data.id);
+	//newProjectile.id = this.id;
 	
-	this.broadcast.emit('new projectile', {id: newProjectile.id, playerId: newProjectile.getPlayerId(), x: newProjectile.getX(), y: newProjectile.getY()});;
+	this.broadcast.emit('new projectile', {id: newProjectile.id, x: newProjectile.getX(), y: newProjectile.getY()});;
 	
 	projectiles.push(newProjectile);
 

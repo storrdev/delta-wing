@@ -51,6 +51,7 @@ function mov(e) {
 function click() {
 	Game.projectile = new Projectile(projId, mouseX, mouseY, Game.player.oldDeltaX, Game.player.oldDeltaY, 12);
 	Game.projectiles.push(Game.projectile);
+	socket.emit('new projectile', {x: Game.projectile.x, y: Game.projectile.y, id: projId});
 	projId++;
 }
 
@@ -131,6 +132,7 @@ var setEventHandlers = function() {
 	socket.on('new player', onNewPlayer);
 	socket.on('move player', onMovePlayer);
 	socket.on('remove player', onRemovePlayer);
+	socket.on('new projectile', onNewProjectile);
 };
 
 function onSocketConnected() {
@@ -174,6 +176,12 @@ function onRemovePlayer(data) {
 	
 	Game.remotePlayers.splice(Game.remotePlayers.indexOf(removePlayer), 1);
 	console.log('player has been disconnected: ' + data.id);
+};
+
+function onNewProjectile(data) {
+	console.log('Remote projectile detected');
+	var newProjectile = new Projectile(data.id, data.x, data.y);
+	Game.projectiles.push(newProjectile);
 };
 
 // Main Game Loop
