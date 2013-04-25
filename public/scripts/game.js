@@ -242,6 +242,11 @@ Game.update = function() {
 	
 	if (Game.projectiles.length != 0) {
 		for (var i = 0; i < Game.projectiles.length; i++) {
+			for (var k = 0; k < Game.remotePlayers.length; k++) {
+				if (collisionCheck(Game.projectiles[i], Game.remotePlayers[k])) {
+					console.log('collision detected');
+				}
+			}
 			Game.projectiles[i].update();
 		}
 	}
@@ -278,29 +283,19 @@ function Projectile(id, playerId, x, y, deltaX, deltaY) {
 	this.update = function() {
 		this.x += this.deltaX;
 		this.y += this.deltaY;
+		
+		if (this.x < 0 || this.x > bgImg.width || this.y < 0 || this.y > bgImg.height) {
+  			var projIndex = Game.projectiles.indexOf(this);
+  			Game.projectiles.splice(projIndex, 1);
+  		}
+	}
+	
+	this.getX = function() {
+		return this.x;
 	}
 	
 	this.init();
 	
-}
-
-function getDeltas(x1, y1, x2, y2, deltaX, deltaY, speed) {
-	
-	var vX = x1 - x2;
-	var vY = y1 - y2;
-	
-	var mag = Math.sqrt(vX * vX + vY * vY);
-	
-	vX = vX / mag * speed;
-	vY = vY / mag * speed;
-	
-	vX = vX + deltaX;
-	vY = vY + deltaY;
-	
-	return {
-		vX: vX,
-		vY: vY
-	}
 }
 
 // Here is the construct for the Player() object
@@ -437,10 +432,7 @@ function Player(x, y) {
 		//Change Player object's map position
 		this.x += this.oldDeltaX;
 		this.y += this.oldDeltaY;
-		
-		//console.log("angle: " + this.angle);
-		//console.log("speed: " + this.getSpeed());
-		
+
 		return (this.prevX != this.mapX || this.prevY != this.mapY) ? true : false;
 	}
 	
@@ -475,9 +467,9 @@ function Player(x, y) {
 	this.init();
 }
 
-function Game() {
+/*function Game() {
 	
-}
+}*/
 
 function getAngle(x1, x2, y1, y2) {
 	var angle;
@@ -496,6 +488,32 @@ function getAngle(x1, x2, y1, y2) {
 		}
 	}
 	
+}
+
+function collisionCheck(obj1, obj2) {
+	console.log('x1: ' + obj1.getX() + ' x2: ' + obj2.getX());
+	if (obj1.getX() > obj2.getX()) {
+		return true;
+	}
+}
+
+function getDeltas(x1, y1, x2, y2, deltaX, deltaY, speed) {
+	
+	var vX = x1 - x2;
+	var vY = y1 - y2;
+	
+	var mag = Math.sqrt(vX * vX + vY * vY);
+	
+	vX = vX / mag * speed;
+	vY = vY / mag * speed;
+	
+	vX = vX + deltaX;
+	vY = vY + deltaY;
+	
+	return {
+		vX: vX,
+		vY: vY
+	}
 }
 
 function playerById(id) {
