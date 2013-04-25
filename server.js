@@ -8,6 +8,7 @@ var url     =   require('url');
 var path    =   require('path');
 var players = [];
 var projectiles = [];
+var projId = 0;
 
 app.listen(80);
 
@@ -127,13 +128,22 @@ function onMovePlayer(data) {
 };
 
 function onNewProjectile(data) {
-	var newProjectile = new Projectile(data.x, data.y, data.id);
-	//newProjectile.id = this.id;
+	var newProjectile = new Projectile(data.x, data.y, data.deltaX, data.deltaY, this.id, projId);
 	
-	this.broadcast.emit('new projectile', {id: newProjectile.id, x: newProjectile.getX(), y: newProjectile.getY()});;
+	io.sockets.emit(
+		'new projectile',
+		{
+			id: newProjectile.getId(),
+			playerId: newProjectile.getPlayerId(),
+			x: newProjectile.getX(),
+			y: newProjectile.getY(),
+			deltaX: newProjectile.getDeltaX(),
+			deltaY: newProjectile.getDeltaY()
+		}
+	);
 	
 	projectiles.push(newProjectile);
-
+	projId++;
 };
 
 
