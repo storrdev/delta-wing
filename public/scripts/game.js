@@ -114,7 +114,8 @@ Game.start = function() {
 	
 	Game.projectiles = new Array();
 	
-	socket = io.connect('localhost');
+	//socket = io.connect('localhost');
+	socket = io.connect('http://storrdev.dyndns-remote.com:80');
 	setEventHandlers();
 	
 	Game.remotePlayers = new Array();
@@ -244,6 +245,8 @@ Game.update = function() {
 		for (var i = 0; i < Game.projectiles.length; i++) {
 			for (var k = 0; k < Game.remotePlayers.length; k++) {
 				if (collisionCheck(Game.projectiles[i], Game.remotePlayers[k])) {
+					// Need to do a check here for who the projectile belongs to, so collision detection doesn't
+					// go off on other client's game from local player's shots being fired. 
 					console.log('collision detected');
 				}
 			}
@@ -262,6 +265,7 @@ function Projectile(id, playerId, x, y, deltaX, deltaY) {
 	this.y = 0;
 	this.deltaX = 0;
 	this.deltaY = 0;
+	this.r = 5;
 	
 	this.init = function() {
 		if (id) { this.id = id; }
@@ -274,7 +278,7 @@ function Projectile(id, playerId, x, y, deltaX, deltaY) {
 	
 	this.draw = function() {
 		Game.context.beginPath();
-  		Game.context.arc(this.x - Game.player.x + Game.width/2, this.y - Game.player.y + Game.height/2, 5, 0, Math.PI*2, true);
+  		Game.context.arc(this.x - Game.player.x + Game.width/2, this.y - Game.player.y + Game.height/2, this.r, 0, Math.PI*2, true);
   		Game.context.fillStyle = 'red';
       	Game.context.fill();
   		Game.context.stroke();
@@ -294,6 +298,10 @@ function Projectile(id, playerId, x, y, deltaX, deltaY) {
 		return this.x;
 	}
 	
+	this.getY = function() {
+		return this.y;
+	}
+	
 	this.init();
 	
 }
@@ -311,8 +319,9 @@ function Player(x, y) {
 	this.drawFlame = false;
 	this.oldDeltaX = 0;
 	this.oldDeltaY = 0;
+	this.r = 20;
 	var mag = 0;
-	var strafeX = 0
+	var strafeX = 0;
 	var strafeY = 0;
 
 	this.init = function() {
@@ -491,10 +500,18 @@ function getAngle(x1, x2, y1, y2) {
 }
 
 function collisionCheck(obj1, obj2) {
-	console.log('x1: ' + obj1.getX() + ' x2: ' + obj2.getX());
-	if (obj1.getX() > obj2.getX()) {
+	
+	var distX = obj1.getX() - obj2.getX();
+	var distY = obj1.getY() - obj2.getY();
+	
+	//var dist = (distX * distX) - (distY * distY);
+	//if (dist <= 40) { console.log(dist); }
+	var dist = Math.sqrt((distX * distX) + (distY * distY));
+	return dist <= (obj1.r + obj2.r);
+	
+	/*if (obj1.getX() > obj2.getX()) {
 		return true;
-	}
+	}*/
 }
 
 function getDeltas(x1, y1, x2, y2, deltaX, deltaY, speed) {
