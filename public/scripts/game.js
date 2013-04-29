@@ -49,8 +49,8 @@ function mov(e) {
 }
 
 function click() {
-	var projectile = getDeltas(mouseX, mouseY, Game.width/2, Game.height/2, Game.player.oldDeltaX, Game.player.oldDeltaY, 12);
-	socket.emit('new projectile', {x: Game.player.x, y: Game.player.y, deltaX: projectile.vX, deltaY: projectile.vY});
+	var projectile = getDeltas(mouseX, mouseY, Game.width/2, Game.height/2, Game.players[0].oldDeltaX, Game.players[0].oldDeltaY, 12);
+	socket.emit('new projectile', {x: Game.players[0].x, y: Game.players[0].y, deltaX: projectile.vX, deltaY: projectile.vY});
 }
 
 function resize() {
@@ -108,17 +108,16 @@ Game.start = function() {
 	Game.canvas.addEventListener('click', click, false);
 	window.addEventListener('resize', resize, false);
 	
-	var xx = parseInt(getRandomArbitary(0, 4000));
-	var yy = parseInt(getRandomArbitary(0, 2500));
-	Game.player = new Player(xx, yy);
+	var xx = parseInt(getRandomArbitary(1500, 1700));
+	var yy = parseInt(getRandomArbitary(700, 800));
+	Game.players = new Array();
+	Game.players.push(new Player(xx, yy));
 	
 	Game.projectiles = new Array();
 	
-	//socket = io.connect('localhost');
-	socket = io.connect('http://storrdev.dyndns-remote.com:80');
+	socket = io.connect('localhost');
+	//socket = io.connect('http://storrdev.dyndns-remote.com:80');
 	setEventHandlers();
-	
-	Game.remotePlayers = new Array();
 	
 	var bgImg = new Image();
 	
@@ -127,6 +126,7 @@ Game.start = function() {
 
 var setEventHandlers = function() {
 	socket.on('connect', onSocketConnected);
+	socket.on('client id', onClientId);
 	socket.on('disconnect', onSocketDisconnect);
 	socket.on('new player', onNewPlayer);
 	socket.on('move player', onMovePlayer);
@@ -136,9 +136,14 @@ var setEventHandlers = function() {
 
 function onSocketConnected() {
 	console.log('Connected to socket server');
-	socket.emit('new player', {x: Game.player.getX(), y: Game.player.getY()});
-	//console.log(Game.player.getX());
+	socket.emit('new player', {x: Game.players[0].getX(), y: Game.players[0].getY()});
+	//console.log(Game.players[0].getX());
 };
+
+function onClientId(data) {
+	Game.players[0].id = data.id;
+	console.log(Game.players[0].id);
+}
 
 function onSocketDisconnect() {
 	console.log('Disconnected from socket server');
@@ -149,7 +154,7 @@ function onNewPlayer(data) {
 	
 	var newPlayer = new Player(data.x, data.y, data.angle);
 	newPlayer.id = data.id;
-	Game.remotePlayers.push(newPlayer);
+	Game.players.push(newPlayer);
 };
 
 function onMovePlayer(data) {
@@ -173,12 +178,11 @@ function onRemovePlayer(data) {
 		return;
 	};
 	
-	Game.remotePlayers.splice(Game.remotePlayers.indexOf(removePlayer), 1);
+	Game.players.splice(Game.players.indexOf(removePlayer), 1);
 	console.log('player has been disconnected: ' + data.id);
 };
 
 function onNewProjectile(data) {
-	console.log('Remote projectile detected');
 	var newProjectile = new Projectile(data.id, data.playerId, data.x, data.y, data.deltaX, data.deltaY);
 	Game.projectiles.push(newProjectile);
 };
@@ -206,21 +210,21 @@ Game.run = (function() {
 
 Game.draw = function() {
 	Game.context.clearRect(0, 0, Game.width, Game.height);
-	Game.context.drawImage(bgImg, -Game.player.getX(), -Game.player.getY());
+	Game.context.drawImage(bgImg, -Game.players[0].getX(), -Game.players[0].getY());
 	if (Game.projectiles.length != 0) {
   		for (var i = 0; i < Game.projectiles.length; i++) {
   			Game.projectiles[i].draw();
   		}
   	}
 	Game.context.save();
-  	Game.player.draw(Game.context);
+  	Game.players[0].draw(Game.context);
   	Game.context.restore();
   	
   	var i;
   	
-  	for (i = 0; i < Game.remotePlayers.length; i++) {
+  	for (i = 1; i < Game.players.length; i++) {		// Starting at 1 should skip over the local player, which requires the draw() function instead of drawRemote()
   		Game.context.save();
-  		Game.remotePlayers[i].drawRemote(Game.context);
+  		Game.players[i].drawRemote(Game.context);
   		Game.context.restore();
   	}
   
@@ -237,17 +241,22 @@ Game.update = function() {
 		fps = 1/delta;
 	}
 
-	if (Game.player.update()) {
-		socket.emit('move player', {x: Game.player.getX(), y: Game.player.getY(), angle: Game.player.getAngle()});
+	if (Game.players[0].update()) {
+		socket.emit('move player', {x: Game.players[0].getX(), y: Game.players[0].getY(), angle: Game.players[0].getAngle()});
 	}
 	
 	if (Game.projectiles.length != 0) {
 		for (var i = 0; i < Game.projectiles.length; i++) {
-			for (var k = 0; k < Game.remotePlayers.length; k++) {
-				if (collisionCheck(Game.projectiles[i], Game.remotePlayers[k])) {
-					// Need to do a check here for who the projectile belongs to, so collision detection doesn't
-					// go off on other client's game from local player's shots being fired. 
-					console.log('collision detected');
+			for (var k = 0; k < Game.players.length; k++) {
+				if (Game.projectiles[i].playerId != Game.players[k].id) {
+					if (collisionCheck(Game.projectiles[i], Game.players[k])) {
+						console.log('collision detected: ' + Game.projectiles[i].id);
+						//Game.projectiles.splice(i, 1);
+						socket.emit('remove projectile', {id: Game.projectiles[i].id});
+					}
+					else {
+						//Game.projectiles[i].update();
+					}
 				}
 			}
 			Game.projectiles[i].update();
@@ -278,7 +287,7 @@ function Projectile(id, playerId, x, y, deltaX, deltaY) {
 	
 	this.draw = function() {
 		Game.context.beginPath();
-  		Game.context.arc(this.x - Game.player.x + Game.width/2, this.y - Game.player.y + Game.height/2, this.r, 0, Math.PI*2, true);
+  		Game.context.arc(this.x - Game.players[0].x + Game.width/2, this.y - Game.players[0].y + Game.height/2, this.r, 0, Math.PI*2, true);
   		Game.context.fillStyle = 'red';
       	Game.context.fill();
   		Game.context.stroke();
@@ -335,7 +344,7 @@ function Player(x, y) {
 		Game.context.drawImage(this.fighterImg, -this.fighterImg.width/2, -this.fighterImg.height/2);
 	}
 	this.drawRemote = function() {
-		Game.context.translate(this.x - Game.player.x + Game.width/2, this.y - Game.player.y + Game.height/2);
+		Game.context.translate(this.x - Game.players[0].x + Game.width/2, this.y - Game.players[0].y + Game.height/2);
 		Game.context.rotate(this.angle);
 		Game.context.drawImage(this.fighterImg, -this.fighterImg.width/2, -this.fighterImg.height/2);
 	}
@@ -343,14 +352,13 @@ function Player(x, y) {
 		this.prevX = this.x;
 		this.prevY = this.y;
 		
-		
 		// Collision detection between players
 		var i;
-		for (i = 0; i < Game.remotePlayers.length; i++) {
-			if (parseInt(Game.remotePlayers[i].x - Game.remotePlayers[i].fighterImg.width/2) < parseInt(Game.player.x + this.fighterImg.width/2) &&
-				parseInt(Game.remotePlayers[i].x + Game.remotePlayers[i].fighterImg.width/2) > parseInt(Game.player.x - this.fighterImg.width/2) &&
-				parseInt(Game.remotePlayers[i].y - Game.remotePlayers[i].fighterImg.height/2) < parseInt(Game.player.y + this.fighterImg.height/2) &&
-				parseInt(Game.remotePlayers[i].y + Game.remotePlayers[i].fighterImg.height/2) > parseInt(Game.player.y - this.fighterImg.height/2)) {
+		for (i = 1; i < Game.players.length; i++) {		// Starts at 1 so that the local player isn't colliding with itself
+			if (parseInt(Game.players[i].x - Game.players[i].fighterImg.width/2) < parseInt(Game.players[0].x + this.fighterImg.width/2) &&
+				parseInt(Game.players[i].x + Game.players[i].fighterImg.width/2) > parseInt(Game.players[0].x - this.fighterImg.width/2) &&
+				parseInt(Game.players[i].y - Game.players[i].fighterImg.height/2) < parseInt(Game.players[0].y + this.fighterImg.height/2) &&
+				parseInt(Game.players[i].y + Game.players[i].fighterImg.height/2) > parseInt(Game.players[0].y - this.fighterImg.height/2)) {
 					this.oldDeltaX *= -.6;
 					this.oldDeltaY *= -.6;
 			}
@@ -535,9 +543,9 @@ function getDeltas(x1, y1, x2, y2, deltaX, deltaY, speed) {
 
 function playerById(id) {
     var i;
-    for (i = 0; i < Game.remotePlayers.length; i++) {
-        if (Game.remotePlayers[i].id == id)
-            return Game.remotePlayers[i];
+    for (i = 0; i < Game.players.length; i++) {
+        if (Game.players[i].id == id)
+            return Game.players[i];
     };
 
     return false;

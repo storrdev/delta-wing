@@ -78,6 +78,7 @@ function onSocketConnection(client) {
 	client.on('new player', onNewPlayer);
 	client.on('move player', onMovePlayer);
 	client.on('new projectile', onNewProjectile);
+	client.on('remove projectile', onRemoveProjectile);
 };
 
 function onClientDisconnect() {
@@ -101,6 +102,9 @@ function onNewPlayer(data) {
 	
 	// broadcast.emit sends a message to all clients except the one it's being called on
 	this.broadcast.emit('new player', {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY()});
+	
+	// sends the server assigned id back to the client who just connected for reference
+	this.emit('client id', {id: newPlayer.id});
 	
 	var i, existingPlayer;
 	for(i = 0; i < players.length; i++) {
@@ -146,6 +150,21 @@ function onNewProjectile(data) {
 	projId++;
 };
 
+function onRemoveProjectile(data) {
+		var removeProjectile = projectileById(data.id);
+		
+		if (!removeProjectile) {
+			console.log('Projectile not found: ' + data.id);
+			return;
+		};
+		
+		console.log('Projectile removed.');
+		
+		projectiles.splice(projectiles.indexOf(removeProjectile), 1);
+		// broadcast.emit sends a message to all clients except the one it's being called on
+		this.broadcast.emit('remove projectile', {id: data.id});
+};
+
 
 function playerById(id) {
     var i;
@@ -155,4 +174,15 @@ function playerById(id) {
     };
 
     return false;
+};
+
+function projectileById(id) {
+	var i;
+	for (i = 0; i < projectiles.length; i++) {
+		if (projectiles[i].getId() == id) {
+			return projectiles[i];
+		};
+	};
+	
+	return false;
 };
