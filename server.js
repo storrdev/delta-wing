@@ -162,7 +162,7 @@ function onRemoveProjectile(data) {
 		
 		projectiles.splice(projectiles.indexOf(removeProjectile), 1);
 		// broadcast.emit sends a message to all clients except the one it's being called on
-		this.broadcast.emit('remove projectile', {id: data.id});
+		io.sockets.emit('remove projectile', {id: data.id});
 };
 
 

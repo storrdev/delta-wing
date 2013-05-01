@@ -132,6 +132,7 @@ var setEventHandlers = function() {
 	socket.on('move player', onMovePlayer);
 	socket.on('remove player', onRemovePlayer);
 	socket.on('new projectile', onNewProjectile);
+	socket.on('remove projectile', onRemoveProjectile);
 };
 
 function onSocketConnected() {
@@ -185,6 +186,16 @@ function onRemovePlayer(data) {
 function onNewProjectile(data) {
 	var newProjectile = new Projectile(data.id, data.playerId, data.x, data.y, data.deltaX, data.deltaY);
 	Game.projectiles.push(newProjectile);
+};
+
+function onRemoveProjectile(data) {
+	var removeProjectile = projectileById(data.id);
+
+	if (!removeProjectile) {
+		console.log('Projectile not found: ' + this.id);
+	};
+
+	Game.projectiles.splice(Game.projectiles.indexOf(removeProjectile));
 };
 
 // Main Game Loop
@@ -250,16 +261,18 @@ Game.update = function() {
 			for (var k = 0; k < Game.players.length; k++) {
 				if (Game.projectiles[i].playerId != Game.players[k].id) {
 					if (collisionCheck(Game.projectiles[i], Game.players[k])) {
-						console.log('collision detected: ' + Game.projectiles[i].id);
-						//Game.projectiles.splice(i, 1);
-						socket.emit('remove projectile', {id: Game.projectiles[i].id});
+						Game.projectiles.splice(i, 1);
+						break;
 					}
+					else if (Game.projectiles[i].x < 0 - Game.width/2 || Game.projectiles[i].x > bgImg.width || Game.projectiles[i].y < 0 - Game.height/2 || Game.projectiles[i].y > bgImg.height) {
+			  			Game.projectiles.splice(i, 1);
+			  			break;
+			  		}
 					else {
-						//Game.projectiles[i].update();
+						Game.projectiles[i].update();
 					}
 				}
 			}
-			Game.projectiles[i].update();
 		}
 	}
 	
@@ -297,10 +310,11 @@ function Projectile(id, playerId, x, y, deltaX, deltaY) {
 		this.x += this.deltaX;
 		this.y += this.deltaY;
 		
-		if (this.x < 0 || this.x > bgImg.width || this.y < 0 || this.y > bgImg.height) {
+		/*if (this.x < 0 - Game.width/2 || this.x > bgImg.width || this.y < 0 - Game.height/2 || this.y > bgImg.height) {
   			var projIndex = Game.projectiles.indexOf(this);
+  			console.log('projectile left screen');
   			Game.projectiles.splice(projIndex, 1);
-  		}
+  		}*/
 	}
 	
 	this.getX = function() {
@@ -549,6 +563,17 @@ function playerById(id) {
     };
 
     return false;
+};
+
+function projectileById(id) {
+	var i;
+	for (i = 0; i < Game.projectiles.length; i++) {
+		if (Game.projectiles[i].id == id) {
+			return Game.projectiles[i];
+		};
+	};
+	
+	return false;
 };
 
 function displayFPS(){
