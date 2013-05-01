@@ -230,6 +230,10 @@ Game.draw = function() {
 	Game.context.save();
   	Game.players[0].draw(Game.context);
   	Game.context.restore();
+
+  	Game.context.fillStyle = "White";
+	Game.context.font      = "normal 12pt Arial";
+	Game.context.fillText(Game.players[0].health, Game.width/2 + 20, Game.height/2 + 20);
   	
   	var i;
   	
@@ -262,6 +266,7 @@ Game.update = function() {
 				if (Game.projectiles[i].playerId != Game.players[k].id) {
 					if (collisionCheck(Game.projectiles[i], Game.players[k])) {
 						Game.projectiles.splice(i, 1);
+						Game.players[k].health--;
 						break;
 					}
 					else if (Game.projectiles[i].x < 0 - Game.width/2 || Game.projectiles[i].x > bgImg.width || Game.projectiles[i].y < 0 - Game.height/2 || Game.projectiles[i].y > bgImg.height) {
@@ -343,6 +348,8 @@ function Player(x, y) {
 	this.oldDeltaX = 0;
 	this.oldDeltaY = 0;
 	this.r = 20;
+	this.health = 10;
+	this.deaths = 0;
 	var mag = 0;
 	var strafeX = 0;
 	var strafeY = 0;
@@ -363,106 +370,115 @@ function Player(x, y) {
 		Game.context.drawImage(this.fighterImg, -this.fighterImg.width/2, -this.fighterImg.height/2);
 	}
 	this.update = function() {
-		this.prevX = this.x;
-		this.prevY = this.y;
 		
-		// Collision detection between players
-		var i;
-		for (i = 1; i < Game.players.length; i++) {		// Starts at 1 so that the local player isn't colliding with itself
-			if (parseInt(Game.players[i].x - Game.players[i].fighterImg.width/2) < parseInt(Game.players[0].x + this.fighterImg.width/2) &&
-				parseInt(Game.players[i].x + Game.players[i].fighterImg.width/2) > parseInt(Game.players[0].x - this.fighterImg.width/2) &&
-				parseInt(Game.players[i].y - Game.players[i].fighterImg.height/2) < parseInt(Game.players[0].y + this.fighterImg.height/2) &&
-				parseInt(Game.players[i].y + Game.players[i].fighterImg.height/2) > parseInt(Game.players[0].y - this.fighterImg.height/2)) {
-					this.oldDeltaX *= -.6;
-					this.oldDeltaY *= -.6;
-			}
-		}
-
-		this.angle = getAngle(mouseX, Game.width/2, mouseY, Game.height/2);
-		
-		this.deltaX = mouseX - Game.width/2;
-		this.deltaY = mouseY - Game.height/2;
-		
-		
-		if (Key.isDown(Key.UP) || Key.isDown(Key.DOWN) || Key.isDown(Key.LEFT) || Key.isDown(Key.RIGHT)) {
-			// This handles the strafing movement
-			if (Key.isDown(Key.LEFT)) {
-				strafeX = this.deltaY;
-				strafeY = this.deltaX * -1;
-			}
-			else if (Key.isDown(Key.RIGHT)) {
-				strafeX = this.deltaY * -1;
-				strafeY = this.deltaX;
-			}
-			else {
-				strafeX = 0;
-				strafeY = 0;
-			}
+		if (this.health > 0) {
+			this.prevX = this.x;
+			this.prevY = this.y;
 			
-			// This handles the forward and backwards movement
-			if (Key.isDown(Key.UP)) {
-				this.drawFlame = true;
-			}
-			else if (Key.isDown(Key.DOWN)) {
-				this.deltaX *= -1;
-				this.deltaY *= -1;
-				//this.drawFlame = false;
-			}
-			else {
-				//this.drawFlame = false;
-				this.deltaX = 0;
-				this.deltaY = 0;
+			// Collision detection between players
+			var i;
+			for (i = 1; i < Game.players.length; i++) {		// Starts at 1 so that the local player isn't colliding with itself
+				if (parseInt(Game.players[i].x - Game.players[i].fighterImg.width/2) < parseInt(Game.players[0].x + this.fighterImg.width/2) &&
+					parseInt(Game.players[i].x + Game.players[i].fighterImg.width/2) > parseInt(Game.players[0].x - this.fighterImg.width/2) &&
+					parseInt(Game.players[i].y - Game.players[i].fighterImg.height/2) < parseInt(Game.players[0].y + this.fighterImg.height/2) &&
+					parseInt(Game.players[i].y + Game.players[i].fighterImg.height/2) > parseInt(Game.players[0].y - this.fighterImg.height/2)) {
+						this.oldDeltaX *= -.6;
+						this.oldDeltaY *= -.6;
+				}
 			}
 
-			// This combines the forward movement with the strafing movement
-			// in case both are used at the same time.
-			this.deltaX = this.deltaX + strafeX;
-			this.deltaY = this.deltaY + strafeY;
-	
-			// Calculating magnitude of vector created from the Player's screen position to the mouse coords
-			mag = Math.sqrt(this.deltaX * this.deltaX + this.deltaY * this.deltaY);
-			// Calculating the unit vector coords from the the original mouse vector
-			// The 'unit vector' has same direction as original vector, but it's magnitude is 1
-			// We then multiply the unit vector by our thrust to find the ships position over time
-			this.deltaX = this.deltaX / mag * this.thrust;
-			this.deltaY = this.deltaY / mag * this.thrust;
+			this.angle = getAngle(mouseX, Game.width/2, mouseY, Game.height/2);
 			
-			// This incrementally changes the delta value to simulate mass when changing direction
-			if (this.oldDeltaX < this.deltaX) { this.oldDeltaX += this.thrust/90; }
-			else { this.oldDeltaX -= this.thrust/90; }
-			if (this.oldDeltaY < this.deltaY) { this.oldDeltaY += this.thrust/90; }
-			else { this.oldDeltaY -= this.thrust/90; }
+			this.deltaX = mouseX - Game.width/2;
+			this.deltaY = mouseY - Game.height/2;
+			
+			
+			if (Key.isDown(Key.UP) || Key.isDown(Key.DOWN) || Key.isDown(Key.LEFT) || Key.isDown(Key.RIGHT)) {
+				// This handles the strafing movement
+				if (Key.isDown(Key.LEFT)) {
+					strafeX = this.deltaY;
+					strafeY = this.deltaX * -1;
+				}
+				else if (Key.isDown(Key.RIGHT)) {
+					strafeX = this.deltaY * -1;
+					strafeY = this.deltaX;
+				}
+				else {
+					strafeX = 0;
+					strafeY = 0;
+				}
+				
+				// This handles the forward and backwards movement
+				if (Key.isDown(Key.UP)) {
+					this.drawFlame = true;
+				}
+				else if (Key.isDown(Key.DOWN)) {
+					this.deltaX *= -1;
+					this.deltaY *= -1;
+					//this.drawFlame = false;
+				}
+				else {
+					//this.drawFlame = false;
+					this.deltaX = 0;
+					this.deltaY = 0;
+				}
+
+				// This combines the forward movement with the strafing movement
+				// in case both are used at the same time.
+				this.deltaX = this.deltaX + strafeX;
+				this.deltaY = this.deltaY + strafeY;
+		
+				// Calculating magnitude of vector created from the Player's screen position to the mouse coords
+				mag = Math.sqrt(this.deltaX * this.deltaX + this.deltaY * this.deltaY);
+				// Calculating the unit vector coords from the the original mouse vector
+				// The 'unit vector' has same direction as original vector, but it's magnitude is 1
+				// We then multiply the unit vector by our thrust to find the ships position over time
+				this.deltaX = this.deltaX / mag * this.thrust;
+				this.deltaY = this.deltaY / mag * this.thrust;
+				
+				// This incrementally changes the delta value to simulate mass when changing direction
+				if (this.oldDeltaX < this.deltaX) { this.oldDeltaX += this.thrust/90; }
+				else { this.oldDeltaX -= this.thrust/90; }
+				if (this.oldDeltaY < this.deltaY) { this.oldDeltaY += this.thrust/90; }
+				else { this.oldDeltaY -= this.thrust/90; }
+			}
+			else {
+				this.drawFlame = false;
+			}
+			
+			if (bgImg.width != 0 && bgImg.height != 0) {
+				// Edge of map clip checking
+				// Left side of map
+				if ((this.x + this.oldDeltaX) <= 0) {
+					if (this.oldDeltaX < 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
+				}
+				// Right side of map
+				if ((this.x + this.oldDeltaX) > (bgImg.width - Game.width)) {
+					this.x = bgImg.width - Game.width;
+					if (this.oldDeltaX > 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
+				}
+				// Top of map
+				if ((this.y + this.oldDeltaY) < 0) {
+					//this.mapY = 0;
+					if (this.oldDeltaY < 0) { this.oldDeltaY = this.oldDeltaY * -.6; }
+				}
+				// Bottom of map
+				if ((this.y + this.oldDeltaY) > (bgImg.height - Game.height)) {
+					this.y = bgImg.height - Game.height;
+					if (this.oldDeltaY > 0) { this.oldDeltaY = this.oldDeltaY * -.6; }
+				}
+			}
+			
+			//Change Player object's map position
+			this.x += this.oldDeltaX;
+			this.y += this.oldDeltaY;
 		}
 		else {
-			this.drawFlame = false;
+			this.deaths++;
+			this.health = 10;
+			this.x = parseInt(getRandomArbitary(1500, 1700));
+			this.y = parseInt(getRandomArbitary(700, 800));
 		}
-		
-		if (bgImg.width != 0 && bgImg.height != 0) {
-			// Edge of map clip checking
-			// Left side of map
-			if ((this.x + this.oldDeltaX) <= 0) {
-				if (this.oldDeltaX < 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
-			}
-			// Right side of map
-			if ((this.x + this.oldDeltaX) > (bgImg.width - Game.width)) {
-				this.x = bgImg.width - Game.width;
-				if (this.oldDeltaX > 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
-			}
-			// Top of map
-			if ((this.y + this.oldDeltaY) < 0) {
-				//this.mapY = 0;
-				if (this.oldDeltaY < 0) { this.oldDeltaY = this.oldDeltaY * -.6; }
-			}
-			// Bottom of map
-			if ((this.y + this.oldDeltaY) > (bgImg.height - Game.height)) {
-				this.y = bgImg.height - Game.height;
-				if (this.oldDeltaY > 0) { this.oldDeltaY = this.oldDeltaY * -.6; }
-			}
-		}
-		
-		//Change Player object's map position
-		this.x += this.oldDeltaX;
-		this.y += this.oldDeltaY;
 
 		return (this.prevX != this.mapX || this.prevY != this.mapY) ? true : false;
 	}
