@@ -314,12 +314,6 @@ function Projectile(id, playerId, x, y, deltaX, deltaY) {
 	this.update = function() {
 		this.x += this.deltaX;
 		this.y += this.deltaY;
-		
-		/*if (this.x < 0 - Game.width/2 || this.x > bgImg.width || this.y < 0 - Game.height/2 || this.y > bgImg.height) {
-  			var projIndex = Game.projectiles.indexOf(this);
-  			console.log('projectile left screen');
-  			Game.projectiles.splice(projIndex, 1);
-  		}*/
 	}
 	
 	this.getX = function() {
@@ -328,6 +322,14 @@ function Projectile(id, playerId, x, y, deltaX, deltaY) {
 	
 	this.getY = function() {
 		return this.y;
+	}
+	
+	this.getdX = function() {
+		return this.deltaX;
+	}
+	
+	this.getdY = function() {
+		return this.deltaY;
 	}
 	
 	this.init();
@@ -378,12 +380,10 @@ function Player(x, y) {
 			// Collision detection between players
 			var i;
 			for (i = 1; i < Game.players.length; i++) {		// Starts at 1 so that the local player isn't colliding with itself
-				if (parseInt(Game.players[i].x - Game.players[i].fighterImg.width/2) < parseInt(Game.players[0].x + this.fighterImg.width/2) &&
-					parseInt(Game.players[i].x + Game.players[i].fighterImg.width/2) > parseInt(Game.players[0].x - this.fighterImg.width/2) &&
-					parseInt(Game.players[i].y - Game.players[i].fighterImg.height/2) < parseInt(Game.players[0].y + this.fighterImg.height/2) &&
-					parseInt(Game.players[i].y + Game.players[i].fighterImg.height/2) > parseInt(Game.players[0].y - this.fighterImg.height/2)) {
+				if (collisionCheck(Game.players[0], Game.players[i])) {
 						this.oldDeltaX *= -.6;
 						this.oldDeltaY *= -.6;
+						//return;
 				}
 			}
 
@@ -476,6 +476,8 @@ function Player(x, y) {
 		else {
 			this.deaths++;
 			this.health = 10;
+			this.oldDeltaX = 0;
+			this.oldDeltaY = 0;
 			this.x = parseInt(getRandomArbitary(1500, 1700));
 			this.y = parseInt(getRandomArbitary(700, 800));
 		}
@@ -489,6 +491,14 @@ function Player(x, y) {
 	
 	this.getY = function() {
 		return this.y;
+	};
+	
+	this.getdX = function() {
+		return this.oldDeltaX;
+	};
+	
+	this.getdY = function() {
+		return this.oldDeltaY;
 	};
 	
 	this.getAngle = function() {
@@ -539,17 +549,15 @@ function getAngle(x1, x2, y1, y2) {
 
 function collisionCheck(obj1, obj2) {
 	
-	var distX = obj1.getX() - obj2.getX();
-	var distY = obj1.getY() - obj2.getY();
+	//var distX = obj1.getX() - obj2.getX();
+	//var distY = obj1.getY() - obj2.getY();
 	
-	//var dist = (distX * distX) - (distY * distY);
-	//if (dist <= 40) { console.log(dist); }
+	var distX = (obj1.getX() + obj1.getdX()) - (obj2.getX() + obj2.getdX());
+	var distY = (obj1.getY() + obj1.getdY()) - (obj2.getY() + obj2.getdY());
+
 	var dist = Math.sqrt((distX * distX) + (distY * distY));
 	return dist <= (obj1.r + obj2.r);
-	
-	/*if (obj1.getX() > obj2.getX()) {
-		return true;
-	}*/
+
 }
 
 function getDeltas(x1, y1, x2, y2, deltaX, deltaY, speed) {
