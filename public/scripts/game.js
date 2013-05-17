@@ -263,19 +263,17 @@ Game.update = function() {
 	if (Game.projectiles.length != 0) {
 		for (var i = 0; i < Game.projectiles.length; i++) {
 			for (var k = 0; k < Game.players.length; k++) {
-				if (Game.projectiles[i].playerId != Game.players[k].id) {
-					if (collisionCheck(Game.projectiles[i], Game.players[k])) {
-						Game.projectiles.splice(i, 1);
-						Game.players[k].health--;
-						break;
-					}
-					else if (Game.projectiles[i].x < 0 - Game.width/2 || Game.projectiles[i].x > bgImg.width || Game.projectiles[i].y < 0 - Game.height/2 || Game.projectiles[i].y > bgImg.height) {
-			  			Game.projectiles.splice(i, 1);
-			  			break;
-			  		}
-					else {
-						Game.projectiles[i].update();
-					}
+				if (Game.projectiles[i].playerId != Game.players[k].id && collisionCheck(Game.projectiles[i], Game.players[k])) {
+					Game.projectiles.splice(i, 1);
+					Game.players[k].health--;
+					break;
+				}
+				else if (Game.projectiles[i].x < 0 - Game.width/2 || Game.projectiles[i].x > bgImg.width || Game.projectiles[i].y < 0 - Game.height/2 || Game.projectiles[i].y > bgImg.height) {
+					Game.projectiles.splice(i, 1);
+					break;
+				}
+				else {
+					Game.projectiles[i].update();
 				}
 			}
 		}
@@ -523,10 +521,6 @@ function Player(x, y) {
 	
 	this.init();
 }
-
-/*function Game() {
-	
-}*/
 
 function getAngle(x1, x2, y1, y2) {
 	var angle;
