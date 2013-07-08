@@ -3,7 +3,7 @@ var showFPS = false;
 var lastRun;
 var projId = 1;
 var socket;
-var bgImg = new Image();
+//var bgImg = new Image();
 //var projectiles = new Array();
 
 var Key = {
@@ -85,11 +85,6 @@ Game._onEachFrame = (function() {
   }
 })();
 
-function loadBackground(src, callback) {
-	bgImg.onload = callback;
-	bgImg.src = src;
-}
-
 // Function called when body loads. This starts the game.
 // It creates the canvas (where the game is displayed) and sets it's height and width
 // The context of the canvas is set to 2d and it's added to the body.
@@ -119,9 +114,8 @@ Game.start = function() {
 	//socket = io.connect('http://storrdev.dyndns-remote.com:80');
 	setEventHandlers();
 	
-	var bgImg = new Image();
-	
-	loadBackground('levels/test/bg.jpg', Game._onEachFrame(Game.run));
+	Game.background = new background('levels/test/bg.jpg');
+	Game.background.load(Game._onEachFrame(Game.run));
 };
 
 var setEventHandlers = function() {
@@ -221,7 +215,9 @@ Game.run = (function() {
 
 Game.draw = function() {
 	Game.context.clearRect(0, 0, Game.width, Game.height);
-	Game.context.drawImage(bgImg, -Game.players[0].getX(), -Game.players[0].getY());
+	//Game.context.drawImage(bgImg, -Game.players[0].getX(), -Game.players[0].getY());
+	//Game.context.drawImage(Game.background.img, -Game.players[0].getX(), -Game.players[0].getY());
+	Game.background.draw();
 	if (Game.projectiles.length != 0) {
   		for (var i = 0; i < Game.projectiles.length; i++) {
   			Game.projectiles[i].draw();
@@ -258,6 +254,7 @@ Game.update = function() {
 
 	if (Game.players[0].update()) {
 		socket.emit('move player', {x: Game.players[0].getX(), y: Game.players[0].getY(), angle: Game.players[0].getAngle()});
+		Game.background.update(Game.players[0].getX(), Game.players[0].getY());
 	}
 	
 	if (Game.projectiles.length != 0) {
@@ -268,7 +265,7 @@ Game.update = function() {
 					Game.players[k].health--;
 					break;
 				}
-				else if (Game.projectiles[i].x < 0 - Game.width/2 || Game.projectiles[i].x > bgImg.width || Game.projectiles[i].y < 0 - Game.height/2 || Game.projectiles[i].y > bgImg.height) {
+				else if (Game.projectiles[i].x < 0 - Game.width/2 || Game.projectiles[i].x > Game.background.img.width || Game.projectiles[i].y < 0 - Game.height/2 || Game.projectiles[i].y > Game.background.img.height) {
 					Game.projectiles.splice(i, 1);
 					break;
 				}
@@ -353,13 +350,42 @@ function Player(x, y) {
 	var mag = 0;
 	var strafeX = 0;
 	var strafeY = 0;
+	var offsetX = Game.width/2;
+	var offsetY = Game.height/2;
 
 	this.init = function() {
 		if (x) { this.x = x; }
 		if (y) { this.y = y; }
 	}
 	this.draw = function() {
-		Game.context.translate(Game.width/2, Game.height/2);
+		var screenX, screenY;
+		if (this.x < Game.width/2) {
+			screenX = this.x;
+		}
+		//else if (this.x > Game.background.img.width - Game.width) {
+		else if (this.x > (Game.background.img.width - Game.width/2)) {
+			// This needs to be changed/fixed
+			screenX = this.x - (Game.background.img.width - Game.width);
+		}
+		else {
+			screenX = this.x - (this.x - (Game.width/2));
+		}
+		
+		//console.log(this.x + " > " + (Game.background.img.width - Game.width));
+		
+		if (this.y < Game.height/2) {
+			screenY = this.y;
+		}
+		else if (this.y > (Game.background.img.height - Game.height/2)) {
+			// This needs to be changed/fixed
+			screenY = this.y - (Game.background.img.height - Game.height);
+		}
+		else {
+			screenY = this.y - (this.y - (Game.height/2));
+			//Game.context.translate(this.x - (this.x - (Game.width/2)), this.y - (this.y - (Game.height/2)));
+		}
+		Game.context.translate(screenX, screenY);
+		//Game.context.translate(this.x - (this.x), this.y - (this.y - (Game.height/2)));
 		Game.context.rotate(this.angle);
 		if (this.drawFlame) { Game.context.drawImage(this.flameImg, -this.fighterImg.width/2, 5); }
 		Game.context.drawImage(this.fighterImg, -this.fighterImg.width/2, -this.fighterImg.height/2);
@@ -384,8 +410,23 @@ function Player(x, y) {
 						//return;
 				}
 			}
+			
+			if (this.x < Game.width/2) {
+				offsetX = this.x;
+			}
+			else {
+				offsetX = Game.width/2;
+			}
+			
+			if (this.y < Game.height/2) {
+				offsetY = this.x;
+			}
+			else {
+				offsetY = Game.height/2;
+			}
 
 			this.angle = getAngle(mouseX, Game.width/2, mouseY, Game.height/2);
+			//this.angle = getAngle(mouseX, this.x - (this.x - offsetX), mouseY, this.y - (this.y - offsetY));
 			
 			this.deltaX = mouseX - Game.width/2;
 			this.deltaY = mouseY - Game.height/2;
@@ -444,25 +485,24 @@ function Player(x, y) {
 				this.drawFlame = false;
 			}
 			
-			if (bgImg.width != 0 && bgImg.height != 0) {
+			if (Game.background.img.width != 0 && Game.background.img.height != 0) {
 				// Edge of map clip checking
 				// Left side of map
 				if ((this.x + this.oldDeltaX) <= 0) {
 					if (this.oldDeltaX < 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
 				}
 				// Right side of map
-				if ((this.x + this.oldDeltaX) > (bgImg.width - Game.width)) {
-					this.x = bgImg.width - Game.width;
+				if ((this.x + this.oldDeltaX) > Game.background.img.width) {
 					if (this.oldDeltaX > 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
 				}
 				// Top of map
 				if ((this.y + this.oldDeltaY) < 0) {
-					//this.mapY = 0;
 					if (this.oldDeltaY < 0) { this.oldDeltaY = this.oldDeltaY * -.6; }
 				}
 				// Bottom of map
-				if ((this.y + this.oldDeltaY) > (bgImg.height - Game.height)) {
-					this.y = bgImg.height - Game.height;
+				//if ((this.y + this.oldDeltaY) > (Game.background.img.height - Game.height)) {
+				if ((this.y + this.oldDeltaY) > Game.background.img.height) {
+					//this.y = Game.background.img.height - Game.height;
 					if (this.oldDeltaY > 0) { this.oldDeltaY = this.oldDeltaY * -.6; }
 				}
 			}
@@ -470,6 +510,8 @@ function Player(x, y) {
 			//Change Player object's map position
 			this.x += this.oldDeltaX;
 			this.y += this.oldDeltaY;
+			
+			//console.log(this.x + ", " + this.y);
 		}
 		else {
 			this.deaths++;
@@ -517,6 +559,50 @@ function Player(x, y) {
 	
 	this.getSpeed = function() {
 		return Math.sqrt(this.oldDeltaX * this.oldDeltaX + this.oldDeltaY * this.oldDeltaY);
+	}
+	
+	this.init();
+}
+
+function background(file) {
+	this.init = function() {
+		if (file) {
+			this.file = file;
+			this.img = new Image();
+			this.x = -Game.players[0].getX();
+			this.y = -Game.players[0].getY();
+		}
+	}
+	
+	this.load = function(callback) {
+		this.img.onload = callback;
+		this.img.src = this.file;
+	}
+	
+	this.update = function(x, y) {
+		if (x < Game.width/2) {
+			this.x = 0;
+		}
+		else if (x > (this.img.width - Game.width/2)) {
+			this.x = -(this.img.width - Game.width);
+		}
+		else {
+			this.x = -(x - Game.width/2);
+		}
+		
+		if (y < Game.height/2) {
+			this.y = 0;
+		}
+		else if (y > (this.img.height - Game.height/2)) {
+			this.y = -(this.img.height - Game.height);
+		}
+		else {
+			this.y = -(y - Game.height/2);
+		}
+	}
+	
+	this.draw = function() {
+		Game.context.drawImage(this.img, this.x, this.y);
 	}
 	
 	this.init();
