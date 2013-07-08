@@ -49,7 +49,7 @@ function mov(e) {
 }
 
 function click() {
-	var projectile = getDeltas(mouseX, mouseY, Game.width/2, Game.height/2, Game.players[0].oldDeltaX, Game.players[0].oldDeltaY, 12);
+	var projectile = getDeltas(mouseX, mouseY, Game.players[0].screenX, Game.players[0].screenY, Game.players[0].oldDeltaX, Game.players[0].oldDeltaY, 12);
 	socket.emit('new projectile', {x: Game.players[0].x, y: Game.players[0].y, deltaX: projectile.vX, deltaY: projectile.vY});
 }
 
@@ -226,10 +226,6 @@ Game.draw = function() {
 	Game.context.save();
   	Game.players[0].draw(Game.context);
   	Game.context.restore();
-
-  	Game.context.fillStyle = "White";
-	Game.context.font      = "normal 12pt Arial";
-	Game.context.fillText(Game.players[0].health, Game.width/2 + 20, Game.height/2 + 20);
   	
   	var i;
   	
@@ -300,7 +296,7 @@ function Projectile(id, playerId, x, y, deltaX, deltaY) {
 	
 	this.draw = function() {
 		Game.context.beginPath();
-  		Game.context.arc(this.x - Game.players[0].x + Game.width/2, this.y - Game.players[0].y + Game.height/2, this.r, 0, Math.PI*2, true);
+  		Game.context.arc(this.x - Game.players[0].x + Game.players[0].screenX, this.y - Game.players[0].y + Game.players[0].screenY, this.r, 0, Math.PI*2, true);
   		Game.context.fillStyle = 'red';
       	Game.context.fill();
   		Game.context.stroke();
@@ -347,51 +343,24 @@ function Player(x, y) {
 	this.r = 20;
 	this.health = 10;
 	this.deaths = 0;
+	this.screenX = Game.width/2;
+	this.screenY = Game.height/2;
 	var mag = 0;
 	var strafeX = 0;
 	var strafeY = 0;
-	var offsetX = Game.width/2;
-	var offsetY = Game.height/2;
 
 	this.init = function() {
 		if (x) { this.x = x; }
 		if (y) { this.y = y; }
 	}
 	this.draw = function() {
-		var screenX, screenY;
-		if (this.x < Game.width/2) {
-			screenX = this.x;
-		}
-		//else if (this.x > Game.background.img.width - Game.width) {
-		else if (this.x > (Game.background.img.width - Game.width/2)) {
-			// This needs to be changed/fixed
-			screenX = this.x - (Game.background.img.width - Game.width);
-		}
-		else {
-			screenX = this.x - (this.x - (Game.width/2));
-		}
-		
-		//console.log(this.x + " > " + (Game.background.img.width - Game.width));
-		
-		if (this.y < Game.height/2) {
-			screenY = this.y;
-		}
-		else if (this.y > (Game.background.img.height - Game.height/2)) {
-			// This needs to be changed/fixed
-			screenY = this.y - (Game.background.img.height - Game.height);
-		}
-		else {
-			screenY = this.y - (this.y - (Game.height/2));
-			//Game.context.translate(this.x - (this.x - (Game.width/2)), this.y - (this.y - (Game.height/2)));
-		}
-		Game.context.translate(screenX, screenY);
-		//Game.context.translate(this.x - (this.x), this.y - (this.y - (Game.height/2)));
+		Game.context.translate(this.screenX, this.screenY);
 		Game.context.rotate(this.angle);
 		if (this.drawFlame) { Game.context.drawImage(this.flameImg, -this.fighterImg.width/2, 5); }
 		Game.context.drawImage(this.fighterImg, -this.fighterImg.width/2, -this.fighterImg.height/2);
 	}
 	this.drawRemote = function() {
-		Game.context.translate(this.x - Game.players[0].x + Game.width/2, this.y - Game.players[0].y + Game.height/2);
+		Game.context.translate(this.x - Game.players[0].x + Game.players[0].screenX, this.y - Game.players[0].y + Game.players[0].screenY);
 		Game.context.rotate(this.angle);
 		Game.context.drawImage(this.fighterImg, -this.fighterImg.width/2, -this.fighterImg.height/2);
 	}
@@ -411,26 +380,31 @@ function Player(x, y) {
 				}
 			}
 			
+			// Handles on screen positioning of local player to for angle equations
 			if (this.x < Game.width/2) {
-				offsetX = this.x;
+				this.screenX = this.x;
+			}
+			else if (this.x > (Game.background.img.width - (Game.width/2))) {
+				this.screenX = (this.x - Game.background.img.width) + Game.width;
 			}
 			else {
-				offsetX = Game.width/2;
+				this.screenX = Game.width/2;
 			}
 			
 			if (this.y < Game.height/2) {
-				offsetY = this.x;
+				this.screenY = this.y
+			}
+			else if (this.y > (Game.background.img.height - (Game.height/2))) {
+				this.screenY = (this.y - Game.background.img.height) + Game.height;
 			}
 			else {
-				offsetY = Game.height/2;
+				this.screenY = Game.height/2;
 			}
-
-			this.angle = getAngle(mouseX, Game.width/2, mouseY, Game.height/2);
-			//this.angle = getAngle(mouseX, this.x - (this.x - offsetX), mouseY, this.y - (this.y - offsetY));
 			
-			this.deltaX = mouseX - Game.width/2;
-			this.deltaY = mouseY - Game.height/2;
+			this.angle = getAngle(mouseX, this.screenX, mouseY, this.screenY);
 			
+			this.deltaX = mouseX - (this.x - (this.x - this.screenX));
+			this.deltaY = mouseY - (this.y - (this.y - this.screenY));
 			
 			if (Key.isDown(Key.UP) || Key.isDown(Key.DOWN) || Key.isDown(Key.LEFT) || Key.isDown(Key.RIGHT)) {
 				// This handles the strafing movement
