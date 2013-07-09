@@ -5,6 +5,7 @@ var projId = 1;
 var socket;
 //var bgImg = new Image();
 //var projectiles = new Array();
+var ASSET_MANAGER = new AssetManager();
 
 var Key = {
   _pressed: {},
@@ -114,82 +115,17 @@ Game.start = function() {
 	//socket = io.connect('http://storrdev.dyndns-remote.com:80');
 	setEventHandlers();
 	
+	
+	
 	Game.background = new background('levels/test/bg.jpg');
-	Game.background.load(Game._onEachFrame(Game.run));
-};
+	//Game.background.load(Game._onEachFrame(Game.run));
 
-var setEventHandlers = function() {
-	socket.on('connect', onSocketConnected);
-	socket.on('client id', onClientId);
-	socket.on('disconnect', onSocketDisconnect);
-	socket.on('new player', onNewPlayer);
-	socket.on('move player', onMovePlayer);
-	socket.on('remove player', onRemovePlayer);
-	socket.on('new projectile', onNewProjectile);
-	socket.on('remove projectile', onRemoveProjectile);
-};
-
-function onSocketConnected() {
-	console.log('Connected to socket server');
-	socket.emit('new player', {x: Game.players[0].getX(), y: Game.players[0].getY()});
-	//console.log(Game.players[0].getX());
-};
-
-function onClientId(data) {
-	Game.players[0].id = data.id;
-	console.log(Game.players[0].id);
-}
-
-function onSocketDisconnect() {
-	console.log('Disconnected from socket server');
-};
-
-function onNewPlayer(data) {
-	console.log('New player connected: ' + data.id);
+	ASSET_MANAGER.queueDownload('levels/test/bg.jpg');
 	
-	var newPlayer = new Player(data.x, data.y, data.angle);
-	newPlayer.id = data.id;
-	Game.players.push(newPlayer);
-};
-
-function onMovePlayer(data) {
-	var movePlayer = playerById(data.id);
-	
-	if (!movePlayer) {
-		console.log('Player not found: ' + data.id);
-		return;
-	};
-	
-	movePlayer.setX(data.x);
-	movePlayer.setY(data.y);
-	movePlayer.setAngle(data.angle);
-};
-
-function onRemovePlayer(data) {
-	var removePlayer = playerById(data.id);
-	
-	if (!removePlayer) {
-		console.log('Player not found: ' + data.id);
-		return;
-	};
-	
-	Game.players.splice(Game.players.indexOf(removePlayer), 1);
-	console.log('player has been disconnected: ' + data.id);
-};
-
-function onNewProjectile(data) {
-	var newProjectile = new Projectile(data.id, data.playerId, data.x, data.y, data.deltaX, data.deltaY);
-	Game.projectiles.push(newProjectile);
-};
-
-function onRemoveProjectile(data) {
-	var removeProjectile = projectileById(data.id);
-
-	if (!removeProjectile) {
-		console.log('Projectile not found: ' + this.id);
-	};
-
-	Game.projectiles.splice(Game.projectiles.indexOf(removeProjectile));
+	ASSET_MANAGER.downloadAll(function () {
+		Game.background.img = ASSET_MANAGER.getAsset('levels/test/bg.jpg');
+		Game._onEachFrame(Game.run);
+	});
 };
 
 // Main Game Loop
@@ -272,6 +208,80 @@ Game.update = function() {
 		}
 	}
 	
+};
+
+var setEventHandlers = function() {
+	socket.on('connect', onSocketConnected);
+	socket.on('client id', onClientId);
+	socket.on('disconnect', onSocketDisconnect);
+	socket.on('new player', onNewPlayer);
+	socket.on('move player', onMovePlayer);
+	socket.on('remove player', onRemovePlayer);
+	socket.on('new projectile', onNewProjectile);
+	socket.on('remove projectile', onRemoveProjectile);
+};
+
+function onSocketConnected() {
+	console.log('Connected to socket server');
+	socket.emit('new player', {x: Game.players[0].getX(), y: Game.players[0].getY()});
+	//console.log(Game.players[0].getX());
+};
+
+function onClientId(data) {
+	Game.players[0].id = data.id;
+	console.log(Game.players[0].id);
+}
+
+function onSocketDisconnect() {
+	console.log('Disconnected from socket server');
+};
+
+function onNewPlayer(data) {
+	console.log('New player connected: ' + data.id);
+	
+	var newPlayer = new Player(data.x, data.y, data.angle);
+	newPlayer.id = data.id;
+	Game.players.push(newPlayer);
+};
+
+function onMovePlayer(data) {
+	var movePlayer = playerById(data.id);
+	
+	if (!movePlayer) {
+		console.log('Player not found: ' + data.id);
+		return;
+	};
+	
+	movePlayer.setX(data.x);
+	movePlayer.setY(data.y);
+	movePlayer.setAngle(data.angle);
+};
+
+function onRemovePlayer(data) {
+	var removePlayer = playerById(data.id);
+	
+	if (!removePlayer) {
+		console.log('Player not found: ' + data.id);
+		return;
+	};
+	
+	Game.players.splice(Game.players.indexOf(removePlayer), 1);
+	console.log('player has been disconnected: ' + data.id);
+};
+
+function onNewProjectile(data) {
+	var newProjectile = new Projectile(data.id, data.playerId, data.x, data.y, data.deltaX, data.deltaY);
+	Game.projectiles.push(newProjectile);
+};
+
+function onRemoveProjectile(data) {
+	var removeProjectile = projectileById(data.id);
+
+	if (!removeProjectile) {
+		console.log('Projectile not found: ' + this.id);
+	};
+
+	Game.projectiles.splice(Game.projectiles.indexOf(removeProjectile));
 };
 
 // Projectile Object
@@ -663,4 +673,49 @@ function displayFPS(){
 
 function getRandomArbitary(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+function AssetManager() {
+	this.successCount = 0;
+    this.errorCount = 0;
+    this.cache = {};
+	this.downloadQueue = [];
+	
+	this.queueDownload = function(path) {
+		this.downloadQueue.push(path);
+	}
+	
+	this.downloadAll = function(downloadCallback) {
+		if (this.downloadQueue.length === 0) {
+      		downloadCallback();
+ 	 	}
+		for (var i = 0; i < this.downloadQueue.length; i++) {
+			var path = this.downloadQueue[i];
+			var img = new Image();
+			var that = this;
+			img.addEventListener("load", function() {
+				that.successCount += 1;
+				if (that.isDone()) {
+					downloadCallback();
+				}
+			}, false);
+			img.addEventListener("error", function() {
+				that.errorCount += 1;
+				if (that.isDone()) {
+					downloadCallback();
+				}
+			}, false);
+			img.src = path;
+			this.cache[path] = img;
+		}
+	}
+	
+	this.isDone = function() {
+		return (this.downloadQueue.length == this.successCount + this.errorCount);
+	}
+	
+	this.getAsset = function(path) {
+		return this.cache[path];
+	}
+	
 }
