@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Delta Wing</title>
+		<style type="text/css" media="screen" src="style.css">
+			* { margin:0; padding:0; } /* to remove the top and left whitespace */
+			html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
+			canvas {
+				display:block; /* To remove the scrollbars */
+				/*cursor: none;*/
+			}
+		</style>
+		<script src="http://localhost:80/socket.io/socket.io.js"></script>
+		<script src="src/delta-wing.js"></script>
+		<script src="src/network.js"></script>
+		<script src="src/componentSystem.js"></script>
+		<script src="src/entity.js"></script>
+		<script src="src/drawable.js"></script>
+		<script src="src/map.js"></script>
+		<script src="src/assetManager.js"></script>
+		<script src="src/xhr.js"></script>
+		<script src="src/player.js"></script>
+		<script src="src/remote.js"></script>
+		<script src="src/game.js"></script>
+	</head>
+	<body onload="game.load();">
+	</body>
+</html>

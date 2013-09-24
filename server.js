@@ -3,6 +3,7 @@ var app = require('http').createServer(handler),
 	fs = require('fs'),
 	Player = require('./Player').Player,
 	Projectile = require('./Projectile').Projectile;
+	mmm = require('mmmagic');
   
 var url     =   require('url');
 var path    =   require('path');
@@ -20,49 +21,46 @@ io.configure(function() {
 });
 
 function handler (req, res) {
-  	var pathname = url.parse(req.url).pathname;
-    var ext      = path.extname(pathname).toLowerCase();
+	var reqPath = url.parse(req.url).pathname;
+    var ext      = path.extname(reqPath).toLowerCase();
 
-    //console.log(pathname);
+    //console.log("file: " + reqPath + " requested");
 
-    if (ext === ".html") {
-        fs.readFile('./public' + pathname, 'utf-8', function(error, content) {
-            res.writeHead(200, {'Content-Type' : 'text/html'});
-            if (error) {
-            	res.write(error);
-            }
-            res.end(content);
-        });
+	if (ext === ".png" || ext === ".jpg" || ext === ".gif") {
+    		var mimeType;
+    		if (ext === ".png") { mimeType = "image/png"; }
+    		if (ext === ".jpg") { mimeType = "image/jpeg"; }
+    		if (ext === ".gif") { mimeType = "image/png"; }
+            res.writeHead(200, {'Content-Type' : mimeType});
+            fs.createReadStream('./' + reqPath).pipe(res);
+            //console.log("file: " + reqPath + " successful");
     }
-    
-    if (ext === ".js") {
-        fs.readFile('./public' + pathname, 'utf-8', function(error, content) {
-            res.writeHead(200, {'Content-Type' : 'text/javascript'});
-            if (error) {
-            	res.write(error);
-            }
-            res.end(content);
-        });
-    }
-    
-    if (ext === ".png") {
-            res.writeHead(200, {'Content-Type' : 'image/png'});
-            fs.createReadStream('./public' + pathname).pipe(res);
-    }
-    
-    if (ext === ".jpg") {
-            res.writeHead(200, {'Content-Type' : 'image/jpeg'});
-            fs.createReadStream('./public' + pathname).pipe(res);
-    }
-    
-    if (!ext) {
-    	fs.readFile('./public/index.html', 'utf-8', function(error, content) {
+    else if (!ext) {
+    	fs.readFile('./index.html', 'utf-8', function(error, content) {
     		res.writeHead(200, {'Content-Type' : 'text/html'});
     		if (error) {
     			res.write(error);
     		}
+    		//console.log("file: " + reqPath + " successful");
     		res.end(content);
     	});
+    }
+    else {
+    	Magic = mmm.Magic;
+    	var magic = new Magic(mmm.MAGIC_MIME_TYPE);
+		magic.detectFile("./" + reqPath, function(err, result) {
+			if (err) throw err;
+			//console.log(result);
+			
+			fs.readFile('./' + reqPath, 'utf-8', function(error, content) {
+				res.writeHead(200, {'Content-Type' : result });
+				if (error) {
+					res.write(error);
+				}
+				//console.log("file: " + reqPath + " successful");
+				res.end(content);
+			});
+		});
     }
 }
 
@@ -126,9 +124,18 @@ function onMovePlayer(data) {
 
 	movePlayer.setX(data.x);
 	movePlayer.setY(data.y);
+	movePlayer.setOldDeltaX(data.oldDeltaX);
+	movePlayer.setOldDeltaY(data.oldDeltaY);
 	movePlayer.setAngle(data.angle);
 
-	this.broadcast.emit("move player", {id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY(), angle: movePlayer.getAngle()});
+	this.broadcast.emit("move player", {
+		id: movePlayer.id,
+		x: movePlayer.getX(),
+		y: movePlayer.getY(),
+		oldDeltaX: movePlayer.getOldDeltaX(),
+		oldDeltaY: movePlayer.getOldDeltaY(),
+		angle: movePlayer.getAngle()
+	});
 };
 
 function onNewProjectile(data) {

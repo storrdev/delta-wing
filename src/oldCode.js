@@ -112,18 +112,15 @@ Game.start = function() {
 	Game.projectiles = new Array();
 	
 	socket = io.connect('localhost');
-	//socket = io.connect('http://storrdev.dyndns-remote.com:80');
 	setEventHandlers();
-	
-	
-	
+
 	Game.background = new background('levels/test/bg.jpg');
 	//Game.background.load(Game._onEachFrame(Game.run));
 
-	ASSET_MANAGER.queueDownload('levels/test/bg.jpg');
+	ASSET_MANAGER.queueDownload('public/levels/test/bg.jpg');
 	
 	ASSET_MANAGER.downloadAll(function () {
-		Game.background.img = ASSET_MANAGER.getAsset('levels/test/bg.jpg');
+		Game.background.img = ASSET_MANAGER.getAsset('public/levels/test/bg.jpg');
 		Game._onEachFrame(Game.run);
 	});
 };
@@ -344,9 +341,9 @@ function Player(x, y) {
   	this.deltaY = 0;
   	this.angle = 0;
   	this.fighterImg = new Image();
-	this.fighterImg.src = "images/sprites/fighter.png";
+	this.fighterImg.src = "public/images/sprites/fighter.png";
 	this.flameImg = new Image();
-	this.flameImg.src = "images/sprites/fighterFlame.png";
+	this.flameImg.src = "public/images/sprites/fighterFlame.png";
 	this.drawFlame = false;
 	this.oldDeltaX = 0;
 	this.oldDeltaY = 0;
