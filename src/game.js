@@ -67,6 +67,11 @@
 							if (game.entities[c].collision === true && e !== c) {
 								if (game.entities[e].distanceTo(game.entities[c].x, game.entities[c].y, game.entities[c].oldDeltaX, game.entities[e].oldDeltaY) < (game.entities[e].r + game.entities[c].r)) {
 
+									//Resets the position of the ship outside of the collision area
+									game.entities[e].x -= game.entities[e].oldDeltaX;
+									game.entities[e].y -= game.entities[e].oldDeltaY;
+
+									// Reverses Direction of Ship after collision
 									game.entities[e].oldDeltaX *= -.6;
 									game.entities[e].oldDeltaY *= -.6;
 
