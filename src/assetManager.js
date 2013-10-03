@@ -13,11 +13,10 @@
 		
 		downloadAll: function(downloadCallback) {
 			if (downloadQueue.length === 0) {
-		  		game.assetManager.downloadAssets(downloadCallback);
-	 	 	}
+				game.assetManager.downloadAssets(downloadCallback);
+			}
 			// Get and parse all JSON files first to grab the files referenced in the json file
 			for (var i = 0; i < downloadQueue.length; i++) {
-			//for (file in downloadQueue) {
 				var ext = downloadQueue[i].split('.').pop().toLowerCase();
 				var file = downloadQueue[i].split('/').pop();
 				var path = downloadQueue[i].substring(0, downloadQueue[i].lastIndexOf("/"));
@@ -27,7 +26,7 @@
 					var xhr = new XMLHttpRequest();
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState==4 && xhr.status==200) {
-							json = eval("(" + xhr.responseText + ")");
+							json = JSON.parse(xhr.responseText);
 							for (var l = 0; l < json.layers.length; l++) {
 								if (json.layers[l].image) {
 									console.log('image found in json: ' + path + '/' + json.layers[l].image);
@@ -37,7 +36,7 @@
 							cache[file] = json;
 							game.assetManager.downloadAssets(downloadCallback);
 						}
-					}
+					};
 					xhr.open("GET", path + "/" + file, true);
 					xhr.send();
 				}
@@ -47,8 +46,7 @@
 		downloadAssets: function(downloadCallback) {
 			// Actual assets being downloaded after json is parsed.
 			console.log(downloadQueue.length + " assets to be downloaded.");
-			for (file in downloadQueue) {
-				//var path = downloadQueue[i];
+			for (var file in downloadQueue) {
 				var path = downloadQueue[file];
 				var ext = path.split('.').pop().toLowerCase();
 				var asset;
@@ -84,6 +82,6 @@
 		getAsset: function(fileName) {
 			return cache[fileName];
 		}
-	}
+	};
 
 }());
