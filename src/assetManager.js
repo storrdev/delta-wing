@@ -33,6 +33,12 @@
 									game.assetManager.queueDownload(path + '/' + json.layers[l].image);
 								}
 							}
+							for (var t = 0; t < json.tilesets.length; t++) {
+								if (json.tilesets[t].image) {
+									console.log('image found in json: ' + path + '/' + json.tilesets[t].image);
+									game.assetManager.queueDownload(path + '/' + json.tilesets[t].image);
+								}
+							}
 							cache[file] = json;
 							game.assetManager.downloadAssets(downloadCallback);
 						}

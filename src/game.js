@@ -18,8 +18,6 @@
 			game.component.moveable,
 			game.component.drawable,
 			game.component.map]);
-			
-		//game.entities['local_player'] = game.player.create('local_player');
 
 		game.entities['player'] = game.createEntity({
 				image: game.assetManager.getAsset('fighter.png'),
@@ -34,9 +32,37 @@
 			game.component.moveable,
 			game.component.drawable,
 			game.component.player]);
+
+		for (var l = 0; l < game.assetManager.getAsset('map.json').layers.length; l++) {
+			var x = 0;
+			var y = 0;
+			if (game.assetManager.getAsset('map.json').layers[l].type === 'tilelayer') {
+				for (var t = 0; t < game.assetManager.getAsset('map.json').layers[l].data.length; t++) {
+					if (t % game.assetManager.getAsset('map.json').width == 0 && t != 0) {
+						y += game.assetManager.getAsset('map.json').tileheight;
+						x = 0;
+					}
+					if (game.assetManager.getAsset('map.json').layers[l].data[t] != 0) {
+						game.entities['tile' + t] = game.createEntity({
+							image: game.assetManager.getAsset(game.assetManager.getAsset('map.json').tilesets[0].image),
+							x: x,
+							y: y,
+							screenX: x,
+							screenY: y,
+							width: game.assetManager.getAsset('map.json').tileheight,
+							height: game.assetManager.getAsset('map.json').tilewidth
+						}, [game.component.entity,
+							game.component.moveable,
+							game.component.drawable,
+							game.component.tile]);
+					}
+					x += game.assetManager.getAsset('map.json').tilewidth;
+				}
+			}
+		}
 		
-			game.socket = game.network.connect();
-			game.network.setEventHandlers();
+		game.socket = game.network.connect();
+		game.network.setEventHandlers();
 
 		game.run();
 	},
