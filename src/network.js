@@ -5,7 +5,7 @@
 	game.network = {
 
 		connect: function() {
-			socket = io.connect('192.168.0.114:80');
+			socket = io.connect('localhost');
 			return socket;
 		},
 	

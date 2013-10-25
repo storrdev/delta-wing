@@ -74,14 +74,14 @@
 				this.drawFlame = false;
 			}
 
-			if (game.entities['background'].width != 0 && game.entities['background'].height != 0) {
+			if (game.entities['map'].width != 0 && game.entities['map'].height != 0) {
 				// Edge of map clip checking
 				// Left side of map
 				if ((this.x + this.oldDeltaX) <= 0) {
 					if (this.oldDeltaX < 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
 				}
 				// Right side of map
-				if ((this.x + this.oldDeltaX) > game.entities['background'].width) {
+				if ((this.x + this.oldDeltaX) > game.entities['map'].width) {
 					if (this.oldDeltaX > 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
 				}
 				// Top of map
@@ -90,7 +90,7 @@
 				}
 				// Bottom of map
 				//if ((this.screenY + this.oldDeltaY) > (game.background.img.height - game.height)) {
-				if ((this.y + this.oldDeltaY) > game.entities['background'].height) {
+				if ((this.y + this.oldDeltaY) > game.entities['map'].height) {
 					//this.screenY = game.background.img.height - game.height;
 					if (this.oldDeltaY > 0) { this.oldDeltaY = this.oldDeltaY * -.6; }
 				}
@@ -98,6 +98,8 @@
 
 			this.x += this.oldDeltaX;
 			this.y += this.oldDeltaY;
+
+			//console.log(this.x + ', ' + this.y);
 		}
 	}
 }());

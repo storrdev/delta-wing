@@ -17,11 +17,17 @@
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
 			game.canvas.addEventListener('mousemove', game.move, false);
 			//game.canvas.addEventListener('click', click, false);
+
+			game.entities = {};
 			
 			// Add way to read all assets required from a data file, txt or something.
 			game.assetManager.queueDownload('/assets/sprites/fighter.png');
 			game.assetManager.queueDownload('/assets/maps/tiledMap/map.json');
-			game.assetManager.downloadAll(function () { game.start(); });
+			//game.assetManager.downloadAll(function () { game.start(); });
+			game.assetManager.downloadAll(function() {
+				//console.log('testing: ' + game.assetManager.getAsset('map.json').tilesets[0].image);
+				game.assetManager.createMap(game.assetManager.getAsset('map.json'), game.start);
+			});
 		},
 		
 		move: function(e) {

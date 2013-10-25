@@ -6,7 +6,7 @@
 	
 	game.start = function() {
 	
-		game.entities = {};
+		//game.entities = {};
 		
 		game.entities['background'] = game.createEntity({
 			image: game.assetManager.getAsset('bg.jpg'),
@@ -16,7 +16,7 @@
 			height: game.assetManager.getAsset('map.json').height * game.assetManager.getAsset('map.json').tileheight
 		}, [game.component.entity,
 			game.component.moveable,
-			game.component.drawable,
+			//game.component.drawable,
 			game.component.map]);
 
 		game.entities['player'] = game.createEntity({
@@ -33,7 +33,7 @@
 			game.component.drawable,
 			game.component.player]);
 
-		for (var l = 0; l < game.assetManager.getAsset('map.json').layers.length; l++) {
+		/*for (var l = 0; l < game.assetManager.getAsset('map.json').layers.length; l++) {
 			var x = 0;
 			var y = 0;
 			if (game.assetManager.getAsset('map.json').layers[l].type === 'tilelayer') {
@@ -59,7 +59,7 @@
 					x += game.assetManager.getAsset('map.json').tilewidth;
 				}
 			}
-		}
+		}*/
 		
 		game.socket = game.network.connect();
 		game.network.setEventHandlers();

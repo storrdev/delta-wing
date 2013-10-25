@@ -87,6 +87,75 @@
 		
 		getAsset: function(fileName) {
 			return cache[fileName];
+		},
+
+		createMap: function(json, callback) {
+
+			game.entities['map'] = game.createEntity({
+				image: game.assetManager.getAsset('bg.jpg'),
+				screenX: -1600,
+				screenY: -400,
+				width: json.width * json.tilewidth,
+				height: json.height * json.tileheight
+			}, [game.component.entity,
+				game.component.moveable,
+				game.component.map]);
+
+			console.log('map: ' + game.entities['map'].width + 'x' + game.entities['map'].height);
+
+			for (var l = 0; l < json.layers.length; l++) {
+				var x = 0;
+				var y = 0;
+
+				if (json.layers[l].type === 'imagelayer') {
+					game.entities[json.layers[l].name] = game.createEntity({
+						image: game.assetManager.getAsset(json.layers[l].image),
+						x: json.layers[l].x,
+						y: json.layers[l].y,
+						screenX: game.entities['map'].screenX,
+						screenY: game.entities['map'].screenY,
+						width: game.entities['map'].width,
+						height: game.entities['map'].height
+					}, [game.component.entity,
+						game.component.moveable,
+						game.component.drawable,
+						game.component.map]);
+				}
+				else if (json.layers[l].type === 'tilelayer') {
+					var layerCanvas = document.createElement('canvas');
+					var layerContext = layerCanvas.getContext('2d');
+					
+					layerCanvas.width = json.width * json.tilewidth;
+					layerCanvas.height = json.height * json.tileheight;
+
+					for (var t = 0; t < json.layers[l].data.length; t++) {
+						if (t % json.width == 0 && t != 0) {
+							y += json.tileheight;
+							x = 0;
+						}
+						if (json.layers[l].data[t] != 0) {
+							//console.log(json.tilesets[0].image + ' ' + x + ', ' + y);
+							layerContext.drawImage(game.assetManager.getAsset(json.tilesets[0].image), x, y);
+						}
+						x += json.tilewidth;
+					}
+					var layerImage = new Image();
+					layerImage.src = layerCanvas.toDataURL('image/png');
+					game.entities[json.layers[l].name] = game.createEntity({
+						image: layerImage,
+						screenX: -1600,
+						screenY: -400,
+						width: layerCanvas.width,
+						height: layerCanvas.height
+					}, [game.component.entity,
+						game.component.moveable,
+						game.component.drawable,
+						game.component.map]);
+					console.log(json.layers[l].name + ': ' + game.entities[json.layers[l].name].width + 'x' + game.entities[json.layers[l].name].height);
+				}
+			}
+
+			callback();
 		}
 	};
 
