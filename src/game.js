@@ -74,7 +74,7 @@
 	},
 	
 	game.update = function() {
-		var lastRun;
+		/*var lastRun;
 		if (!lastRun) {
 			lastRun = new Date().getTime();
 		}
@@ -82,7 +82,7 @@
 			var delta = (new Date().getTime() - lastRun)/1000;
 			lastRun = new Date().getTime();
 			fps = 1/delta;
-		}
+		}*/
 
 		for(var e in game.entities) {
 			if (game.entities.hasOwnProperty(e)) {
