@@ -46,7 +46,7 @@
 				angle: 0,
 				offsetX: -game.assetManager.getAsset('fighter.png').width/2,
 				offsetY: -game.assetManager.getAsset('fighter.png').height/2,
-				collision: true
+				collision: 'circle'
 				
 			}, [game.component.entity,
 				game.component.moveable,

@@ -107,7 +107,26 @@
 				var x = 0;
 				var y = 0;
 
-				if (json.layers[l].type === 'imagelayer') {
+				if (json.layers[l].type === 'objectgroup') {
+					console.log(json.layers[l].name);
+					var objects = json.layers[l].objects;
+					for (var o = 0; o < objects.length; o++) {
+						
+						console.log(objects[o].type);
+						if (json.layers[l].name === 'Collision') {
+							game.entities['collision object ' + o] = game.createEntity({
+								collision: 'rect',
+								x: objects[o].x + (objects[o].width / 2),
+								y: objects[o].y + (objects[o].height / 2),
+								width: objects[o].width,
+								height: objects[o].height,
+								r: 100
+							},[game.component.entity,
+							   game.component.moveable]);
+						}
+					}
+				}
+				else if (json.layers[l].type === 'imagelayer') {
 					game.entities[json.layers[l].name] = game.createEntity({
 						image: game.assetManager.getAsset(json.layers[l].image),
 						x: json.layers[l].x,
