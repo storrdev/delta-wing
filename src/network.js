@@ -58,8 +58,8 @@
 			game.entities[data.id].screenY = data.y - game.entities['player'].y + game.entities['player'].screenY;
 			game.entities[data.id].x = data.x;
 			game.entities[data.id].y = data.y;
-			game.entities[data.id].oldDeltaX = data.oldDeltaX;
-			game.entities[data.id].oldDeltaY = data.oldDeltaY;
+			game.entities[data.id].velX = data.velX;
+			game.entities[data.id].velY = data.velY;
 			game.entities[data.id].angle = data.angle;
 		},
 

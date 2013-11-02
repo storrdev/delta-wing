@@ -2,8 +2,8 @@ var Player = function(startX, startY, startAngle) {
 
 	var x = startX,
 		y = startY,
-		oldDeltaX = 0,
-		oldDeltaY = 0,
+		velX = 0,
+		velY = 0,
 		angle = startAngle,
 		id;
 		
@@ -15,12 +15,12 @@ var Player = function(startX, startY, startAngle) {
 		return y;
 	}
 
-	var getOldDeltaX = function() {
-		return oldDeltaX;
+	var getvelX = function() {
+		return velX;
 	}
 
-	var getOldDeltaY = function() {
-		return oldDeltaY;
+	var getvelY = function() {
+		return velY;
 	}
 	
 	var getAngle = function() {
@@ -35,12 +35,12 @@ var Player = function(startX, startY, startAngle) {
 		y = newY;
 	}
 
-	var setOldDeltaX = function(odX) {
-		oldDeltaX = odX;
+	var setVelX = function(odX) {
+		velX = odX;
 	}
 
-	var setOldDeltaY = function(odY) {
-		oldDeltaY = odY;
+	var setVelY = function(odY) {
+		velY = odY;
 	}
 	
 	var setAngle = function(newAngle) {
@@ -50,13 +50,13 @@ var Player = function(startX, startY, startAngle) {
 	return {
 		getX: getX,
 		getY: getY,
-		getOldDeltaX: getOldDeltaX,
-		getOldDeltaY: getOldDeltaY,
+		getvelX: getvelX,
+		getvelY: getvelY,
 		getAngle: getAngle,
 		setX: setX,
 		setY: setY,
-		setOldDeltaX: setOldDeltaX,
-		setOldDeltaY: setOldDeltaY,
+		setVelX: setVelX,
+		setVelY: setVelY,
 		setAngle: setAngle,
 		id: id
 	}

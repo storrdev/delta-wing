@@ -67,39 +67,41 @@
 								
 								if (game.entities[c].collision === 'rect') {
 									var rect = game.entities[c];
-									/*if (((game.entities[e].x + game.entities[e].r) > game.entities[c].x && (game.entities[e].x - game.entities[e].r) < (game.entities[c].x + game.entities[c].width))
-										&& ((game.entities[e].y + game.entities[e].r) > game.entities[c].y && (game.entities[e].y - game.entities[e].r) < (game.entities[c].y + game.entities[c].height))
-										) {*/
-
 									if (game.collision.circleRectIntersects(player, rect)) {
 
-										console.log('collision detection.');
-										
-									    if (player.distanceTo(player.x, rect.y) - player.r <= rect.height/2) {
-											// top/bottom side detection
-											//alert('top/bottom side detection');
-											player.y -= player.oldDeltaY;
-											player.oldDeltaY *= -.6;
+										rect.right = rect.x + (rect.width/2);
+										rect.left = rect.x - (rect.width/2);
+										rect.top = rect.y - (rect.height/2);
+										rect.bottom = rect.y + (rect.height/2);
+
+									    if (player.x < rect.left && player.velX > 0) {
+									    	// left
+									    	player.x -= player.velX;
+											player.velX *= -.6;
 									    }
-									    if (player.distanceTo(rect.x, player.y) - player.r <= rect.width/2) {
-									    	// left/right side detection
-											//alert('left/right side detection: ' + rect.x + ', ' + player.y);
-											player.x -= player.oldDeltaX;
-											player.oldDeltaX *= -.6;
+									    else if (player.x > rect.right && player.velX < 0) {
+									    	// right
+									    	player.x -= player.velX;
+											player.velX *= -.6;
+									    }
+									    else {
+									    	// top/bottom
+									    	player.y -= player.velY;
+											player.velY *= -.6;
 									    }
 		
 									}
 								}
 								else if (game.entities[c].collision === 'circle') {
-									if (game.entities[e].distanceTo(game.entities[c].x, game.entities[c].y, game.entities[c].oldDeltaX, game.entities[e].oldDeltaY) < (game.entities[e].r + game.entities[c].r)) {
+									if (game.entities[e].distanceTo(game.entities[c].x, game.entities[c].y, game.entities[c].velX, game.entities[e].velY) < (game.entities[e].r + game.entities[c].r)) {
 
 										//Resets the position of the ship outside of the collision area
-										game.entities[e].x -= game.entities[e].oldDeltaX;
-										game.entities[e].y -= game.entities[e].oldDeltaY;
+										game.entities[e].x -= game.entities[e].velX;
+										game.entities[e].y -= game.entities[e].velY;
 
 										// Reverses Direction of Ship after collision
-										game.entities[e].oldDeltaX *= -.6;
-										game.entities[e].oldDeltaY *= -.6;
+										game.entities[e].velX *= -.6;
+										game.entities[e].velY *= -.6;
 
 									}
 								}
@@ -108,8 +110,8 @@
 						game.socket.emit('move player', {
 							x: game.entities[e].x,
 							y: game.entities[e].y,
-							oldDeltaX: game.entities[e].oldDeltaX,
-							oldDeltaY: game.entities[e].oldDeltaY,
+							velX: game.entities[e].velX,
+							velY: game.entities[e].velY,
 							angle: game.entities[e].angle
 						});
 					}

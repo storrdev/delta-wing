@@ -124,16 +124,16 @@ function onMovePlayer(data) {
 
 	movePlayer.setX(data.x);
 	movePlayer.setY(data.y);
-	movePlayer.setOldDeltaX(data.oldDeltaX);
-	movePlayer.setOldDeltaY(data.oldDeltaY);
+	movePlayer.setVelX(data.velX);
+	movePlayer.setVelY(data.velY);
 	movePlayer.setAngle(data.angle);
 
 	this.broadcast.emit("move player", {
 		id: movePlayer.id,
 		x: movePlayer.getX(),
 		y: movePlayer.getY(),
-		oldDeltaX: movePlayer.getOldDeltaX(),
-		oldDeltaY: movePlayer.getOldDeltaY(),
+		velX: movePlayer.getvelX(),
+		velY: movePlayer.getvelY(),
 		angle: movePlayer.getAngle()
 	});
 };

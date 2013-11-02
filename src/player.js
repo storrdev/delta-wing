@@ -6,8 +6,8 @@
 	  	deltaX: 0,
 	  	deltaY: 0,
 		drawFlame: false,
-		oldDeltaX: 0,
-		oldDeltaY: 0,
+		velX: 0,
+		velY: 0,
 		r: 20,
 		screenX: game.width/2,
 		screenY: game.height/2,
@@ -65,10 +65,10 @@
 				this.deltaY = this.deltaY / mag * this.thrust;
 				
 				// This incrementally changes the delta value to simulate mass when changing direction
-				if (this.oldDeltaX < this.deltaX) { this.oldDeltaX += this.thrust/90; }
-				else { this.oldDeltaX -= this.thrust/90; }
-				if (this.oldDeltaY < this.deltaY) { this.oldDeltaY += this.thrust/90; }
-				else { this.oldDeltaY -= this.thrust/90; }
+				if (this.velX < this.deltaX) { this.velX += this.thrust/90; }
+				else { this.velX -= this.thrust/90; }
+				if (this.velY < this.deltaY) { this.velY += this.thrust/90; }
+				else { this.velY -= this.thrust/90; }
 			}
 			else {
 				this.drawFlame = false;
@@ -77,27 +77,27 @@
 			if (game.entities['map'].width != 0 && game.entities['map'].height != 0) {
 				// Edge of map clip checking
 				// Left side of map
-				if ((this.x + this.oldDeltaX) <= 0) {
-					if (this.oldDeltaX < 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
+				if ((this.x + this.velX) <= 0) {
+					if (this.velX < 0) { this.velX = this.velX * -.6; }
 				}
 				// Right side of map
-				if ((this.x + this.oldDeltaX) > game.entities['map'].width) {
-					if (this.oldDeltaX > 0) { this.oldDeltaX = this.oldDeltaX * -.6; }
+				if ((this.x + this.velX) > game.entities['map'].width) {
+					if (this.velX > 0) { this.velX = this.velX * -.6; }
 				}
 				// Top of map
-				if ((this.y + this.oldDeltaY) < 0) {
-					if (this.oldDeltaY < 0) { this.oldDeltaY = this.oldDeltaY * -.6; }
+				if ((this.y + this.velY) < 0) {
+					if (this.velY < 0) { this.velY = this.velY * -.6; }
 				}
 				// Bottom of map
-				//if ((this.screenY + this.oldDeltaY) > (game.background.img.height - game.height)) {
-				if ((this.y + this.oldDeltaY) > game.entities['map'].height) {
+				//if ((this.screenY + this.velY) > (game.background.img.height - game.height)) {
+				if ((this.y + this.velY) > game.entities['map'].height) {
 					//this.screenY = game.background.img.height - game.height;
-					if (this.oldDeltaY > 0) { this.oldDeltaY = this.oldDeltaY * -.6; }
+					if (this.velY > 0) { this.velY = this.velY * -.6; }
 				}
 			}
 
-			this.x += this.oldDeltaX;
-			this.y += this.oldDeltaY;
+			this.x += this.velX;
+			this.y += this.velY;
 
 			//console.log(this.x + ', ' + this.y);
 		}
