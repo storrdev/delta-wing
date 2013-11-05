@@ -56,8 +56,8 @@
 				var path = downloadQueue[file];
 				var ext = path.split('.').pop().toLowerCase();
 				var asset;
+				console.log(path);
 				if (ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "gif") {
-					console.log(ext);
 					asset = new Image();
 					asset.addEventListener("load", function() {
 						successCount += 1;
@@ -75,9 +75,39 @@
 						}
 					}, false);
 					asset.src = path;
+
+					console.log('cached: ' + asset);
+					cache[path.split('/').pop()] = asset;
 				}
-				
-				cache[path.split('/').pop()] = asset;
+
+				if (ext === "wav") {
+					/*asset = new Audio(path);
+					asset.addEventListener('canplaythrough', function() {
+						successCount += 1;
+					});*/
+
+					if (!window.audioContext) {
+						audioContext = new AudioContext();
+					}
+
+					var xhr = new XMLHttpRequest();
+					var soundFile = path.split('/').pop();
+					console.log('file name: ' + soundFile);
+					xhr.open("GET", path, true);
+					xhr.responseType = "arraybuffer";
+					xhr.onload = function() {
+						audioContext.decodeAudioData(xhr.response, function(buffer) {
+							//this.file = path.split('/').pop();
+							console.log('cached: ' + buffer);
+							cache[soundFile] = buffer;
+							console.log('really here: ' + soundFile);
+							successCount++;
+						});
+					}
+					xhr.send();
+
+					//asset = new Audio(path);
+				}
 			}
 		},
 		
@@ -153,7 +183,6 @@
 							x = 0;
 						}
 						if (json.layers[l].data[t] != 0) {
-							//console.log(json.tilesets[0].image + ' ' + x + ', ' + y);
 							layerContext.drawImage(game.assetManager.getAsset(json.tilesets[0].image), x, y);
 						}
 						x += json.tilewidth;

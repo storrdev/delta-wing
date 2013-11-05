@@ -20,18 +20,27 @@
 			game.component.map]);
 
 		game.entities['player'] = game.createEntity({
-				image: game.assetManager.getAsset('fighter.png'),
-				x: 1000,
-				y: 1000,
-				angle: 0,
-				offsetX: -game.assetManager.getAsset('fighter.png').width/2,
-				offsetY: -game.assetManager.getAsset('fighter.png').height/2,
-				collision: 'circle'
+			image: game.assetManager.getAsset('fighter.png'),
+			x: 1000,
+			y: 1000,
+			angle: 0,
+			offsetX: -game.assetManager.getAsset('fighter.png').width/2,
+			offsetY: -game.assetManager.getAsset('fighter.png').height/2,
+			collision: 'circle'
 				
 		}, [game.component.entity,
 			game.component.moveable,
 			game.component.drawable,
 			game.component.player]);
+
+		//for (var q = 0; q < game.assetManager.cache.length; q++) {
+			console.log('here: ' + game.assetManager.getAsset('lasershot.wav'));
+		//}
+
+		game.entities['lasershot'] = game.createEntity({
+			buffer: game.assetManager.getAsset('lasershot.wav')
+		}, [game.component.entity,
+			game.component.sound]);
 		
 		game.socket = game.network.connect();
 		game.network.setEventHandlers();

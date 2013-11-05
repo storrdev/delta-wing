@@ -16,12 +16,15 @@
 			window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
 			game.canvas.addEventListener('mousemove', game.move, false);
+			game.canvas.addEventListener('click', game.click, false);
 			//game.canvas.addEventListener('click', click, false);
 
 			game.entities = {};
 			
 			// Add way to read all assets required from a data file, txt or something.
+			game.assetManager.queueDownload('/assets/audio/effects/lasershot.wav');
 			game.assetManager.queueDownload('/assets/sprites/fighter.png');
+			game.assetManager.queueDownload('/assets/sprites/projectile.png');
 			game.assetManager.queueDownload('/assets/maps/tiledMap/map.json');
 			//game.assetManager.downloadAll(function () { game.start(); });
 			game.assetManager.downloadAll(function() {
@@ -43,6 +46,26 @@
 				game.mouseX = e.clientX;
 				game.mouseY = e.clientY;
 			}
+		},
+
+		click: function() {
+			game.entities['lasershot'].play();
+
+			var vX = game.mouseX - game.entities['player'].screenX;
+			var vY = game.mouseY - game.entities['player'].screenY;
+			var speed = 1;
+			
+			var mag = Math.sqrt(vX * vX + vY * vY);
+			
+			vX = vX / mag * speed;
+			vY = vY / mag * speed;
+			
+			vX = vX + game.entities['player'].velX;
+			vY = vY + game.entities['player'].velY;
+
+			console.log(game.entities['player'].x);
+
+			game.socket.emit('new projectile', {x: game.entities['player'].x, y: game.entities['player'].y, velX: vX, velY: vY});
 		},
 
 		resize: function() {

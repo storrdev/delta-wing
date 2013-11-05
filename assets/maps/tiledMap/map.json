@@ -558,6 +558,32 @@
                  "width":317,
                  "x":834,
                  "y":1858
+                }, 
+                {
+                 "height":29,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":31,
+                 "x":1730,
+                 "y":1665
+                }, 
+                {
+                 "height":31,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":30,
+                 "x":1730,
+                 "y":1504
                 }],
          "opacity":1,
          "type":"objectgroup",

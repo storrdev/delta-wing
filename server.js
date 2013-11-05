@@ -24,16 +24,18 @@ function handler (req, res) {
 	var reqPath = url.parse(req.url).pathname;
     var ext      = path.extname(reqPath).toLowerCase();
 
-    //console.log("file: " + reqPath + " requested");
+    console.log("file: " + reqPath + " requested");
 
-	if (ext === ".png" || ext === ".jpg" || ext === ".gif") {
-    		var mimeType;
-    		if (ext === ".png") { mimeType = "image/png"; }
-    		if (ext === ".jpg") { mimeType = "image/jpeg"; }
-    		if (ext === ".gif") { mimeType = "image/png"; }
-            res.writeHead(200, {'Content-Type' : mimeType});
+	Magic = mmm.Magic;
+    var magic = new Magic(mmm.MAGIC_MIME_TYPE);
+
+	if (ext === ".png" || ext === ".jpg" || ext === ".gif") {	
+		magic.detectFile('./' + reqPath, function(err, result) {
+			if (err) throw err;
+            res.writeHead(200, {'Content-Type' : result});
             fs.createReadStream('./' + reqPath).pipe(res);
-            //console.log("file: " + reqPath + " successful");
+
+		});
     }
     else if (!ext) {
     	fs.readFile('./index.html', 'utf-8', function(error, content) {
@@ -46,14 +48,24 @@ function handler (req, res) {
     	});
     }
     else {
-    	Magic = mmm.Magic;
-    	var magic = new Magic(mmm.MAGIC_MIME_TYPE);
+    	//Magic = mmm.Magic;
+    	//var magic = new Magic(mmm.MAGIC_MIME_TYPE);
 		magic.detectFile("./" + reqPath, function(err, result) {
 			if (err) throw err;
-			//console.log(result);
+			console.log(result);
+
+			if (ext === '.wav') {
+				fs.readFile('./' + reqPath, function(error, content) {
+					res.writeHead(200, {'Content-Type' : result});
+					if (error) {
+						res.write(error);
+					}
+					res.end(content);
+				});
+			}
 			
 			fs.readFile('./' + reqPath, 'utf-8', function(error, content) {
-				res.writeHead(200, {'Content-Type' : result });
+				res.writeHead(200, {'Content-Type' : result});
 				if (error) {
 					res.write(error);
 				}
@@ -139,8 +151,8 @@ function onMovePlayer(data) {
 };
 
 function onNewProjectile(data) {
-	var newProjectile = new Projectile(data.x, data.y, data.deltaX, data.deltaY, this.id, projId);
-	
+	var newProjectile = new Projectile(data.x, data.y, data.velX, data.velY, this.id, projId);
+
 	io.sockets.emit(
 		'new projectile',
 		{
@@ -148,8 +160,8 @@ function onNewProjectile(data) {
 			playerId: newProjectile.getPlayerId(),
 			x: newProjectile.getX(),
 			y: newProjectile.getY(),
-			deltaX: newProjectile.getDeltaX(),
-			deltaY: newProjectile.getDeltaY()
+			velX: newProjectile.getVelX(),
+			velY: newProjectile.getVelY()
 		}
 	);
 	

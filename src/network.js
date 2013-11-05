@@ -74,8 +74,24 @@
 		},
 
 		onNewProjectile: function(data) {
-			var newProjectile = new Projectile(data.id, data.playerId, data.x, data.y, data.deltaX, data.deltaY);
-			game.projectiles.push(newProjectile);
+			//var newProjectile = new Projectile(data.id, data.playerId, data.x, data.y, data.deltaX, data.deltaY);
+			//game.projectiles.push(newProjectile);
+			game.entities['Projectile' + data.id] = game.createEntity({
+				id: data.id,
+				image: game.assetManager.getAsset('projectile.png'),
+				//screenX: data.x,
+				//screenY: data.y,
+				//screenX: game.entities['player'].screenX,
+				//screenY: game.entities['player'].screenY,
+				x: data.x,
+				y: data.y,
+				velX: data.velX,
+				velY: data.velY
+				//collision: 'circle'
+			}, [game.component.entity,
+				game.component.moveable,
+				game.component.drawable,
+				game.component.projectile]);
 		},
 
 		onRemoveProjectile: function(data) {

@@ -1,9 +1,9 @@
-var Projectile = function(startX, startY, deltaX, deltaY, playerId, id) {
+var Projectile = function(startX, startY, velX, velY, playerId, id) {
 
 	var x = startX,
 		y = startY,
-		deltaX = deltaX,
-		deltaY = deltaY,
+		velX = velX,
+		velY = velY,
 		playerId = playerId,
 		id = id;
 		
@@ -15,12 +15,12 @@ var Projectile = function(startX, startY, deltaX, deltaY, playerId, id) {
 		return y;
 	};
 	
-	var getDeltaX = function() {
-		return deltaX;
+	var getVelX = function() {
+		return velX;
 	};
 	
-	var getDeltaY = function() {
-		return deltaY;
+	var getVelY = function() {
+		return velY;
 	};
 	
 	var getPlayerId = function() {
@@ -34,8 +34,8 @@ var Projectile = function(startX, startY, deltaX, deltaY, playerId, id) {
 	return {
 		getX: getX,
 		getY: getY,
-		getDeltaX: getDeltaX,
-		getDeltaY: getDeltaY,
+		getVelX: getVelX,
+		getVelY: getVelY,
 		getPlayerId: getPlayerId,
 		getId: getId
 	}
