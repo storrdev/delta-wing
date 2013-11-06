@@ -99,7 +99,59 @@
 			this.x += this.velX;
 			this.y += this.velY;
 
+			game.socket.emit('move player', {
+				x: this.x,
+				y: this.y,
+				velX: this.velX,
+				velY: this.velY,
+				angle: this.angle
+			});
+
 			//console.log(this.x + ', ' + this.y);
+
+			for (var e in game.entities) {
+				if (e !== 'player' && this.id != game.entities[e].playerId) {
+					if (game.entities[e].collision === 'circle') {
+						var circle = game.entities[e];
+						if (this.distanceTo(circle.x, circle.y, circle.velX, this.velY) < (this.r + circle.r)) {
+							//Resets the position of the ship outside of the collision area
+							this.x -= this.velX;
+							this.y -= this.velY;
+
+							// Reverses Direction of Ship after collision
+							this.velX *= -.6;
+							this.velY *= -.6;
+						}
+					}
+					if (game.entities[e].collision === 'rect') {
+						var rect = game.entities[e];
+						if (game.collision.circleRectIntersects(this, rect)) {
+
+							rect.right = rect.x + (rect.width/2);
+							rect.left = rect.x - (rect.width/2);
+							rect.top = rect.y - (rect.height/2);
+							rect.bottom = rect.y + (rect.height/2);
+
+						    if (this.x < rect.left && this.velX > 0) {
+						    	// left
+						    	this.x -= this.velX;
+								this.velX *= -.6;
+						    }
+						    else if (this.x > rect.right && this.velX < 0) {
+						    	// right
+						    	this.x -= this.velX;
+								this.velX *= -.6;
+						    }
+						    else {
+						    	// top/bottom
+						    	this.y -= this.velY;
+								this.velY *= -.6;
+						    }
+
+						}
+					}
+				}
+			}
 		}
 	}
 }());

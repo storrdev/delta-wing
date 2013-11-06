@@ -22,6 +22,14 @@
 
         return entity;
 
+    },
+
+    game.removeEntityById = function(id) {
+        for (var e in game.entities) {
+            if (game.entities[e].id === id) {
+                delete game.entities[e];
+            }
+        }
     }
 
 }());

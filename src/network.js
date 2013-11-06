@@ -76,18 +76,16 @@
 		onNewProjectile: function(data) {
 			//var newProjectile = new Projectile(data.id, data.playerId, data.x, data.y, data.deltaX, data.deltaY);
 			//game.projectiles.push(newProjectile);
+			//console.log('projectile player id: ' + data.playerId + ' projectile id: ' + data.id);
 			game.entities['Projectile' + data.id] = game.createEntity({
 				id: data.id,
 				image: game.assetManager.getAsset('projectile.png'),
-				//screenX: data.x,
-				//screenY: data.y,
-				//screenX: game.entities['player'].screenX,
-				//screenY: game.entities['player'].screenY,
+				playerId: data.playerId,
 				x: data.x,
 				y: data.y,
 				velX: data.velX,
-				velY: data.velY
-				//collision: 'circle'
+				velY: data.velY,
+				collision: 'circle'
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.drawable,

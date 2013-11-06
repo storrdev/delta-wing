@@ -6,15 +6,29 @@
 		
 		update: function() {
 
-			//Game.context.arc(this.x - Game.players[0].x + Game.players[0].screenX, this.y - Game.players[0].y + Game.players[0].screenY, this.r, 0, Math.PI*2, true);
-
-			//console.log(this.x);
-
 			this.x += this.velX;
 			this.y += this.velY;
 			this.screenX = this.x - game.entities['player'].x + game.entities['player'].screenX;
 			this.screenY = this.y - game.entities['player'].y + game.entities['player'].screenY;
-			//console.log(this.screenX + ' = ' + this.x + ' - ' + game.entities['player'].x + ' + ' + game.entities['player'].screenX);
+
+			for (var e in game.entities) {
+				if (this.playerId != game.entities[e].id && this.id != game.entities[e].id) {
+					if (game.entities[e].collision === 'circle') {
+						var circle = game.entities[e];
+						if (this.distanceTo(circle.x, circle.y, circle.velX, this.velY) < (this.r + circle.r)) {
+							game.removeEntityById(this.id);
+						    break;
+						}
+					}
+					if (game.entities[e].collision === 'rect') {
+						var rect = game.entities[e];
+						if (game.collision.circleRectIntersects(this, rect)) {
+						    game.removeEntityById(this.id);
+						    break;
+						}
+					}
+				}
+			}
 
 		}
 

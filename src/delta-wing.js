@@ -53,7 +53,7 @@
 
 			var vX = game.mouseX - game.entities['player'].screenX;
 			var vY = game.mouseY - game.entities['player'].screenY;
-			var speed = 1;
+			var speed = 30;
 			
 			var mag = Math.sqrt(vX * vX + vY * vY);
 			
@@ -62,8 +62,6 @@
 			
 			vX = vX + game.entities['player'].velX;
 			vY = vY + game.entities['player'].velY;
-
-			console.log(game.entities['player'].x);
 
 			game.socket.emit('new projectile', {x: game.entities['player'].x, y: game.entities['player'].y, velX: vX, velY: vY});
 		},
