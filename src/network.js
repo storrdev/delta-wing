@@ -5,7 +5,7 @@
 	game.network = {
 
 		connect: function() {
-			socket = io.connect('localhost');
+			socket = io.connect(window.location.href);
 			return socket;
 		},
 	
