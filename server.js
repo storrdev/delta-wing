@@ -24,12 +24,28 @@ function handler (req, res) {
 	var reqPath = url.parse(req.url).pathname;
     var ext      = path.extname(reqPath).toLowerCase();
 
-    console.log("file: " + reqPath + " requested");
+    console.log("file: '" + reqPath + "'' requested");
 
 	Magic = mmm.Magic;
     var magic = new Magic(mmm.MAGIC_MIME_TYPE);
 
-	if (ext === ".png" || ext === ".jpg" || ext === ".gif") {	
+    if (reqPath === '/update') {
+    	console.log('update requested');
+    	var sys = require('sys')
+		var exec = require('child_process').exec;
+		exec("bash update.sh", function (error, stdout, stderr) {
+			var status = '';
+
+			status = 'stdout: ' + stdout + '<br>stderr: ' + stderr + '<br>';
+			if (error !== null) {
+				status += 'exec error: ' + error;
+			}
+
+			res.end(status);
+
+		});
+    }
+	else if (ext === ".png" || ext === ".jpg" || ext === ".gif") {	
 		magic.detectFile('./' + reqPath, function(err, result) {
 			if (err) throw err;
             res.writeHead(200, {'Content-Type' : result});
