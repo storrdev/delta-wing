@@ -8,7 +8,10 @@
  </imagelayer>
  <layer name="Tile Layer 1" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt3NsKglAURVH9/5/uIaJSz0WP2iLGgF6yEvasVFDnaZrmxoPztGZt3jn0yKJHFj3uV5v5mT20revZfh+Z4fL1n5+hx7bS3Ed7tBrrsbZ3v3Zvj9Z6eLr6GMNxTL/l93a5bGRmPR20eNuaf2nZ6znbjOscnfnoHP021nr2oVrvG1m3Ft9q8y8tM8Pf898CAAAAAAAAAADOn0mjRxY9suiRRY8semTR416912q5jiuDeWfRI4seWfTIokcWPbLoAQAAAAAAAAAAAAAAAAAAwL9wDX0O9+jKokcWPbLokUWPLHpkcX/U+7Xm/QAC7wDP
+   eJzt0UEJADAMwMDOv+lZ2GuEcgdRkBkAAAAAAAAAAAAAAAAAAAAAtjkP8Y8fLX60+NHiR4sfLX60+NHiBwAAAAAAAAAAAAAAAAAAAAAAALDRBRIxAFI=
   </data>
  </layer>
+ <objectgroup name="Collision" width="100" height="100">
+  <object x="1442" y="1346" width="283" height="281"/>
+ </objectgroup>
 </map>

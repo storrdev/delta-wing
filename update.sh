@@ -2,4 +2,4 @@
 
 git fetch --all
 git reset --hard origin/master
-restart delta-wing
+sudo restart delta-wing

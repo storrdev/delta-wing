@@ -14,6 +14,8 @@
 		mag: 0,
 		strafeX: 0,
 		strafeY: 0,
+		width: 40,
+		height: 40,
 
 		update: function() {
 			this.angle = game.getAngle(game.mouseX, this.screenX, game.mouseY, this.screenY);
@@ -125,7 +127,7 @@
 					}
 					if (game.entities[e].collision === 'rect') {
 						var rect = game.entities[e];
-						if (game.collision.circleRectIntersects(this, rect)) {
+						if (game.collision.rectToRectIntersection(this, rect)) {
 
 							rect.right = rect.x + (rect.width/2);
 							rect.left = rect.x - (rect.width/2);

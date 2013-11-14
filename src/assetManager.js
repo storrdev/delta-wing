@@ -149,8 +149,7 @@
 								x: objects[o].x + (objects[o].width / 2),
 								y: objects[o].y + (objects[o].height / 2),
 								width: objects[o].width,
-								height: objects[o].height,
-								r: 100
+								height: objects[o].height
 							},[game.component.entity,
 							   game.component.moveable]);
 						}
