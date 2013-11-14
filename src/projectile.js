@@ -30,6 +30,11 @@
 				}
 			}
 
+			if (this.x < 0 || this.y < 0 || this.x > game.entities['map'].width || this.y > game.entities['map'].height) {
+				console.log('projectile out of bounds');
+				game.removeEntityById(this.id);
+			}
+
 		}
 
 	}
