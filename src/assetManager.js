@@ -133,6 +133,12 @@
 
 			console.log('map: ' + game.entities['map'].width + 'x' + game.entities['map'].height);
 
+			var layerCanvas = document.createElement('canvas');
+			var layerContext = layerCanvas.getContext('2d');
+			
+			layerCanvas.width = json.width * json.tilewidth;
+			layerCanvas.height = json.height * json.tileheight;
+
 			for (var l = 0; l < json.layers.length; l++) {
 				var x = 0;
 				var y = 0;
@@ -142,7 +148,7 @@
 					var objects = json.layers[l].objects;
 					for (var o = 0; o < objects.length; o++) {
 						
-						console.log(objects[o].type);
+						console.log(objects[o].name);
 						if (json.layers[l].name === 'Collision') {
 							game.entities['collision object ' + o] = game.createEntity({
 								collision: 'rect',
@@ -153,10 +159,13 @@
 							},[game.component.entity,
 							   game.component.moveable]);
 						}
+						if (json.layers[l].name === 'Spawn') {
+
+						}
 					}
 				}
 				else if (json.layers[l].type === 'imagelayer') {
-					game.entities[json.layers[l].name] = game.createEntity({
+					/*game.entities[json.layers[l].name] = game.createEntity({
 						image: game.assetManager.getAsset(json.layers[l].image),
 						x: json.layers[l].x,
 						y: json.layers[l].y,
@@ -167,15 +176,11 @@
 					}, [game.component.entity,
 						game.component.moveable,
 						game.component.drawable,
-						game.component.map]);
+						game.component.map]);*/
+
+						layerContext.drawImage(game.assetManager.getAsset(json.layers[l].image), json.layers[l].x, json.layers[l].y);
 				}
 				else if (json.layers[l].type === 'tilelayer') {
-					var layerCanvas = document.createElement('canvas');
-					var layerContext = layerCanvas.getContext('2d');
-					
-					layerCanvas.width = json.width * json.tilewidth;
-					layerCanvas.height = json.height * json.tileheight;
-
 					for (var t = 0; t < json.layers[l].data.length; t++) {
 						if (t % json.width == 0 && t != 0) {
 							y += json.tileheight;
@@ -186,21 +191,23 @@
 						}
 						x += json.tilewidth;
 					}
-					var layerImage = new Image();
-					layerImage.src = layerCanvas.toDataURL('image/png');
-					game.entities[json.layers[l].name] = game.createEntity({
-						image: layerImage,
-						screenX: -1600,
-						screenY: -400,
-						width: layerCanvas.width,
-						height: layerCanvas.height
-					}, [game.component.entity,
-						game.component.moveable,
-						game.component.drawable,
-						game.component.map]);
-					console.log(json.layers[l].name + ': ' + game.entities[json.layers[l].name].width + 'x' + game.entities[json.layers[l].name].height);
+					
+					//console.log(json.layers[l].name + ': ' + game.entities[json.layers[l].name].width + 'x' + game.entities[json.layers[l].name].height);
 				}
 			}
+
+			var layerImage = new Image();
+			layerImage.src = layerCanvas.toDataURL('image/png');
+			game.entities['background'] = game.createEntity({
+				image: layerImage,
+				screenX: -1600,
+				screenY: -400,
+				width: layerCanvas.width,
+				height: layerCanvas.height
+			}, [game.component.entity,
+				game.component.moveable,
+				game.component.drawable,
+				game.component.map]);
 
 			callback();
 		}

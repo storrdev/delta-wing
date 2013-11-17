@@ -8,7 +8,7 @@
 	
 		//game.entities = {};
 		
-		game.entities['background'] = game.createEntity({
+		/*game.entities['background'] = game.createEntity({
 			image: game.assetManager.getAsset('bg.jpg'),
 			screenX: -1600,
 			screenY: -400,
@@ -17,7 +17,7 @@
 		}, [game.component.entity,
 			game.component.moveable,
 			//game.component.drawable,
-			game.component.map]);
+			game.component.map]);*/
 
 		game.entities['player'] = game.createEntity({
 			image: game.assetManager.getAsset('fighter.png'),

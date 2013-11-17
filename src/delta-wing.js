@@ -20,6 +20,7 @@
 			game.canvas.addEventListener('click', game.click, false);
 			//game.canvas.addEventListener('click', click, false);
 
+			// Display FPS on screen
 			game.stats = new Stats();
 			game.stats.setMode(0); // 0: fps, 1: ms
 
