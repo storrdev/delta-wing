@@ -5,6 +5,7 @@
 		height: window.innerHeight,
 	
 		load: function() {
+
 			game.canvas = document.createElement("canvas");
 			game.canvas.width = game.width;
 			game.canvas.height = game.height;
@@ -18,6 +19,15 @@
 			game.canvas.addEventListener('mousemove', game.move, false);
 			game.canvas.addEventListener('click', game.click, false);
 			//game.canvas.addEventListener('click', click, false);
+
+			game.stats = new Stats();
+			game.stats.setMode(0); // 0: fps, 1: ms
+
+			game.stats.domElement.style.position = 'absolute';
+			game.stats.domElement.style.left = '0px';
+			game.stats.domElement.style.top = '0px';
+
+			document.body.appendChild( game.stats.domElement );
 
 			game.entities = {};
 			

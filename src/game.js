@@ -45,9 +45,11 @@
 	},
 	
 	game.run = function() {
+		game.stats.begin();
 		requestAnimationFrame(game.run);
 	  	game.update();
 		game.draw();
+		game.stats.end();
 	},
 
 	game.update = function() {
