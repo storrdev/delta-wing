@@ -33,6 +33,8 @@
 			game.component.drawable,
 			game.component.player]);
 
+		//console.log('this: ' + game.entities['player'].draw);
+
 		game.entities['lasershot'] = game.createEntity({
 			buffer: game.assetManager.getAsset('lasershot.wav')
 		}, [game.component.entity,

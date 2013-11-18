@@ -182,11 +182,11 @@
 				}
 				else if (json.layers[l].type === 'tilelayer') {
 					for (var t = 0; t < json.layers[l].data.length; t++) {
-						if (t % json.width == 0 && t != 0) {
+						if (t % json.width === 0 && t !== 0) {
 							y += json.tileheight;
 							x = 0;
 						}
-						if (json.layers[l].data[t] != 0) {
+						if (json.layers[l].data[t] !== 0) {
 							layerContext.drawImage(game.assetManager.getAsset(json.tilesets[0].image), x, y);
 						}
 						x += json.tilewidth;
@@ -198,7 +198,7 @@
 
 			var layerImage = new Image();
 			layerImage.src = layerCanvas.toDataURL('image/png');
-			game.entities['background'] = game.createEntity({
+			/*game.entities['background'] = game.createEntity({
 				image: layerImage,
 				screenX: -1600,
 				screenY: -400,
@@ -207,7 +207,41 @@
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.drawable,
-				game.component.map]);
+				game.component.map]);*/
+
+			var chunkHeight = json.tileheight * 10;
+			var chunkWidth = json.tilewidth * 14;
+
+			var chunksAcross = (json.tilewidth * json.width) / chunkWidth;
+			var chunksDown = (json.tileheight * json.height) / chunkHeight;
+			var chunkCount = 1;
+
+			for (var cD = 0; cD <= chunksDown; cD++) {
+				for (var cA = 0; cA <= chunksAcross; cA++) {
+					var chunkCanvas = document.createElement('canvas');
+					var chunkContext = chunkCanvas.getContext('2d');
+			
+					chunkCanvas.width = chunkWidth;
+					chunkCanvas.height = chunkHeight;
+
+					chunkContext.drawImage(layerImage, -(cA * chunkWidth), -(cD * chunkHeight));
+
+					var chunkImage = new Image();
+					chunkImage.src = chunkCanvas.toDataURL('image/png');
+					game.entities['chunk' + chunkCount] = game.createEntity({
+						id: chunkCount,
+						image: chunkImage,
+						x: cA * chunkWidth,
+						y: cD * chunkHeight,
+						width: chunkWidth,
+						height: chunkHeight
+					}, [game.component.entity,
+						game.component.moveable,
+						game.component.chunk]);
+					chunkCount++;
+				}
+				chunkCount++;
+			}
 
 			callback();
 		}
