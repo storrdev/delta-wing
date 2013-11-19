@@ -165,19 +165,6 @@
 					}
 				}
 				else if (json.layers[l].type === 'imagelayer') {
-					/*game.entities[json.layers[l].name] = game.createEntity({
-						image: game.assetManager.getAsset(json.layers[l].image),
-						x: json.layers[l].x,
-						y: json.layers[l].y,
-						screenX: game.entities['map'].screenX,
-						screenY: game.entities['map'].screenY,
-						width: game.entities['map'].width,
-						height: game.entities['map'].height
-					}, [game.component.entity,
-						game.component.moveable,
-						game.component.drawable,
-						game.component.map]);*/
-
 						layerContext.drawImage(game.assetManager.getAsset(json.layers[l].image), json.layers[l].x, json.layers[l].y);
 				}
 				else if (json.layers[l].type === 'tilelayer') {
@@ -197,53 +184,47 @@
 			}
 
 			var layerImage = new Image();
-			layerImage.src = layerCanvas.toDataURL('image/png');
-			/*game.entities['background'] = game.createEntity({
-				image: layerImage,
-				screenX: -1600,
-				screenY: -400,
-				width: layerCanvas.width,
-				height: layerCanvas.height
-			}, [game.component.entity,
-				game.component.moveable,
-				game.component.drawable,
-				game.component.map]);*/
+			layerImage.addEventListener('load', function() {
 
-			var chunkHeight = json.tileheight * 10;
-			var chunkWidth = json.tilewidth * 14;
+				var chunkHeight = json.tileheight * 15;
+				var chunkWidth = json.tilewidth * 17;
 
-			var chunksAcross = (json.tilewidth * json.width) / chunkWidth;
-			var chunksDown = (json.tileheight * json.height) / chunkHeight;
-			var chunkCount = 1;
+				var chunksAcross = (json.tilewidth * json.width) / chunkWidth;
+				var chunksDown = (json.tileheight * json.height) / chunkHeight;
+				var chunkCount = 1;
 
-			for (var cD = 0; cD <= chunksDown; cD++) {
-				for (var cA = 0; cA <= chunksAcross; cA++) {
-					var chunkCanvas = document.createElement('canvas');
-					var chunkContext = chunkCanvas.getContext('2d');
-			
-					chunkCanvas.width = chunkWidth;
-					chunkCanvas.height = chunkHeight;
+				for (var cD = 0; cD <= chunksDown; cD++) {
+					for (var cA = 0; cA <= chunksAcross; cA++) {
+						var chunkCanvas = document.createElement('canvas');
+						var chunkContext = chunkCanvas.getContext('2d');
+				
+						chunkCanvas.width = chunkWidth;
+						chunkCanvas.height = chunkHeight;
 
-					chunkContext.drawImage(layerImage, -(cA * chunkWidth), -(cD * chunkHeight));
+						chunkContext.drawImage(layerImage, -(cA * chunkWidth), -(cD * chunkHeight));
 
-					var chunkImage = new Image();
-					chunkImage.src = chunkCanvas.toDataURL('image/png');
-					game.entities['chunk' + chunkCount] = game.createEntity({
-						id: chunkCount,
-						image: chunkImage,
-						x: cA * chunkWidth,
-						y: cD * chunkHeight,
-						width: chunkWidth,
-						height: chunkHeight
-					}, [game.component.entity,
-						game.component.moveable,
-						game.component.chunk]);
+						var chunkImage = new Image();
+						chunkImage.src = chunkCanvas.toDataURL('image/png');
+
+						game.entities['chunk' + chunkCount] = game.createEntity({
+							//id: chunkCount,
+							image: chunkImage,
+							x: cA * chunkWidth,
+							y: cD * chunkHeight,
+							width: chunkWidth,
+							height: chunkHeight
+						}, [game.component.entity,
+							game.component.moveable,
+							game.component.chunk]);
+						chunkCount++;
+					}
 					chunkCount++;
 				}
-				chunkCount++;
-			}
 
-			callback();
+				callback();
+			}, false);
+			layerImage.src = layerCanvas.toDataURL('image/png');
+
 		}
 	};
 
