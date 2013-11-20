@@ -43,15 +43,13 @@
 		game.socket = game.network.connect();
 		game.network.setEventHandlers();
 
-		game.run();
+		//game.run();
+		setInterval(game.update, 1000/70);
 	},
 	
 	game.run = function() {
-		game.stats.begin();
-		requestAnimationFrame(game.run);
-	  	game.update();
-		game.draw();
-		game.stats.end();
+	  		game.draw();
+	  		game.update();
 	},
 
 	game.update = function() {
@@ -60,6 +58,8 @@
 				game.entities[e].update();
 			}
 		}
+		game.stats.begin();
+		requestAnimationFrame(game.draw);
 	}
 	
 	game.draw = function() {
@@ -72,6 +72,7 @@
 				}
 			}
 		}
+		game.stats.end();
 	},
 
 	game.getAngle = function(x1, x2, y1, y2) {
