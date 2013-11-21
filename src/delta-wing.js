@@ -21,14 +21,14 @@
 			//game.canvas.addEventListener('click', click, false);
 
 			// Display FPS on screen
-			game.stats = new Stats();
+			/*game.stats = new Stats();
 			game.stats.setMode(0); // 0: fps, 1: ms
 
 			game.stats.domElement.style.position = 'absolute';
 			game.stats.domElement.style.left = '0px';
 			game.stats.domElement.style.top = '0px';
 
-			document.body.appendChild( game.stats.domElement );
+			document.body.appendChild( game.stats.domElement );*/
 
 			game.entities = {};
 			
@@ -64,7 +64,7 @@
 
 			var vX = game.mouseX - game.entities['player'].screenX;
 			var vY = game.mouseY - game.entities['player'].screenY;
-			var speed = 1;
+			var speed = 2;
 			
 			var mag = Math.sqrt(vX * vX + vY * vY);
 			

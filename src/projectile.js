@@ -16,6 +16,11 @@
 					if (game.entities[e].collision === 'circle') {
 						var circle = game.entities[e];
 						if (this.distanceTo(circle.x, circle.y, circle.velX, this.velY) < (this.r + circle.r)) {
+							if (this.playerId != circle.playerId) {
+								if (circle.damage) {
+									circle.damage(this.damage);
+								}
+							}
 							game.removeEntityById(this.id);
 						    break;
 						}

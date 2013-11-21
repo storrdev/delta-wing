@@ -5,19 +5,6 @@
 	window.requestAnimationFrame = requestAnimationFrame;
 	
 	game.start = function() {
-	
-		//game.entities = {};
-		
-		/*game.entities['background'] = game.createEntity({
-			image: game.assetManager.getAsset('bg.jpg'),
-			screenX: -1600,
-			screenY: -400,
-			width: game.assetManager.getAsset('map.json').width * game.assetManager.getAsset('map.json').tilewidth,
-			height: game.assetManager.getAsset('map.json').height * game.assetManager.getAsset('map.json').tileheight
-		}, [game.component.entity,
-			game.component.moveable,
-			//game.component.drawable,
-			game.component.map]);*/
 
 		game.entities['player'] = game.createEntity({
 			image: game.assetManager.getAsset('fighter.png'),
@@ -26,14 +13,13 @@
 			angle: 0,
 			offsetX: -game.assetManager.getAsset('fighter.png').width/2,
 			offsetY: -game.assetManager.getAsset('fighter.png').height/2,
-			collision: 'circle'
+			collision: 'circle',
 				
 		}, [game.component.entity,
 			game.component.moveable,
 			game.component.drawable,
-			game.component.player]);
-
-		//console.log('this: ' + game.entities['player'].draw);
+			game.component.player,
+			game.component.damageable]);
 
 		game.entities['lasershot'] = game.createEntity({
 			buffer: game.assetManager.getAsset('lasershot.wav')
@@ -48,7 +34,7 @@
 	},
 	
 	game.run = function() {
-		game.stats.begin();
+		//game.stats.begin();
 		var now = Date.now();
 		game.dt = now - game.lastUpdate;
 		game.lastUpdate = now;
@@ -56,7 +42,7 @@
 	  	game.draw(game.dt);
 	  	game.update(game.dt);
 	  	requestAnimationFrame(game.run);
-		game.stats.end();
+		//game.stats.end();
 	},
 
 	game.update = function(dt) {

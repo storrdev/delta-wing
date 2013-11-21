@@ -26,8 +26,8 @@
 		},
 
 		onClientId: function(data) {
-			game.entities['player'].id = data.id;
-			console.log('network id acquired: ' + game.entities['player'].id);
+			game.entities['player'].playerId = data.id;
+			console.log('network id acquired: ' + game.entities['player'].playerId);
 		},
 
 		onSocketDisconnect: function() {
@@ -38,7 +38,7 @@
 			console.log('New player connected: ' + data.id);
 
 			game.entities[data.id] = game.createEntity({
-				id: data.id,
+				playerId: data.id,
 				image: game.assetManager.getAsset('fighter.png'),
 				x: data.x,
 				y: data.y,
@@ -85,7 +85,8 @@
 				y: data.y,
 				velX: data.velX,
 				velY: data.velY,
-				collision: 'circle'
+				collision: 'circle',
+				damage: 1
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.drawable,
