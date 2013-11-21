@@ -2,7 +2,7 @@
 	
 	game.component.player = {
 
-		thrust: 10,
+		thrust: 1,
 	  	deltaX: 0,
 	  	deltaY: 0,
 		drawFlame: false,
@@ -17,7 +17,7 @@
 		width: 40,
 		height: 40,
 
-		update: function() {
+		update: function(dt) {
 			this.angle = game.getAngle(game.mouseX, this.screenX, game.mouseY, this.screenY);
 
 			this.deltaX = game.mouseX - (this.x - (this.x - this.screenX));
@@ -98,8 +98,8 @@
 				}
 			}
 
-			this.x += this.velX;
-			this.y += this.velY;
+			this.x += this.velX * dt;
+			this.y += this.velY * dt;
 
 			game.socket.emit('move player', {
 				x: this.x,

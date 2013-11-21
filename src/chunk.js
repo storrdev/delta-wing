@@ -5,7 +5,6 @@
 
 		update: function() {
 
-			//if (this.distanceToRectCenter(game.entities['player'].x, game.entities['player'].y) - this.width - this.height < Math.sqrt(Math.pow(game.width, 2) + Math.pow(game.height, 2))) {
 			if (this.distanceToRectCenter(game.entities['player'].x, game.entities['player'].y) < Math.sqrt(Math.pow(game.width, 2) + Math.pow(game.height, 2))) {
 				this.draw = game.component.drawable.draw;
 				

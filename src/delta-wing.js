@@ -64,7 +64,7 @@
 
 			var vX = game.mouseX - game.entities['player'].screenX;
 			var vY = game.mouseY - game.entities['player'].screenY;
-			var speed = 30;
+			var speed = 1;
 			
 			var mag = Math.sqrt(vX * vX + vY * vY);
 			

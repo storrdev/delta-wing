@@ -4,10 +4,10 @@
 
 		r: 5,
 		
-		update: function() {
+		update: function(dt) {
 
-			this.x += this.velX;
-			this.y += this.velY;
+			this.x += this.velX * dt;
+			this.y += this.velY * dt;
 			this.screenX = this.x - game.entities['player'].x + game.entities['player'].screenX;
 			this.screenY = this.y - game.entities['player'].y + game.entities['player'].screenY;
 

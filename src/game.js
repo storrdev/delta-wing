@@ -43,32 +43,37 @@
 		game.socket = game.network.connect();
 		game.network.setEventHandlers();
 
+		game.lastUpdate = Date.now();
 		game.run();
 	},
 	
 	game.run = function() {
 		game.stats.begin();
-		requestAnimationFrame(game.run);
-	  	game.update();
-		game.draw();
+		var now = Date.now();
+		game.dt = now - game.lastUpdate;
+		game.lastUpdate = now;
+		//console.log(dt);
+	  	game.draw(game.dt);
+	  	game.update(game.dt);
+	  	requestAnimationFrame(game.run);
 		game.stats.end();
 	},
 
-	game.update = function() {
+	game.update = function(dt) {
 		for(var e in game.entities) {
 			if (game.entities.hasOwnProperty(e) && game.entities[e].update) {
-				game.entities[e].update();
+				game.entities[e].update(dt);
 			}
 		}
 	}
 	
-	game.draw = function() {
+	game.draw = function(dt) {
 		game.context.clearRect(0, 0, game.width, game.height);
 
 		for(var e in game.entities) {
 			if (game.entities.hasOwnProperty(e)) {
 				if (game.entities[e].draw) {
-					game.entities[e].draw();
+					game.entities[e].draw(dt);
 				}
 			}
 		}
