@@ -2,7 +2,7 @@
 	
 	game.component.player = {
 
-		thrust: 1,
+		thrust: .7,
 	  	deltaX: 0,
 	  	deltaY: 0,
 		drawFlame: false,
@@ -136,12 +136,12 @@
 
 						    if (this.x < rect.left && this.velX > 0) {
 						    	// left
-						    	this.x -= this.velX;
+						    	this.x -= this.velX * dt;
 								this.velX *= -.6;
 						    }
 						    else if (this.x > rect.right && this.velX < 0) {
 						    	// right
-						    	this.x -= this.velX;
+						    	this.x -= this.velX * dt;
 								this.velX *= -.6;
 						    }
 						    else {
