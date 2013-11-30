@@ -8,8 +8,8 @@
 
 		game.entities['player'] = game.createEntity({
 			image: game.assetManager.getAsset('fighter.png'),
-			x: 1000,
-			y: 1000,
+			x: game.entities['map'].width/2,
+			y: game.entities['map'].height/2,
 			angle: 0,
 			offsetX: -game.assetManager.getAsset('fighter.png').width/2,
 			offsetY: -game.assetManager.getAsset('fighter.png').height/2,
@@ -17,9 +17,18 @@
 				
 		}, [game.component.entity,
 			game.component.moveable,
-			game.component.drawable,
-			game.component.player,
 			game.component.damageable]);
+
+		game.entities['login'] = game.createEntity({
+			id: 'login',
+			height: 200,
+			width: 500,
+			fillColor: 'rgba(0, 0, 0, 0.4)',
+			borderColor: 'blue',
+			url: 'src/login.html'
+		}, [game.component.entity,
+			game.component.menu,
+			game.component.drawable]);
 
 		game.entities['lasershot'] = game.createEntity({
 			buffer: game.assetManager.getAsset('lasershot.wav')
@@ -81,5 +90,21 @@
 				return angle + 90 * (Math.PI/180);
 			}
 		}
+	},
+
+	game.join = function(userName) {
+		delete game.entities['login'].draw;
+		var loginDiv = document.getElementById('login');
+		loginDiv.parentNode.removeChild(loginDiv);
+
+		game.entities['player'].name = userName;
+		game.entities['player'].draw = game.component.drawable.draw;
+		game.entities['player'].addComponent(game.component.player);
+
+		game.socket.emit('new player', {
+			x: game.entities['player'].mapX,
+			y: game.entities['player'].mapY,
+			name: game.entities['player'].name
+		});
 	}
 }());

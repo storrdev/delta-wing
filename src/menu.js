@@ -1,18 +1,36 @@
-(function(){
+(function() {
 	
-	window.menu = {
+	game.component.menu = {
 
-		load: function() {
+		shape: 'rect',
+		x: game.width/2,
+		y: game.height/2,
+		urlLoaded: false,
 
-			game.canvas = document.createElement("canvas");
-			game.canvas.width = game.width;
-			game.canvas.height = game.height;
-			game.context = game.canvas.getContext("2d");
+		update: function() {
+			if (this.urlLoaded === false) {
+				var that = this;
+				var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState==4 && xhr.status==200) {
+						var menuDiv = document.createElement('div');
+						menuDiv.style.width = that.width + 'px';
+						menuDiv.style.height = that.height + 'px';
+						menuDiv.style.left = that.x - (that.width/2) + 'px';
+						menuDiv.style.top = that.y - (that.height/2) + 'px';
+						menuDiv.style.position = 'absolute';
+						menuDiv.id = that.id;
+						document.body.appendChild(menuDiv);
+						menuDiv.innerHTML = xhr.responseText;
 
-			document.body.appendChild(game.canvas);
-
+					}
+				}
+				xhr.open("GET", this.url, true);
+				xhr.send();
+				this.urlLoaded = true;
+			}
 		}
 
-	}
-
+	};
+	
 }());

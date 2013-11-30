@@ -18,6 +18,7 @@
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
 			game.canvas.addEventListener('mousemove', game.move, false);
 			game.canvas.addEventListener('click', game.click, false);
+			game.canvas.addEventListener('contextmenu', function(event) { event.preventDefault(); game.click(); return false; }, false);
 			//game.canvas.addEventListener('click', click, false);
 
 			// Display FPS on screen

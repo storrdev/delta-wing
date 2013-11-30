@@ -1,10 +1,11 @@
-var Player = function(startX, startY, startAngle) {
+var Player = function(startX, startY, name) {
 
 	var x = startX,
 		y = startY,
 		velX = 0,
 		velY = 0,
-		angle = startAngle,
+		angle = 0,
+		name = name,
 		id;
 		
 	var getX = function() {
@@ -58,6 +59,7 @@ var Player = function(startX, startY, startAngle) {
 		setVelX: setVelX,
 		setVelY: setVelY,
 		setAngle: setAngle,
+		name: name,
 		id: id
 	}
 

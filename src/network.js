@@ -22,7 +22,7 @@
 
 		onSocketConnected: function() {
 			console.log('Connected to socket server');
-			socket.emit('new player', {x: game.entities['player'].mapX, y: game.entities['player'].mapY});
+			//socket.emit('new player', {x: game.entities['player'].mapX, y: game.entities['player'].mapY});
 		},
 
 		onClientId: function(data) {
@@ -35,10 +35,11 @@
 		},
 
 		onNewPlayer: function(data) {
-			console.log('New player connected: ' + data.id);
+			console.log('New player connected: ' + data.id + ':' + data.name);
 
 			game.entities[data.id] = game.createEntity({
 				playerId: data.id,
+				name: data.name,
 				image: game.assetManager.getAsset('fighter.png'),
 				x: data.x,
 				y: data.y,
@@ -46,11 +47,15 @@
 				angle: 0,
 				offsetX: -game.assetManager.getAsset('fighter.png').width/2,
 				offsetY: -game.assetManager.getAsset('fighter.png').height/2,
+				width: game.assetManager.getAsset('fighter.png').width,
+				height: game.assetManager.getAsset('fighter.png').height,
 				collision: 'circle'
 				
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.drawable]);
+
+			console.log('Name: ' + game.entities[data.id].name);
 		},
 
 		onMovePlayer: function(data) {

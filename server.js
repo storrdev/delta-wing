@@ -123,11 +123,16 @@ function onClientDisconnect() {
 };
 
 function onNewPlayer(data) {
-	var newPlayer = new Player(data.x, data.y, data.angle);
+	var newPlayer = new Player(data.x, data.y, data.name);
 	newPlayer.id = this.id;
 	
 	// broadcast.emit sends a message to all clients except the one it's being called on
-	this.broadcast.emit('new player', {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY()});
+	this.broadcast.emit('new player', {
+		id: newPlayer.id,
+		name: newPlayer.name,
+		x: newPlayer.getX(),
+		y: newPlayer.getY()
+	});
 	
 	// sends the server assigned id back to the client who just connected for reference
 	this.emit('client id', {id: newPlayer.id});
@@ -136,7 +141,12 @@ function onNewPlayer(data) {
 	for(i = 0; i < players.length; i++) {
 		existingPlayer = players[i];
 		// .emit sends a message to all the clients
-		this.emit('new player', {id: existingPlayer.id, x: existingPlayer.getX(), y: existingPlayer.getY()});
+		this.emit('new player', {
+			id: existingPlayer.id,
+			x: existingPlayer.getX(),
+			y: existingPlayer.getY(),
+			name: existingPlayer.name
+		});
 	}
 	
 	players.push(newPlayer);
