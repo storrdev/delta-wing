@@ -18,16 +18,35 @@
 			socket.on('remove player', this.onRemovePlayer);
 			socket.on('new projectile', this.onNewProjectile);
 			socket.on('remove projectile', this.onRemoveProjectile);
+			socket.on('deaths', this.onDeaths);
 		},
 
 		onSocketConnected: function() {
 			console.log('Connected to socket server');
-			//socket.emit('new player', {x: game.entities['player'].mapX, y: game.entities['player'].mapY});
+			game.socket.emit('request id', {});
 		},
 
 		onClientId: function(data) {
-			game.entities['player'].playerId = data.id;
-			console.log('network id acquired: ' + game.entities['player'].playerId);
+			game.clientId = data.id;
+			console.log('network id acquired: ' + game.clientId);
+
+			game.entities[game.clientId] = game.createEntity({
+				image: game.assetManager.getAsset('fighter.png'),
+				x: game.entities['map'].width/2,
+				y: game.entities['map'].height/2,
+				screenX: game.width/2,
+				screenY: game.height/2,
+				angle: 0,
+				offsetX: -game.assetManager.getAsset('fighter.png').width/2,
+				offsetY: -game.assetManager.getAsset('fighter.png').height/2,
+				collision: 'circle'
+			}, [game.component.entity,
+				game.component.moveable,
+				game.component.damageable]);
+
+			game.socket.emit('get clients', {});
+			game.lastUpdate = Date.now();
+			game.run();
 		},
 
 		onSocketDisconnect: function() {
@@ -55,12 +74,14 @@
 				game.component.moveable,
 				game.component.drawable]);
 
+			game.addPlayerToScoreboard(game.entities[data.id]);
+
 			console.log('Name: ' + game.entities[data.id].name);
 		},
 
 		onMovePlayer: function(data) {
-			game.entities[data.id].screenX = data.x - game.entities['player'].x + game.entities['player'].screenX;
-			game.entities[data.id].screenY = data.y - game.entities['player'].y + game.entities['player'].screenY;
+			game.entities[data.id].screenX = data.x - game.entities[game.clientId].x + game.entities[game.clientId].screenX;
+			game.entities[data.id].screenY = data.y - game.entities[game.clientId].y + game.entities[game.clientId].screenY;
 			game.entities[data.id].x = data.x;
 			game.entities[data.id].y = data.y;
 			game.entities[data.id].velX = data.velX;
@@ -91,7 +112,7 @@
 				velX: data.velX,
 				velY: data.velY,
 				collision: 'circle',
-				damage: 1
+				dp: 1
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.drawable,
@@ -106,6 +127,12 @@
 			};
 
 			game.projectiles.splice(game.projectiles.indexOf(removeProjectile));
+		},
+
+		onDeaths: function(data) {
+			console.log(data.id);
+			game.entities[data.id].deaths = data.deaths;
+			console.log(data.id + ' has died ' + game.entities[data.id].deaths + ' times');
 		}
 
 	}

@@ -105,6 +105,9 @@ function onSocketConnection(client) {
 	client.on('move player', onMovePlayer);
 	client.on('new projectile', onNewProjectile);
 	client.on('remove projectile', onRemoveProjectile);
+	client.on('death', onDeath);
+	client.on('request id', onRequestId);
+	client.on('get clients', onGetClients);
 };
 
 function onClientDisconnect() {
@@ -122,6 +125,24 @@ function onClientDisconnect() {
 	this.broadcast.emit('remove player', {id: this.id});
 };
 
+function onRequestId() {
+	this.emit('client id', {id: this.id});
+}
+
+function onGetClients() {
+	var i, existingPlayer;
+	for(i = 0; i < players.length; i++) {
+		existingPlayer = players[i];
+		// .emit sends a message to all the clients
+		this.emit('new player', {
+			id: existingPlayer.id,
+			x: existingPlayer.getX(),
+			y: existingPlayer.getY(),
+			name: existingPlayer.name
+		});
+	}
+}
+
 function onNewPlayer(data) {
 	var newPlayer = new Player(data.x, data.y, data.name);
 	newPlayer.id = this.id;
@@ -135,19 +156,7 @@ function onNewPlayer(data) {
 	});
 	
 	// sends the server assigned id back to the client who just connected for reference
-	this.emit('client id', {id: newPlayer.id});
-	
-	var i, existingPlayer;
-	for(i = 0; i < players.length; i++) {
-		existingPlayer = players[i];
-		// .emit sends a message to all the clients
-		this.emit('new player', {
-			id: existingPlayer.id,
-			x: existingPlayer.getX(),
-			y: existingPlayer.getY(),
-			name: existingPlayer.name
-		});
-	}
+	//this.emit('client id', {id: newPlayer.id});
 	
 	players.push(newPlayer);
 };
@@ -196,18 +205,28 @@ function onNewProjectile(data) {
 };
 
 function onRemoveProjectile(data) {
-		var removeProjectile = projectileById(data.id);
-		
-		if (!removeProjectile) {
-			console.log('Projectile not found: ' + data.id);
-			return;
-		};
-		
-		console.log('Projectile removed.');
-		
-		projectiles.splice(projectiles.indexOf(removeProjectile), 1);
-		// broadcast.emit sends a message to all clients except the one it's being called on
-		io.sockets.emit('remove projectile', {id: data.id});
+	var removeProjectile = projectileById(data.id);
+	
+	if (!removeProjectile) {
+		console.log('Projectile not found: ' + data.id);
+		return;
+	};
+	
+	console.log('Projectile removed.');
+	
+	projectiles.splice(projectiles.indexOf(removeProjectile), 1);
+	// broadcast.emit sends a message to all clients except the one it's being called on
+	io.sockets.emit('remove projectile', {id: data.id});
+};
+
+function onDeath() {
+	var deathPlayer = playerById(this.id);
+
+	deathPlayer.deaths++;
+
+	console.log(this.id + ' has died ' + deathPlayer.deaths + ' times.');
+
+	io.sockets.emit('deaths', {id: this.id, deaths: deathPlayer.deaths});
 };
 
 

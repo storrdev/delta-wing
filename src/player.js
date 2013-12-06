@@ -2,21 +2,20 @@
 	
 	game.component.player = {
 
-		thrust: .7,
+		thrust: .4,
 	  	deltaX: 0,
 	  	deltaY: 0,
 		drawFlame: false,
 		velX: 0,
 		velY: 0,
 		r: 20,
-		screenX: game.width/2,
-		screenY: game.height/2,
 		mag: 0,
 		strafeX: 0,
 		strafeY: 0,
 		width: 40,
 		height: 40,
 		hp: 10,
+		kills: 0,
 		deaths: 0,
 
 		update: function(dt) {
@@ -71,10 +70,10 @@
 					this.deltaY = this.deltaY / mag * this.thrust;
 					
 					// This incrementally changes the delta value to simulate mass when changing direction
-					if (this.velX < this.deltaX) { this.velX += this.thrust/90; }
-					else { this.velX -= this.thrust/90; }
-					if (this.velY < this.deltaY) { this.velY += this.thrust/90; }
-					else { this.velY -= this.thrust/90; }
+					if (this.velX < this.deltaX) { this.velX += this.thrust/150; }
+					else { this.velX -= this.thrust/150; }
+					if (this.velY < this.deltaY) { this.velY += this.thrust/150; }
+					else { this.velY -= this.thrust/150; }
 				}
 				else {
 					this.drawFlame = false;
@@ -116,7 +115,7 @@
 				//console.log(this.x + ', ' + this.y);
 
 				for (var e in game.entities) {
-					if (e !== 'player' && this.playerId != game.entities[e].playerId) {
+					if (e !== game.clientId && game.clientId != game.entities[e].playerId) {
 						if (game.entities[e].collision === 'circle') {
 							var circle = game.entities[e];
 							if (this.distanceTo(circle.x, circle.y, circle.velX, this.velY) < (this.r + circle.r)) {
@@ -161,6 +160,8 @@
 			}
 			else {
 				this.deaths++;
+				//document.getElementById(this.playerId + '.deaths').innerHTML = this.deaths;
+				game.socket.emit('death', {});
 				this.hp = 10;
 				this.velX = 0;
 				this.velY = 0;

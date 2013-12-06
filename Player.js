@@ -6,7 +6,9 @@ var Player = function(startX, startY, name) {
 		velY = 0,
 		angle = 0,
 		name = name,
-		id;
+		id,
+		kills = 0,
+		deaths = 0;
 		
 	var getX = function() {
 		return x;
@@ -26,6 +28,14 @@ var Player = function(startX, startY, name) {
 	
 	var getAngle = function() {
 		return angle;
+	}
+
+	var getKills = function() {
+		return kills;
+	}
+
+	var getDeaths = function() {
+		return deaths;
 	}
 	
 	var setX = function(newX) {
@@ -47,6 +57,14 @@ var Player = function(startX, startY, name) {
 	var setAngle = function(newAngle) {
 		angle = newAngle;
 	}
+
+	var setKills = function(newKills) {
+		kills = newKills;
+	}
+
+	var setDeaths = function(newDeaths) {
+		deaths = newDeaths;
+	}
 	
 	return {
 		getX: getX,
@@ -54,13 +72,19 @@ var Player = function(startX, startY, name) {
 		getvelX: getvelX,
 		getvelY: getvelY,
 		getAngle: getAngle,
+		getKills: getKills,
+		getDeaths: getDeaths,
 		setX: setX,
 		setY: setY,
 		setVelX: setVelX,
 		setVelY: setVelY,
 		setAngle: setAngle,
+		setKills: setKills,
+		setDeaths: setDeaths,
 		name: name,
-		id: id
+		id: id,
+		kills: kills,
+		deaths: deaths
 	}
 
 };

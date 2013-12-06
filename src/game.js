@@ -3,21 +3,8 @@
 	var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
 		                  		window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 	window.requestAnimationFrame = requestAnimationFrame;
-	
-	game.start = function() {
 
-		game.entities['player'] = game.createEntity({
-			image: game.assetManager.getAsset('fighter.png'),
-			x: game.entities['map'].width/2,
-			y: game.entities['map'].height/2,
-			angle: 0,
-			offsetX: -game.assetManager.getAsset('fighter.png').width/2,
-			offsetY: -game.assetManager.getAsset('fighter.png').height/2,
-			collision: 'circle',
-				
-		}, [game.component.entity,
-			game.component.moveable,
-			game.component.damageable]);
+	game.start = function() {
 
 		game.entities['login'] = game.createEntity({
 			id: 'login',
@@ -30,6 +17,17 @@
 			game.component.menu,
 			game.component.drawable]);
 
+		game.entities['scoreboard'] = game.createEntity({
+			id: 'scoreboard',
+			height: game.height * .7,
+			width: game.height * .7,
+			fillColor: 'rgba(0, 0, 0, 0.4)',
+			borderColor: 'blue',
+			display: 'none',
+			url: 'src/scoreboard.html'
+		}, [game.component.entity,
+			game.component.menu]);
+
 		game.entities['lasershot'] = game.createEntity({
 			buffer: game.assetManager.getAsset('lasershot.wav')
 		}, [game.component.entity,
@@ -37,9 +35,6 @@
 		
 		game.socket = game.network.connect();
 		game.network.setEventHandlers();
-
-		game.lastUpdate = Date.now();
-		game.run();
 	},
 	
 	game.run = function() {
@@ -97,14 +92,14 @@
 		var loginDiv = document.getElementById('login');
 		loginDiv.parentNode.removeChild(loginDiv);
 
-		game.entities['player'].name = userName;
-		game.entities['player'].draw = game.component.drawable.draw;
-		game.entities['player'].addComponent(game.component.player);
+		game.entities[game.clientId].name = userName;
+		game.entities[game.clientId].draw = game.component.drawable.draw;
+		game.entities[game.clientId].addComponent(game.component.player);
 
 		game.socket.emit('new player', {
-			x: game.entities['player'].mapX,
-			y: game.entities['player'].mapY,
-			name: game.entities['player'].name
+			x: game.entities[game.clientId].mapX,
+			y: game.entities[game.clientId].mapY,
+			name: game.entities[game.clientId].name
 		});
 	}
 }());

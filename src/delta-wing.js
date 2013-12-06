@@ -38,6 +38,8 @@
 			game.assetManager.queueDownload('/assets/sprites/fighter.png');
 			game.assetManager.queueDownload('/assets/sprites/projectile.png');
 			game.assetManager.queueDownload('/assets/maps/tiledMap/map.json');
+			//game.assetManager.queueDownload('/src/login.html');
+			//game.assetManager.queueDownload('/src/scoreboard.html');
 			//game.assetManager.downloadAll(function () { game.start(); });
 			game.assetManager.downloadAll(function() {
 				//console.log('testing: ' + game.assetManager.getAsset('map.json').tilesets[0].image);
@@ -63,8 +65,8 @@
 		click: function() {
 			game.entities['lasershot'].play();
 
-			var vX = game.mouseX - game.entities['player'].screenX;
-			var vY = game.mouseY - game.entities['player'].screenY;
+			var vX = game.mouseX - game.entities[game.clientId].screenX;
+			var vY = game.mouseY - game.entities[game.clientId].screenY;
 			var speed = 2;
 			
 			var mag = Math.sqrt(vX * vX + vY * vY);
@@ -72,10 +74,10 @@
 			vX = vX / mag * speed;
 			vY = vY / mag * speed;
 			
-			vX = vX + game.entities['player'].velX;
-			vY = vY + game.entities['player'].velY;
+			vX = vX + game.entities[game.clientId].velX;
+			vY = vY + game.entities[game.clientId].velY;
 
-			game.socket.emit('new projectile', {x: game.entities['player'].x, y: game.entities['player'].y, velX: vX, velY: vY});
+			game.socket.emit('new projectile', {x: game.entities[game.clientId].x, y: game.entities[game.clientId].y, velX: vX, velY: vY});
 		},
 
 		resize: function() {
@@ -94,6 +96,7 @@
 		UP: 87,
 		RIGHT: 68,
 		DOWN: 83,
+		TAB: 9,
 
 		isDown: function(keyCode) {
 			return this._pressed[keyCode];
@@ -101,6 +104,10 @@
 
 		onKeydown: function(event) {
 			this._pressed[event.keyCode] = true;
+			if (event.keyCode == game.key.TAB) {
+				event.preventDefault();
+				return false;
+			}
 		},
 
 		onKeyup: function(event) {
