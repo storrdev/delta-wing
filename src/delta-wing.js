@@ -3,6 +3,12 @@
 		fps: 60,
 		width: window.innerWidth,
 		height: window.innerHeight,
+		state: 'menu',
+		layers: {
+			'background': [],
+			'middle': [],
+			'foreground': []
+		},
 	
 		load: function() {
 
@@ -63,21 +69,26 @@
 		},
 
 		click: function() {
-			game.entities['lasershot'].play();
+			if (game.state == 'in game') {
+				game.entities['lasershot'].play();
 
-			var vX = game.mouseX - game.entities[game.clientId].screenX;
-			var vY = game.mouseY - game.entities[game.clientId].screenY;
-			var speed = 2;
-			
-			var mag = Math.sqrt(vX * vX + vY * vY);
-			
-			vX = vX / mag * speed;
-			vY = vY / mag * speed;
-			
-			vX = vX + game.entities[game.clientId].velX;
-			vY = vY + game.entities[game.clientId].velY;
+				var vX = game.mouseX - game.entities[game.clientId].screenX;
+				var vY = game.mouseY - game.entities[game.clientId].screenY;
+				var speed = 2;
+				
+				var mag = Math.sqrt(vX * vX + vY * vY);
+				
+				vX = vX / mag * speed;
+				vY = vY / mag * speed;
+				
+				vX = vX + game.entities[game.clientId].velX;
+				vY = vY + game.entities[game.clientId].velY;
 
-			game.socket.emit('new projectile', {x: game.entities[game.clientId].x, y: game.entities[game.clientId].y, velX: vX, velY: vY});
+				game.socket.emit('new projectile', {x: game.entities[game.clientId].x, y: game.entities[game.clientId].y, velX: vX, velY: vY});
+			}
+			else if (game.state == 'menu') {
+				game.join();
+			}
 		},
 
 		resize: function() {
@@ -97,6 +108,7 @@
 		RIGHT: 68,
 		DOWN: 83,
 		TAB: 9,
+		ENTER: 13,
 
 		isDown: function(keyCode) {
 			return this._pressed[keyCode];

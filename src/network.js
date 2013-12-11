@@ -22,7 +22,7 @@
 		},
 
 		onSocketConnected: function() {
-			console.log('Connected to socket server');
+			console.log('Connected to socket server, requesting client id');
 			game.socket.emit('request id', {});
 		},
 
@@ -31,6 +31,7 @@
 			console.log('network id acquired: ' + game.clientId);
 
 			game.entities[game.clientId] = game.createEntity({
+				playerId: game.clientId,
 				image: game.assetManager.getAsset('fighter.png'),
 				x: game.entities['map'].width/2,
 				y: game.entities['map'].height/2,
@@ -39,11 +40,15 @@
 				angle: 0,
 				offsetX: -game.assetManager.getAsset('fighter.png').width/2,
 				offsetY: -game.assetManager.getAsset('fighter.png').height/2,
-				collision: 'circle'
+				collision: 'circle',
+				zIndex: 2
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.damageable]);
 
+			game.layers['middle'].push(game.entities[game.clientId]);
+
+			console.log('requesting already connected players.');
 			game.socket.emit('get clients', {});
 			game.lastUpdate = Date.now();
 			game.run();
@@ -68,8 +73,8 @@
 				offsetY: -game.assetManager.getAsset('fighter.png').height/2,
 				width: game.assetManager.getAsset('fighter.png').width,
 				height: game.assetManager.getAsset('fighter.png').height,
-				collision: 'circle'
-				
+				collision: 'circle',
+				zIndex: 2
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.drawable]);
@@ -112,11 +117,14 @@
 				velX: data.velX,
 				velY: data.velY,
 				collision: 'circle',
-				dp: 1
+				dp: 1,
+				zIndex: 1
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.drawable,
 				game.component.projectile]);
+
+			//game.layers['middle'].push(game.entities['Projectile' + data.id]);
 		},
 
 		onRemoveProjectile: function(data) {
@@ -133,6 +141,7 @@
 			console.log(data.id);
 			game.entities[data.id].deaths = data.deaths;
 			console.log(data.id + ' has died ' + game.entities[data.id].deaths + ' times');
+			document.getElementById(data.id + '.deaths').innerHTML = game.entities[data.id].deaths;
 		}
 
 	}

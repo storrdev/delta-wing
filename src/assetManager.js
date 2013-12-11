@@ -126,7 +126,7 @@
 				screenX: -1600,
 				screenY: -400,
 				width: json.width * json.tilewidth,
-				height: json.height * json.tileheight
+				height: json.height * json.tileheight,
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.map]);
@@ -212,10 +212,14 @@
 							x: cA * chunkWidth,
 							y: cD * chunkHeight,
 							width: chunkWidth,
-							height: chunkHeight
+							height: chunkHeight,
+							zIndex: 0
 						}, [game.component.entity,
 							game.component.moveable,
 							game.component.chunk]);
+
+						//game.layers['background'].push(game.entities['chunk' + chunkCount]);
+
 						chunkCount++;
 					}
 					chunkCount++;

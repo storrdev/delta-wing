@@ -12,21 +12,60 @@
 			width: 500,
 			fillColor: 'rgba(0, 0, 0, 0.4)',
 			borderColor: 'blue',
-			url: 'src/login.html'
+			zIndex: 20
 		}, [game.component.entity,
 			game.component.menu,
 			game.component.drawable]);
+
+		
+		//game.layers['foreground'].push(game.entities['login']);
+
+		game.entities['loginButton'] = game.createEntity({
+			id: 'loginButton',
+			offsetY: 40,
+			height: 35,
+			width: 150,
+			fillColor: 'black',
+			borderColor: 'green',
+			text: 'login',
+			action: game.join,
+			key: game.key.ENTER,
+			state: 'menu',
+			zIndex: 21
+		}, [game.component.entity,
+			game.component.button,
+			game.component.drawable]);
+
+		//game.layers['foreground'].push(game.entities['loginButton']);
+
+		var loginTextBox = document.createElement('input');
+		loginTextBox.type = 'text';
+		loginTextBox.style.position = 'absolute';
+		loginTextBox.style.left = '50%';
+		loginTextBox.style.top = '50%';
+		loginTextBox.style.width = '250px';
+		loginTextBox.style.marginLeft = '-' + parseInt(loginTextBox.style.width)/2 +  'px';
+		loginTextBox.style.marginTop = '-35px';
+		loginTextBox.style.fontSize = '20px';
+		loginTextBox.style.borderStyle = 'solid';
+		loginTextBox.style.borderWidth = '2px'
+		loginTextBox.style.borderColor = 'green';
+		loginTextBox.style.backgroundColor = 'black';
+		loginTextBox.style.color = 'green';
+		loginTextBox.id = 'loginTextBox';
+		document.body.appendChild(loginTextBox);
 
 		game.entities['scoreboard'] = game.createEntity({
 			id: 'scoreboard',
 			height: game.height * .7,
 			width: game.height * .7,
-			fillColor: 'rgba(0, 0, 0, 0.4)',
+			fillColor: 'black',
 			borderColor: 'blue',
-			display: 'none',
-			url: 'src/scoreboard.html'
+			zIndex: 22
 		}, [game.component.entity,
 			game.component.menu]);
+
+		//game.layers['foreground'].push(game.entities['scoreboard']);
 
 		game.entities['lasershot'] = game.createEntity({
 			buffer: game.assetManager.getAsset('lasershot.wav')
@@ -58,12 +97,25 @@
 	}
 	
 	game.draw = function(dt) {
-		game.context.clearRect(0, 0, game.width, game.height);
+		var zIndex_array = [];
+		var entities_bucketed_by_zIndex = {};
 
 		for(var e in game.entities) {
-			if (game.entities.hasOwnProperty(e)) {
-				if (game.entities[e].draw) {
-					game.entities[e].draw(dt);
+			if (game.entities[e].draw) {
+				if (zIndex_array.indexOf(game.entities[e].zIndex) === -1) {
+					zIndex_array.push(game.entities[e].zIndex);
+					entities_bucketed_by_zIndex[game.entities[e].zIndex] = [];
+				}
+				entities_bucketed_by_zIndex[game.entities[e].zIndex].push(game.entities[e]);
+			}
+		}
+
+		game.context.clearRect(0, 0, game.width, game.height);
+
+		for(var z in entities_bucketed_by_zIndex) {
+			for (var e = 0; e < entities_bucketed_by_zIndex[z].length; e++) {
+				if (entities_bucketed_by_zIndex[z][e].draw) {
+					entities_bucketed_by_zIndex[z][e].draw(dt);
 				}
 			}
 		}
@@ -88,9 +140,14 @@
 	},
 
 	game.join = function(userName) {
+		game.state = 'in game';
+
 		delete game.entities['login'].draw;
-		var loginDiv = document.getElementById('login');
-		loginDiv.parentNode.removeChild(loginDiv);
+		delete game.entities['loginButton'].draw;
+
+		var userName = document.getElementById('loginTextBox').value;
+
+		document.body.removeChild(document.getElementById('loginTextBox'));
 
 		game.entities[game.clientId].name = userName;
 		game.entities[game.clientId].draw = game.component.drawable.draw;
@@ -101,5 +158,9 @@
 			y: game.entities[game.clientId].mapY,
 			name: game.entities[game.clientId].name
 		});
+
+		game.addPlayerToScoreboard(game.entities[game.clientId]);
+
+		//game.canvas.addEventListener('click', game.click, false);
 	}
 }());

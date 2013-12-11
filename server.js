@@ -24,7 +24,7 @@ function handler (req, res) {
 	var reqPath = url.parse(req.url).pathname;
     var ext      = path.extname(reqPath).toLowerCase();
 
-    console.log("file: '" + reqPath + "'' requested");
+    //console.log("file: '" + reqPath + "'' requested");
 
 	Magic = mmm.Magic;
     var magic = new Magic(mmm.MAGIC_MIME_TYPE);
@@ -68,7 +68,7 @@ function handler (req, res) {
     	//var magic = new Magic(mmm.MAGIC_MIME_TYPE);
 		magic.detectFile("./" + reqPath, function(err, result) {
 			if (err) throw err;
-			console.log(result);
+			//console.log(result);
 
 			if (ext === '.wav') {
 				fs.readFile('./' + reqPath, function(error, content) {
@@ -130,10 +130,13 @@ function onRequestId() {
 }
 
 function onGetClients() {
+	console.log('connected clients requested.');
+	console.log('number of existing players: ' + players.length);
 	var i, existingPlayer;
 	for(i = 0; i < players.length; i++) {
 		existingPlayer = players[i];
 		// .emit sends a message to all the clients
+		console.log('sent ' + existingPlayer.name + '\'s information.');
 		this.emit('new player', {
 			id: existingPlayer.id,
 			x: existingPlayer.getX(),
@@ -146,6 +149,8 @@ function onGetClients() {
 function onNewPlayer(data) {
 	var newPlayer = new Player(data.x, data.y, data.name);
 	newPlayer.id = this.id;
+
+	console.log(data.name + ' has entered the game. ' + newPlayer);
 	
 	// broadcast.emit sends a message to all clients except the one it's being called on
 	this.broadcast.emit('new player', {
@@ -155,10 +160,8 @@ function onNewPlayer(data) {
 		y: newPlayer.getY()
 	});
 	
-	// sends the server assigned id back to the client who just connected for reference
-	//this.emit('client id', {id: newPlayer.id});
-	
 	players.push(newPlayer);
+	console.log('number of players: ' + players.length);
 };
 
 function onMovePlayer(data) {

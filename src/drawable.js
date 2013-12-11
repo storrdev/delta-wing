@@ -22,9 +22,13 @@
         	else if (this.shape == 'rect') {
         		var x = this.x - (this.width/2);
         		var y = this.y - (this.height/2);
+                if (this.offsetY) {
+                    y = y + this.offsetY;
+                }
         		game.context.beginPath();
         		game.context.fillStyle = this.fillColor;
         		game.context.strokeStyle = this.borderColor;
+                game.context.lineWidth = 2;
         		game.context.rect(x, y, this.width, this.height);
         		game.context.fill();
         		game.context.stroke();
@@ -39,6 +43,19 @@
         		//game.context.fill();
         		//console.log(this.name + ': ' + this.screenX + ',' + this.screenY);
         	}
+
+            if (this.text) {
+                var x = this.x;
+                var y = this.y + 4;
+                if (this.offsetY) {
+                    y = y + this.offsetY;
+                }
+                game.context.fillStyle = this.borderColor;
+                game.context.font = "bold 14px Arial";
+                game.context.textAlign = 'center';
+
+                game.context.fillText(this.text, x, y);
+            }
         }
     }
 
