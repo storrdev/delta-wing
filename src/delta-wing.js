@@ -4,11 +4,6 @@
 		width: window.innerWidth,
 		height: window.innerHeight,
 		state: 'menu',
-		layers: {
-			'background': [],
-			'middle': [],
-			'foreground': []
-		},
 	
 		load: function() {
 
@@ -44,11 +39,7 @@
 			game.assetManager.queueDownload('/assets/sprites/fighter.png');
 			game.assetManager.queueDownload('/assets/sprites/projectile.png');
 			game.assetManager.queueDownload('/assets/maps/tiledMap/map.json');
-			//game.assetManager.queueDownload('/src/login.html');
-			//game.assetManager.queueDownload('/src/scoreboard.html');
-			//game.assetManager.downloadAll(function () { game.start(); });
 			game.assetManager.downloadAll(function() {
-				//console.log('testing: ' + game.assetManager.getAsset('map.json').tilesets[0].image);
 				game.assetManager.createMap(game.assetManager.getAsset('map.json'), game.start);
 			});
 		},

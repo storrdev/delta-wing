@@ -29,13 +29,13 @@
 							json = JSON.parse(xhr.responseText);
 							for (var l = 0; l < json.layers.length; l++) {
 								if (json.layers[l].image) {
-									console.log('image found in json: ' + path + '/' + json.layers[l].image);
+									//console.log('image found in json: ' + path + '/' + json.layers[l].image);
 									game.assetManager.queueDownload(path + '/' + json.layers[l].image);
 								}
 							}
 							for (var t = 0; t < json.tilesets.length; t++) {
 								if (json.tilesets[t].image) {
-									console.log('image found in json: ' + path + '/' + json.tilesets[t].image);
+									//console.log('image found in json: ' + path + '/' + json.tilesets[t].image);
 									game.assetManager.queueDownload(path + '/' + json.tilesets[t].image);
 								}
 							}
@@ -51,12 +51,12 @@
 		
 		downloadAssets: function(downloadCallback) {
 			// Actual assets being downloaded after json is parsed.
-			console.log(downloadQueue.length + " assets to be downloaded.");
+			//console.log(downloadQueue.length + " assets to be downloaded.");
 			for (var file in downloadQueue) {
 				var path = downloadQueue[file];
 				var ext = path.split('.').pop().toLowerCase();
 				var asset;
-				console.log(path);
+				//console.log(path);
 				if (ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "gif") {
 					asset = new Image();
 					asset.addEventListener("load", function() {
@@ -76,7 +76,7 @@
 					}, false);
 					asset.src = path;
 
-					console.log('cached: ' + asset);
+					//console.log('cached: ' + asset);
 					cache[path.split('/').pop()] = asset;
 				}
 
@@ -92,15 +92,15 @@
 
 					var xhr = new XMLHttpRequest();
 					var soundFile = path.split('/').pop();
-					console.log('file name: ' + soundFile);
+					//console.log('file name: ' + soundFile);
 					xhr.open("GET", path, true);
 					xhr.responseType = "arraybuffer";
 					xhr.onload = function() {
 						audioContext.decodeAudioData(xhr.response, function(buffer) {
 							//this.file = path.split('/').pop();
-							console.log('cached: ' + buffer);
+							//console.log('cached: ' + buffer);
 							cache[soundFile] = buffer;
-							console.log('really here: ' + soundFile);
+							//console.log('really here: ' + soundFile);
 							successCount++;
 						});
 					}
@@ -131,7 +131,7 @@
 				game.component.moveable,
 				game.component.map]);
 
-			console.log('map: ' + game.entities['map'].width + 'x' + game.entities['map'].height);
+			//console.log('map: ' + game.entities['map'].width + 'x' + game.entities['map'].height);
 
 			var layerCanvas = document.createElement('canvas');
 			var layerContext = layerCanvas.getContext('2d');
@@ -144,11 +144,11 @@
 				var y = 0;
 
 				if (json.layers[l].type === 'objectgroup') {
-					console.log(json.layers[l].name);
+					//console.log(json.layers[l].name);
 					var objects = json.layers[l].objects;
 					for (var o = 0; o < objects.length; o++) {
 						
-						console.log(objects[o].name);
+						//console.log(objects[o].name);
 						if (json.layers[l].name === 'Collision') {
 							game.entities['collision object ' + o] = game.createEntity({
 								collision: 'rect',

@@ -21,8 +21,9 @@
 									circle.damage(this.dp);
 								}
 								if (circle.hp == 0) {
-									this.kills++;
-									
+									game.entities[this.playerId].kills++;
+									game.socket.emit('kills', { playerId: this.playerId });
+									console.log(this.playerId + ' has ' + game.entities[this.playerId].kills + ' kills');
 								}
 								game.removeEntityById(this.id);
 						    	break;
@@ -40,7 +41,7 @@
 			}
 
 			if (this.x < 0 || this.y < 0 || this.x > game.entities['map'].width || this.y > game.entities['map'].height) {
-				console.log('projectile out of bounds');
+				//console.log('projectile out of bounds');
 				game.removeEntityById(this.id);
 			}
 

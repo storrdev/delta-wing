@@ -19,6 +19,7 @@
 			socket.on('new projectile', this.onNewProjectile);
 			socket.on('remove projectile', this.onRemoveProjectile);
 			socket.on('deaths', this.onDeaths);
+			socket.on('kills', this.onKills);
 		},
 
 		onSocketConnected: function() {
@@ -46,8 +47,6 @@
 				game.component.moveable,
 				game.component.damageable]);
 
-			game.layers['middle'].push(game.entities[game.clientId]);
-
 			console.log('requesting already connected players.');
 			game.socket.emit('get clients', {});
 			game.lastUpdate = Date.now();
@@ -74,14 +73,16 @@
 				width: game.assetManager.getAsset('fighter.png').width,
 				height: game.assetManager.getAsset('fighter.png').height,
 				collision: 'circle',
-				zIndex: 2
+				zIndex: 2,
+				kills: data.kills,
+				deaths: data.deaths
 			}, [game.component.entity,
 				game.component.moveable,
 				game.component.drawable]);
 
-			game.addPlayerToScoreboard(game.entities[data.id]);
+			game.nPlayers++;
 
-			console.log('Name: ' + game.entities[data.id].name);
+			game.addPlayerToScoreboard(game.entities[data.id]);
 		},
 
 		onMovePlayer: function(data) {
@@ -100,14 +101,13 @@
 				return;
 			}
 			
+			game.removePlayerFromScoreboard(game.entities[data.id]);
 			delete game.entities[data.id];
+			game.nPlayers--;
 			console.log('player has been disconnected: ' + data.id);
 		},
 
 		onNewProjectile: function(data) {
-			//var newProjectile = new Projectile(data.id, data.playerId, data.x, data.y, data.deltaX, data.deltaY);
-			//game.projectiles.push(newProjectile);
-			//console.log('projectile player id: ' + data.playerId + ' projectile id: ' + data.id);
 			game.entities['Projectile' + data.id] = game.createEntity({
 				id: data.id,
 				image: game.assetManager.getAsset('projectile.png'),
@@ -123,8 +123,6 @@
 				game.component.moveable,
 				game.component.drawable,
 				game.component.projectile]);
-
-			//game.layers['middle'].push(game.entities['Projectile' + data.id]);
 		},
 
 		onRemoveProjectile: function(data) {
@@ -138,10 +136,13 @@
 		},
 
 		onDeaths: function(data) {
-			console.log(data.id);
 			game.entities[data.id].deaths = data.deaths;
-			console.log(data.id + ' has died ' + game.entities[data.id].deaths + ' times');
-			document.getElementById(data.id + '.deaths').innerHTML = game.entities[data.id].deaths;
+			game.entities[data.id + '.deathsLabel'].label = game.entities[data.id].deaths;
+		},
+
+		onKills: function(data) {
+			game.entities[data.id].kills = data.kills;
+			game.entities[data.id + '.killsLabel'].label = game.entities[data.id].kills;
 		}
 
 	}

@@ -60,6 +60,7 @@
             if (this.label) {
                 game.context.fillStyle = this.color;
                 game.context.font = 'bold 14px Arial';
+                game.context.textAlign = this.align;
                 game.context.fillText(this.label, this.x, this.y);
             }
         }

@@ -1,6 +1,4 @@
 (function() {
-	
-	console.log('sound component loaded.');
 
 	game.component.sound = {
 

@@ -5,7 +5,6 @@
 	window.requestAnimationFrame = requestAnimationFrame;
 
 	game.start = function() {
-
 		game.entities['login'] = game.createEntity({
 			id: 'login',
 			x: game.width/2,
@@ -19,9 +18,6 @@
 		}, [game.component.entity,
 			game.component.menu,
 			game.component.drawable]);
-
-		
-		//game.layers['foreground'].push(game.entities['login']);
 
 		game.entities['loginButton'] = game.createEntity({
 			id: 'loginButton',
@@ -38,8 +34,6 @@
 		}, [game.component.entity,
 			game.component.button,
 			game.component.drawable]);
-
-		//game.layers['foreground'].push(game.entities['loginButton']);
 
 		var loginTextBox = document.createElement('input');
 		loginTextBox.type = 'text';
@@ -65,7 +59,7 @@
 			x: game.width/2,
 			y: game.height/2,
 			height: game.height * .7,
-			width: game.height * .7,
+			width: 400,
 			fillColor: 'rgba(0, 0, 0, 0.5)',
 			borderColor: 'blue',
 			zIndex: 22,
@@ -74,7 +68,32 @@
 		}, [game.component.entity,
 			game.component.menu]);
 
-		//game.layers['foreground'].push(game.entities['scoreboard']);
+		game.entities['scoreboardNameHeader'] = game.createEntity({
+			id: 'scoreboardNameHeader',
+			x: game.width/2 - (game.entities['scoreboard'].width/2) + 50,
+			y: game.height/2 - (game.entities['scoreboard'].height/2) + 50,
+			label: 'Player',
+			color: 'white'
+		}, [game.component.entity,
+			game.component.label]);
+
+		game.entities['scoreboardKillsHeader'] = game.createEntity({
+			id: 'scoreboardKillsHeader',
+			x: game.width/2 + (game.entities['scoreboard'].width/2) - 110,
+			y: game.height/2 - (game.entities['scoreboard'].height/2) + 50,
+			label: 'Kills',
+			color: 'white'
+		}, [game.component.entity,
+			game.component.label]);
+
+		game.entities['scoreboardDeathsHeader'] = game.createEntity({
+			id: 'scoreboardDeathsHeader',
+			x: game.width/2 + (game.entities['scoreboard'].width/2) - 70,
+			y: game.height/2 - (game.entities['scoreboard'].height/2) + 50,
+			label: 'Deaths',
+			color: 'white'
+		}, [game.component.entity,
+			game.component.label]);
 
 		game.entities['lasershot'] = game.createEntity({
 			buffer: game.assetManager.getAsset('lasershot.wav')
@@ -169,7 +188,5 @@
 		});
 
 		game.addPlayerToScoreboard(game.entities[game.clientId]);
-
-		//game.canvas.addEventListener('click', game.click, false);
 	}
 }());

@@ -68,7 +68,7 @@ function handler (req, res) {
     	//var magic = new Magic(mmm.MAGIC_MIME_TYPE);
 		magic.detectFile("./" + reqPath, function(err, result) {
 			if (err) throw err;
-			//console.log(result);
+			console.log(reqPath + ': ' + result);
 
 			if (ext === '.wav') {
 				fs.readFile('./' + reqPath, function(error, content) {
@@ -106,6 +106,7 @@ function onSocketConnection(client) {
 	client.on('new projectile', onNewProjectile);
 	client.on('remove projectile', onRemoveProjectile);
 	client.on('death', onDeath);
+	client.on('kills', onKills);
 	client.on('request id', onRequestId);
 	client.on('get clients', onGetClients);
 };
@@ -141,7 +142,9 @@ function onGetClients() {
 			id: existingPlayer.id,
 			x: existingPlayer.getX(),
 			y: existingPlayer.getY(),
-			name: existingPlayer.name
+			name: existingPlayer.name,
+			kills: existingPlayer.kills,
+			deaths: existingPlayer.deaths
 		});
 	}
 }
@@ -157,7 +160,9 @@ function onNewPlayer(data) {
 		id: newPlayer.id,
 		name: newPlayer.name,
 		x: newPlayer.getX(),
-		y: newPlayer.getY()
+		y: newPlayer.getY(),
+		kills: newPlayer.kills,
+		deaths: newPlayer.deaths
 	});
 	
 	players.push(newPlayer);
@@ -168,7 +173,7 @@ function onMovePlayer(data) {
 	var movePlayer = playerById(this.id);
 
 	if (!movePlayer) {
-		console.log("(onMovePlayer) Player not found: " + this.id);
+		//console.log("(onMovePlayer) Player not found: " + this.id);
 		return;
 	};
 
@@ -230,6 +235,16 @@ function onDeath() {
 	console.log(this.id + ' has died ' + deathPlayer.deaths + ' times.');
 
 	io.sockets.emit('deaths', {id: this.id, deaths: deathPlayer.deaths});
+};
+
+function onKills(data) {
+	var killsPlayer = playerById(data.playerId);
+
+	killsPlayer.kills++;
+
+	console.log(data.playerId + ' has killed ' + killsPlayer.kills + ' players.');
+
+	io.sockets.emit('kills', {id: data.playerId, kills: killsPlayer.kills});
 };
 
 
