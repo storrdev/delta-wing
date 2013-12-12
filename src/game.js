@@ -8,11 +8,14 @@
 
 		game.entities['login'] = game.createEntity({
 			id: 'login',
+			x: game.width/2,
+			y: game.height/2,
 			height: 200,
 			width: 500,
-			fillColor: 'rgba(0, 0, 0, 0.4)',
+			fillColor: 'rgba(0, 0, 0, 0.5)',
 			borderColor: 'blue',
-			zIndex: 20
+			zIndex: 20,
+			centered: true
 		}, [game.component.entity,
 			game.component.menu,
 			game.component.drawable]);
@@ -47,6 +50,7 @@
 		loginTextBox.style.marginLeft = '-' + parseInt(loginTextBox.style.width)/2 +  'px';
 		loginTextBox.style.marginTop = '-35px';
 		loginTextBox.style.fontSize = '20px';
+		loginTextBox.style.textAlign = 'center';
 		loginTextBox.style.borderStyle = 'solid';
 		loginTextBox.style.borderWidth = '2px'
 		loginTextBox.style.borderColor = 'green';
@@ -54,14 +58,19 @@
 		loginTextBox.style.color = 'green';
 		loginTextBox.id = 'loginTextBox';
 		document.body.appendChild(loginTextBox);
+		loginTextBox.focus();
 
 		game.entities['scoreboard'] = game.createEntity({
 			id: 'scoreboard',
+			x: game.width/2,
+			y: game.height/2,
 			height: game.height * .7,
 			width: game.height * .7,
-			fillColor: 'black',
+			fillColor: 'rgba(0, 0, 0, 0.5)',
 			borderColor: 'blue',
-			zIndex: 22
+			zIndex: 22,
+			resizable: true,
+			centered: true
 		}, [game.component.entity,
 			game.component.menu]);
 

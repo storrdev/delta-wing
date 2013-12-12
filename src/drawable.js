@@ -56,6 +56,12 @@
 
                 game.context.fillText(this.text, x, y);
             }
+
+            if (this.label) {
+                game.context.fillStyle = this.color;
+                game.context.font = 'bold 14px Arial';
+                game.context.fillText(this.label, this.x, this.y);
+            }
         }
     }
 
