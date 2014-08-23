@@ -1,25 +1,26 @@
 {
-  "name": "delta-wing",
-  "version": "0.1.0",
-  "description": "Multiplayer spaceship combat game",
-  "main": "index.html",
-  "dependencies": {
-    "grunt": "~0.4.1",
-    "socket.io": "~0.9.16",
-    "grunt-init": "~0.2.1"
-  },
-  "devDependencies": {
-    "grunt-contrib-uglify": "~0.2.4",
-    "mime": "~1.2.11",
-    "mmmagic": "~0.3.4"
-  },
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/storrdev/delta-wing"
+  "name": "ds",
+  "version": "0.0.1",
+  "description": "Procedurally generating deep space multiplayer game.",
+  "main": "src/ds.js",
+  "scripts": {
+    "test": "test"
   },
   "author": "Stephen Orr",
-  "license": "BSD-2-Clause",
-  "bugs": {
-    "url": "https://github.com/storrdev/delta-wing/issues"
+  "license": "ISC",
+  "dependencies": {
+    "grunt": "~0.4.5",
+    "mmmagic": "^0.3.8",
+    "mongodb": "^1.4.7",
+    "mongoose": "^3.8.12",
+    "socket.io": "^1.0.6"
+  },
+  "devDependencies": {
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-nodeunit": "~0.3.3",
+    "grunt-contrib-qunit": "^0.5.1",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "^0.6.1"
   }
 }

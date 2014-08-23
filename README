@@ -4,22 +4,26 @@ http://storrdev.com/category/development/delta-wing/
 
 Demo
 --------------------------
-deltawing.storrdev.com (click on "Play Game")
+No demo currently available
 
 Installation
 ------------
 
-1. Install node
-2. Install node package manager
-3. npm install socket.io
+1. run 'npm install'
+
+Building
+--------
+
+1. run 'grunt'
 
 
 Running
 -------
 
-1. Open terminal and navigate to directory.
-2. Run the command: 'sudo node server.js'
-3. In a modern browser, navigate to 'localhost'
+1. Navigate to project directory in command line
+2. Start db with 'mongod --dbpath ./data/db'
+3. Start server with 'node server.js'
+4. Use your browser to navigate to 'localhost'
 
 
 Contacts
