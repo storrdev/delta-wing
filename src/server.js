@@ -39,14 +39,14 @@ function handler(req, res) {
   var magic = new Magic(mmm.MAGIC_MIME_TYPE);
 
   if (ext === ".png" || ext === ".jpg" || ext === ".gif") {
-    magic.detectFile('./' + reqPath, function(err, result) {
+    magic.detectFile('../' + reqPath, function(err, result) {
       if (err) throw err;
       res.writeHead(200, {'Content-Type' : result});
-      fs.createReadStream('./' + reqPath).pipe(res);
+      fs.createReadStream('../' + reqPath).pipe(res);
     });
   }
   else if (!ext) {
-    fs.readFile('./index.html', 'utf-8', function(error, content) {
+    fs.readFile('../index.html', 'utf-8', function(error, content) {
       res.writeHead(200, {'Content-Type' : 'text/html'});
       if (error) {
         res.write(error);
@@ -55,11 +55,11 @@ function handler(req, res) {
     });
   }
   else {
-    magic.detectFile("./" + reqPath, function(err, result) {
+    magic.detectFile("../" + reqPath, function(err, result) {
       if (err) throw err;
 
       if (ext === '.wav') {
-        fs.readFile('./' + reqPath, function(error, content) {
+        fs.readFile('../' + reqPath, function(error, content) {
           res.writeHead(200, {'Content-Type' : result});
           if (error) {
             res.write(error);
@@ -68,7 +68,7 @@ function handler(req, res) {
         });
       }
 
-      fs.readFile('./' + reqPath, 'utf-8', function(error, content) {
+      fs.readFile('../' + reqPath, 'utf-8', function(error, content) {
         res.writeHead(200, {'Content-Type' : result});
         if (error) {
           res.write(error);
@@ -239,8 +239,11 @@ function onKills(data) {
 function onGetChunk(data) {
   console.log('chunk(' + data.x + ', ' + data.y + ') requested from ' + this.id);
 	var that = this;
-	db.getChunk(data.x, data.y, function(chunk) {
-    that.emit('chunk', { x: data.x, y: data.y, json: chunk });
+	db.deleteChunk(data.x, data.y, function() {
+		console.log('chunk deleted');
+		db.getChunk(data.x, data.y, function(chunk) {
+	    	that.emit('chunk', { x: data.x, y: data.y, json: chunk });
+		});
 	});
 }
 

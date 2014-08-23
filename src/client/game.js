@@ -1,12 +1,9 @@
 (function() {
 
 	game.assetsLoaded = function() {
-
-		// Quick change to test github creds for this repo.
-			
+		// Connect to server
 		game.socket = game.network.connect();
 		game.network.setEventHandlers();
-
 	};
 
 	game.loadChunks = function() {

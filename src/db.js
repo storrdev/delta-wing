@@ -42,9 +42,17 @@ exports.getChunk = function(x, y, fn) {
         fn(oldChunk);
       }
       else {
+        console.log('no chunk found. generating chunk.');
         chunk.generate(x, y, fn);
       }
     }
   });
 
+};
+
+exports.deleteChunk = function(x, y, fn) {
+  this.Chunk.remove({ x: x, y: y }, function(err) {
+    if (err) return handleError(err);
+    fn();
+  })
 };
