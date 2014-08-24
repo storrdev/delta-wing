@@ -32,16 +32,22 @@
 
 		onChunk: function(data) {
 			var coords = data.x + ',' + data.y;
-			console.log('chunk recieved: (' + coords + ')');
+			//console.log('chunk recieved: (' + coords + ')');
 			//console.log(data.json);
 
 			game.chunks[coords] = data.json;
 
 			for (var c = 0; c < data.json.layers.length; c++) {
 				for (var o = 0; o < data.json.layers[c].objects.length; o++) {
+					var yMultiplier = data.json.height * data.json.tileheight * data.json.y;
+					var xMultiplier = data.json.width * data.json.tilewidth * data.json.x;
 					var planet = PIXI.Sprite.fromImage(data.json.layers[c].objects[o].properties.texture);
-					planet.position.x = data.json.layers[c].objects[o].x;
-					planet.position.y = data.json.layers[c].objects[o].y;
+					planet.position.x = xMultiplier + data.json.layers[c].objects[o].x;
+					planet.position.y = yMultiplier + data.json.layers[c].objects[o].y;
+					planet.anchor.x = 0.5;
+					planet.anchor.y = 0.5;
+					planet.height = data.json.layers[c].objects[o].height;
+					planet.width = data.json.layers[c].objects[o].width;
 					game.planets.push(planet);
 					game.level.addChild(planet);
 				}

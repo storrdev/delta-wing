@@ -22,7 +22,7 @@
 			for (var yy = -game.chunkBuffer; yy <= game.chunkBuffer; yy++) {
 				var chunkX = xx + x;
 				var chunkY = yy + y;
-				console.log(chunkX + ', ' + chunkY);
+				//console.log(chunkX + ', ' + chunkY);
 				game.socket.emit('get chunk', { x: chunkX, y: chunkY });
 			}
 		}
