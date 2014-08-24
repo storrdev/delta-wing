@@ -4,12 +4,14 @@
 		height: window.innerHeight,
 		state: 'menu',
 		chunks: {},
+		planets: [],
 
 		init: function() {
 
-			var assetsToLoader = ["Spritesheet.json", "background.png"];
-
-			game.loader = new PIXI.AssetLoader(assetsToLoader);
+			game.loader = new PIXI.AssetLoader([
+				"Spritesheet.json",
+				"background.png"
+			]);
 
 			game.loader.onComplete = game.assetsLoaded;
 

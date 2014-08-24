@@ -33,13 +33,19 @@
 		onChunk: function(data) {
 			var coords = data.x + ',' + data.y;
 			console.log('chunk recieved: (' + coords + ')');
-			console.log(data.json);
+			//console.log(data.json);
 
-			/*
-				Access the game chunks like this
-				chunk_json = game.chunks[x][y];
-			*/
 			game.chunks[coords] = data.json;
+
+			for (var c = 0; c < data.json.layers.length; c++) {
+				for (var o = 0; o < data.json.layers[c].objects.length; o++) {
+					var planet = PIXI.Sprite.fromImage(data.json.layers[c].objects[o].properties.texture);
+					planet.position.x = data.json.layers[c].objects[o].x;
+					planet.position.y = data.json.layers[c].objects[o].y;
+					game.planets.push(planet);
+					game.level.addChild(planet);
+				}
+			}
 		},
 
 		onSocketConnected: function() {
