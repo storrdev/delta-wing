@@ -13,16 +13,27 @@
 		game.background.tilePosition.y = 0;
 		game.level.addChild(game.background);
 
+		game.ship = new PIXI.Sprite.fromImage('fighter.png');
+		game.ship.position.x = window.innerWidth / 2;
+		game.ship.position.y = window.innerHeight / 2;
+		game.ship.anchor.x = 0.5;
+		game.ship.anchor.y = 0.5;
+		game.ship.scale.x = 1;
+		game.ship.scale.y = 1;
+		game.ship.radius = 30 * game.ship.scale.x;
+		game.ship.mass = 1;
+		game.ship.thrust = 0.2;
+		game.stage.addChild(game.ship);
+
 	};
 
 	game.loadSurroudingChunks = function(x, y) {
-		game.chunkBuffer = 2;
+		game.chunkBuffer = 1;
 
 		for (var xx = -game.chunkBuffer; xx <= game.chunkBuffer; xx++) {
 			for (var yy = -game.chunkBuffer; yy <= game.chunkBuffer; yy++) {
 				var chunkX = xx + x;
 				var chunkY = yy + y;
-				//console.log(chunkX + ', ' + chunkY);
 				game.socket.emit('get chunk', { x: chunkX, y: chunkY });
 			}
 		}
@@ -52,7 +63,7 @@
 		// 	game.planets[p].rotation = lightAngle;
 		// }
 
-		// game.ship.rotation = getAngle(game.mouse.position.x, game.ship.position.x, game.mouse.position.y, game.ship.position.y);
+		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.position.x, game.mouse.position.y, game.ship.position.y);
 
 		// if (game.ship.state === 'launched') {
 		// 	for (var p = 0; p < game.planets.length; p++) {

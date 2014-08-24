@@ -5,8 +5,8 @@ var fs = require('fs');
 exports.generate = function(x, y, cb) {
 
 	// Hard coded chunk variables.. I know it's wrong I just can't help myself!
-	var chunkHeight = 10;
-	var chunkWidth = 10;
+	var chunkHeight = 50;
+	var chunkWidth = 50;
 	var tileHeight = 10;
 	var tileWidth = 10;
 	var orientation = 'orthogonal';

@@ -32,6 +32,8 @@ exports.Chunk = mongoose.model('Chunk', chunkSchema);
 
 exports.getChunk = function(x, y, fn) {
 
+  // this.deleteChunk(x, y);
+
   this.Chunk.findOne({ x: x, y: y }, function(err, oldChunk) {
     if (err) {
       console.log('chunk error: ' + err);
@@ -53,6 +55,6 @@ exports.getChunk = function(x, y, fn) {
 exports.deleteChunk = function(x, y, fn) {
   this.Chunk.remove({ x: x, y: y }, function(err) {
     if (err) return handleError(err);
-    fn();
+    //fn();
   });
 };
