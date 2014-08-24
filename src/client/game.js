@@ -5,13 +5,15 @@
 		game.socket = game.network.connect();
 		game.network.setEventHandlers();
 
-		game.backgroundImage = new PIXI.Texture.fromImage('background.png');
-		game.background = new PIXI.TilingSprite(game.backgroundImage, game.width, game.height);
+		game.backgroundTexture = new PIXI.Texture.fromImage('background.png');
+		game.background = new PIXI.TilingSprite(game.backgroundTexture, game.width, game.height);
 		game.background.position.x = 0;
 		game.background.position.y = 0;
 		game.background.tilePosition.x = 0;
 		game.background.tilePosition.y = 0;
-		game.level.addChild(game.background);
+		game.stage.addChild(game.background);
+
+		game.stage.addChild(game.level);
 
 		game.ship = new PIXI.Sprite.fromImage('fighter.png');
 		game.ship.position.x = window.innerWidth / 2;
@@ -23,7 +25,17 @@
 		game.ship.radius = 30 * game.ship.scale.x;
 		game.ship.mass = 1;
 		game.ship.thrust = 0.2;
+		game.ship.velocity = {
+			x: 0,
+			y: 0
+		};
+		game.ship.vector = {
+			x: 0,
+			y: 0
+		};
 		game.stage.addChild(game.ship);
+
+		requestAnimFrame(game.run);
 
 	};
 
@@ -46,10 +58,13 @@
 	};
 
 	game.update = function() {
-		// game.background.tilePosition.x -= 0.4 * game.ship.velocity.x;
+		 game.background.tilePosition.x -= 0.2 * game.ship.velocity.x;
 		// game.midground.tilePosition.x -= 0.2 * game.ship.velocity.x;
-		// game.background.tilePosition.y -= 0.4 * game.ship.velocity.y;
+		 game.background.tilePosition.y -= 0.2 * game.ship.velocity.y;
 		// game.midground.tilePosition.y -= 0.2 * game.ship.velocity.y;
+
+		game.level.position.x -= 0.5 * game.ship.velocity.x;
+		game.level.position.y -= 0.5 * game.ship.velocity.y;
 
 		// for (var s = 0; s < game.shadows.length; s++) {
 		// 	var shadowAngle = getAngle(game.lightSource.x + game.level.position.x, game.shadows[s].position.x,
@@ -91,19 +106,19 @@
 		// 			game.ship.vector.y += planetVector.y * gravitationalForce;
 		// 		}
 
-		// 		var mouseVector = new Vector(game.ship.position.x, game.mouse.position.x,
-		// 									game.ship.position.y, game.mouse.position.y);
+				var mouseVector = new Vector(game.ship.position.x, game.mouse.position.x,
+											game.ship.position.y, game.mouse.position.y);
 
-		// 		var acceleration = .02;
+				var acceleration = 0.05;
 
-		// 		if (game.key.isDown(game.key.UP)) {
-		// 			game.ship.vector.x += mouseVector.x * acceleration;
-		// 			game.ship.vector.y += mouseVector.y * acceleration;
-		// 		}
-		// 		if (game.key.isDown(game.key.DOWN)) {
-		// 			game.ship.vector.x -= mouseVector.x * acceleration;
-		// 			game.ship.vector.y -= mouseVector.y * acceleration;
-		// 		}
+				if (game.key.isDown(game.key.UP)) {
+					game.ship.vector.x += mouseVector.x * acceleration;
+					game.ship.vector.y += mouseVector.y * acceleration;
+				}
+				if (game.key.isDown(game.key.DOWN)) {
+					game.ship.vector.x -= mouseVector.x * acceleration;
+					game.ship.vector.y -= mouseVector.y * acceleration;
+				}
 
 		// 		if (Math.abs(game.ship.vector.x) > topSpeed) {
 		// 			game.ship.vector.x = (Math.abs(game.ship.vector.x)/game.ship.vector.x) * topSpeed;
@@ -118,8 +133,8 @@
 		// 		game.shadows[p].position.y -= game.ship.velocity.y;
 		// 	}
 
-		// 	game.ship.velocity.x = game.ship.vector.x;
-		// 	game.ship.velocity.y = game.ship.vector.y;
+			game.ship.velocity.x = game.ship.vector.x;
+			game.ship.velocity.y = game.ship.vector.y;
 		// 	//console.log(game.ship.velocity.x);
 		// }
 		// else if (game.ship.state == 'colliding') {

@@ -15,8 +15,6 @@
 
 			game.loader.onComplete = game.assetsLoaded;
 
-			game.loader.load();
-
 			game.mouse = {
 				position: {
 					x: 0,
@@ -78,12 +76,12 @@
     		// add the renderer view element to the DOM
     		document.body.appendChild(game.renderer.view);
 
-    		requestAnimFrame(game.run);
-
     		game.level = new PIXI.DisplayObjectContainer();
     		game.level.position.x = 0;
     		game.level.position.y = 0;
-    		game.stage.addChild(game.level);
+    		//game.stage.addChild(game.level);
+
+    		game.loader.load();
 		}
 	};
 
