@@ -76,7 +76,7 @@
     		// add the renderer view element to the DOM
     		document.body.appendChild(game.renderer.view);
 
-    		//requestAnimFrame(game.run);
+    		requestAnimFrame(game.run);
 
     		game.level = new PIXI.DisplayObjectContainer();
     		game.level.position.x = 0;

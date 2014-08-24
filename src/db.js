@@ -54,5 +54,5 @@ exports.deleteChunk = function(x, y, fn) {
   this.Chunk.remove({ x: x, y: y }, function(err) {
     if (err) return handleError(err);
     fn();
-  })
+  });
 };

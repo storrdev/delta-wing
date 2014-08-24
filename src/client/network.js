@@ -26,7 +26,8 @@
 
 		onSpawn: function(data) {
 			console.log('spawn coordinates recieved at (' + data.x + ', ' + data.y + ')');
-			game.socket.emit('get chunk', {x: data.x, y: data.y});
+			//game.socket.emit('get chunk', {x: data.x, y: data.y});
+			game.loadSurroudingChunks(data.x, data.y);
 		},
 
 		onChunk: function(data) {

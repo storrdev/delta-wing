@@ -60,7 +60,6 @@ exports.generate = function(x, y, cb) {
 			}
 		];
 
-
 		var newChunk = new db.Chunk({
 			x: x,
 			y: y,
