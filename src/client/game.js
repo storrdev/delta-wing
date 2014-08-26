@@ -13,6 +13,14 @@
 		game.background.tilePosition.y = 0;
 		game.stage.addChild(game.background);
 
+		game.midgroundTexture = new PIXI.Texture.fromImage('midground.png');
+		game.midground = new PIXI.TilingSprite(game.midgroundTexture, game.width, game.height);
+		game.midground.position.x = 0;
+		game.midground.position.y = 0;
+		game.midground.tilePosition.x = 0;
+		game.midground.tilePosition.y = 0;
+		game.stage.addChild(game.midground);
+
 		game.stage.addChild(game.level);
 
 		game.ship = new PIXI.Sprite.fromImage('fighter.png');
@@ -33,6 +41,7 @@
 			x: 0,
 			y: 0
 		};
+		game.ship.state = 'launched';
 		game.stage.addChild(game.ship);
 
 		requestAnimFrame(game.run);
@@ -58,67 +67,46 @@
 	};
 
 	game.update = function() {
-		 game.background.tilePosition.x -= 0.2 * game.ship.velocity.x;
-		// game.midground.tilePosition.x -= 0.2 * game.ship.velocity.x;
-		 game.background.tilePosition.y -= 0.2 * game.ship.velocity.y;
-		// game.midground.tilePosition.y -= 0.2 * game.ship.velocity.y;
+		game.background.tilePosition.x -= 0.2 * game.ship.velocity.x;
+		game.midground.tilePosition.x -= 0.4 * game.ship.velocity.x;
+		game.background.tilePosition.y -= 0.2 * game.ship.velocity.y;
+		game.midground.tilePosition.y -= 0.4 * game.ship.velocity.y;
 
 		game.level.position.x -= 0.5 * game.ship.velocity.x;
 		game.level.position.y -= 0.5 * game.ship.velocity.y;
 
-		// for (var s = 0; s < game.shadows.length; s++) {
-		// 	var shadowAngle = getAngle(game.lightSource.x + game.level.position.x, game.shadows[s].position.x,
-		// 								game.lightSource.y, game.shadows[s].position.y);
-		// 	game.shadows[s].rotation = shadowAngle;
-		// }
-
-		// for (var p = 0; p < game.planets.length; p++) {
-		// 	var lightAngle = getAngle(game.lightSource.x + game.level.position.x, game.planets[p].position.x,
-		// 								game.lightSource.y, game.planets[p].position.y);
-		// 	game.planets[p].rotation = lightAngle;
-		// }
-
 		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.position.x, game.mouse.position.y, game.ship.position.y);
 
-		// if (game.ship.state === 'launched') {
-		// 	for (var p = 0; p < game.planets.length; p++) {
-		// 		var distance = getDistance(game.planets[p], game.ship);
+		if (game.ship.state === 'launched') {
+			for (var p = 0; p < game.planets.length; p++) {
+		 		//var distance = getDistance(game.planets[p], game.level);
+		 		var distance = Math.sqrt(Math.pow(game.planets[p].position.x + (-game.ship.position.x + game.level.position.x), 2) + Math.pow(game.planets[p].position.y + (-game.ship.position.y + game.level.position.y), 2));
+		 		if (p === 0) {
+		 			//console.log(distance);
+		 		}
 
-		// 		var planetVector = new Vector(game.ship.position.x, game.planets[p].position.x,
-		// 								game.ship.position.y, game.planets[p].position.y);
+		 		var planetVector = new Vector(game.ship.position.x, game.planets[p].position.x,
+		 								game.ship.position.y, game.planets[p].position.y);
 
 		// 		var topSpeed = 10;
 
 		// 		var gravitationalForce = (game.gravity * game.ship.mass * game.planets[p].mass)/Math.pow(distance,2);
 
-		// 		if (distance < game.ship.radius + game.planets[p].radius) {
-		// 			//game.ship.state = 'colliding';
-		// 			/*if (game.planets[p].target == 'true') {
-		// 				game.explosion.onComplete = function() { game.win(); }
-		// 			}*/
+				if (distance < game.ship.radius + game.planets[p].radius) {
+					//game.ship.state = 'colliding';
+					/*if (game.planets[p].target == 'true') {
+						game.explosion.onComplete = function() { game.win(); }
+					}*/
 
-		// 			game.ship.vector.x = -planetVector.x;
-		// 			game.ship.vector.y = -planetVector.y;
+					console.log('colliding');
 
-		// 		}
+					game.ship.vector.x = -planetVector.x;
+					game.ship.vector.y = -planetVector.y;
+				}
 		// 		else {
 		// 			game.ship.vector.x += planetVector.x * gravitationalForce;
 		// 			game.ship.vector.y += planetVector.y * gravitationalForce;
 		// 		}
-
-				var mouseVector = new Vector(game.ship.position.x, game.mouse.position.x,
-											game.ship.position.y, game.mouse.position.y);
-
-				var acceleration = 0.05;
-
-				if (game.key.isDown(game.key.UP)) {
-					game.ship.vector.x += mouseVector.x * acceleration;
-					game.ship.vector.y += mouseVector.y * acceleration;
-				}
-				if (game.key.isDown(game.key.DOWN)) {
-					game.ship.vector.x -= mouseVector.x * acceleration;
-					game.ship.vector.y -= mouseVector.y * acceleration;
-				}
 
 		// 		if (Math.abs(game.ship.vector.x) > topSpeed) {
 		// 			game.ship.vector.x = (Math.abs(game.ship.vector.x)/game.ship.vector.x) * topSpeed;
@@ -131,26 +119,38 @@
 		// 		game.planets[p].position.y -= game.ship.velocity.y;
 		// 		game.shadows[p].position.x -= game.ship.velocity.x;
 		// 		game.shadows[p].position.y -= game.ship.velocity.y;
-		// 	}
+			}
+
+			var mouseVector = new Vector(game.ship.position.x, game.mouse.position.x,
+										game.ship.position.y, game.mouse.position.y);
+
+			var acceleration = 0.05;
+
+			if (game.key.isDown(game.key.UP)) {
+				game.ship.vector.x += mouseVector.x * acceleration;
+				game.ship.vector.y += mouseVector.y * acceleration;
+			}
+			if (game.key.isDown(game.key.DOWN)) {
+				game.ship.vector.x -= mouseVector.x * acceleration;
+				game.ship.vector.y -= mouseVector.y * acceleration;
+			}
 
 			game.ship.velocity.x = game.ship.vector.x;
 			game.ship.velocity.y = game.ship.vector.y;
-		// 	//console.log(game.ship.velocity.x);
-		// }
-		// else if (game.ship.state == 'colliding') {
-		// 	/*if (!game.explosion.playing) {
-		// 		game.ship.visible = false;
-		// 		game.ship.velocity.x = 0;
-		// 		game.ship.velocity.y = 0;
-		// 		game.explosion.position.x = game.ship.position.x;
-		// 		game.explosion.position.y = game.ship.position.y;
-		// 		game.explosion.visible = true;
-		// 		game.explosion.gotoAndPlay(0);
-		// 	}*/
-			
 
-		// }
-		// else {
+		}
+		else if (game.ship.state == 'colliding') {
+			if (!game.explosion.playing) {
+				game.ship.visible = false;
+				game.ship.velocity.x = 0;
+				game.ship.velocity.y = 0;
+				game.explosion.position.x = game.ship.position.x;
+				game.explosion.position.y = game.ship.position.y;
+				game.explosion.visible = true;
+				game.explosion.gotoAndPlay(0);
+			}
+		}
+		else {
 			
 		// 	if (game.dragging === true && game.level.position.x <= 0) {
 		// 		game.level.position.x -= (game.lastMousePosition - game.mouse.position.x) * 2;
@@ -180,7 +180,7 @@
 			
 		// 	game.reset();
 		
-		// }
+		}
 	};
 
 })();

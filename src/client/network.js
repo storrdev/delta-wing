@@ -45,6 +45,7 @@
 					planet.anchor.y = 0.5;
 					planet.height = data.json.layers[c].objects[o].height;
 					planet.width = data.json.layers[c].objects[o].width;
+					planet.radius = data.json.layers[c].objects[o].width/2;
 					game.planets.push(planet);
 					game.level.addChild(planet);
 				}

@@ -8,11 +8,11 @@ _db.once('open', function callback () {
   console.log('connected to database successfully');
 });
 
-var chunkHeight = 10;
-var chunkWidth = 10;
-var tileHeight = 10;
-var tileWidth = 10;
-var orientation = 'orthogonal';
+// var chunkHeight = 10;
+// var chunkWidth = 10;
+// var tileHeight = 10;
+// var tileWidth = 10;
+// var orientation = 'orthogonal';
 
 var chunkSchema = new Schema({
   x: Number,
