@@ -28,6 +28,13 @@
 			// game.stage = new PIXI.Stage(0x000000, interactive);
 			game.scene = new THREE.Scene();
 			game.camera = new THREE.PerspectiveCamera(90, game.width / game.height, 0.1, 1000);
+			game.camera.position.y = 150;
+
+			var axisHelper = new THREE.AxisHelper( 5 );
+			game.scene.add( axisHelper );
+
+			var light = new THREE.AmbientLight( 0x404040 );
+			game.scene.add( light );
 
 			window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
@@ -79,6 +86,8 @@
     		game.renderer = new THREE.WebGLRenderer();
     		game.renderer.setSize( game.width, game.height );
 
+    		controls = new THREE.OrbitControls( game.camera, game.renderer.domElement );
+
     		// add the renderer view element to the DOM
     		document.body.appendChild(game.renderer.domElement);
 
@@ -88,7 +97,7 @@
     		// game.level.position.y = 0;
     		game.scene.add(game.level);
 
-    		game.loader.load("assets/ship.js", game.assetsLoaded);
+    		game.loader.load("assets/ship/ship.js", game.assetsLoaded);
 		}
 	};
 

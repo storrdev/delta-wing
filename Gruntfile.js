@@ -12,7 +12,8 @@ module.exports = function(grunt) {
           'src/client/oldMath.js',
           'src/client/main.js',
           'src/client/**/*.js',
-          '!**/*.min.js'
+          '!**/*.min.js',
+          '!src/client/lib/OrbitControls.js'
         ],
         dest: 'dist/client.min.js'
       }

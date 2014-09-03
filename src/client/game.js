@@ -1,9 +1,9 @@
 (function() {
 
-	game.assetsLoaded = function() {
+	game.assetsLoaded = function(geometry, materials) {
 		// Connect to server
-		game.socket = game.network.connect();
-		game.network.setEventHandlers();
+		//game.socket = game.network.connect();
+		//game.network.setEventHandlers();
 
 		// game.backgroundTexture = new PIXI.Texture.fromImage('background.png');
 		// game.background = new PIXI.TilingSprite(game.backgroundTexture, game.width, game.height);
@@ -24,11 +24,19 @@
 		// game.stage.addChild(game.level);
 
 		// game.ship = new PIXI.Sprite.fromImage('fighter.png');
-		
-		game.ship.position.x = window.innerWidth / 2;
-		game.ship.position.y = window.innerHeight / 2;
-		game.ship.anchor.x = 0.5;
-		game.ship.anchor.y = 0.5;
+
+		game.camera.position.z = 5;
+
+		materials = new THREE.MeshBasicMaterial( { color: 0xdddddd } );
+
+		//materials = new THREE.MeshFaceMaterial( materials );
+
+		game.ship = new THREE.Mesh( geometry, materials );
+
+		game.ship.position.x = 0;
+		game.ship.position.y = 0;
+		// game.ship.anchor.x = 0.5;
+		// game.ship.anchor.y = 0.5;
 		game.ship.scale.x = 1;
 		game.ship.scale.y = 1;
 		game.ship.radius = 30 * game.ship.scale.x;
@@ -43,9 +51,9 @@
 			y: 0
 		};
 		game.ship.state = 'launched';
-		game.stage.addChild(game.ship);
+		game.level.add(game.ship);
 
-		requestAnimFrame(game.run);
+		requestAnimationFrame(game.run);
 
 	};
 
@@ -62,16 +70,16 @@
 	};
 
 	game.run = function() {
-		requestAnimFrame(game.run);
+		requestAnimationFrame(game.run);
 		game.update();
-		game.renderer.render(game.stage);
+		game.renderer.render(game.scene, game.camera);
 	};
 
 	game.update = function() {
-		game.background.tilePosition.x -= 0.2 * game.ship.velocity.x;
-		game.midground.tilePosition.x -= 0.4 * game.ship.velocity.x;
-		game.background.tilePosition.y -= 0.2 * game.ship.velocity.y;
-		game.midground.tilePosition.y -= 0.4 * game.ship.velocity.y;
+		// game.background.tilePosition.x -= 0.2 * game.ship.velocity.x;
+		// game.midground.tilePosition.x -= 0.4 * game.ship.velocity.x;
+		// game.background.tilePosition.y -= 0.2 * game.ship.velocity.y;
+		// game.midground.tilePosition.y -= 0.4 * game.ship.velocity.y;
 
 		game.level.position.x -= 0.5 * game.ship.velocity.x;
 		game.level.position.y -= 0.5 * game.ship.velocity.y;
