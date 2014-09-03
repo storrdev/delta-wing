@@ -1,0 +1,63 @@
+# Max2Mtl Version 4.0 Mar 10th, 2001
+#
+# Multi/Sub Material__144 (4) to come 
+#
+newmtl Material__33
+Ka  0.0 0.0 0.0
+Kd  0.5 0.5 0.5
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  8.0
+illum 2
+#
+newmtl Case
+Ka  0.0 0.0 0.0
+Kd  0.1 0.1 0.1
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  5.0
+illum 2
+#
+newmtl Aqua_Diffuse
+Ka  0.0 0.0 0.0
+Kd  0.5 0.6 1.0
+Ks  1.0 1.0 1.0
+d  0.3
+Ns  25.0
+illum 2
+#
+newmtl Glass
+Ka  0.0 0.0 0.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  0.3
+Ns  25.0
+illum 2
+#
+# Multi/Sub Material__144 done 
+#
+newmtl Earth
+Ka  0.0 0.0 0.0
+Kd  0.0 0.0 0.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  1.0
+illum 2
+#
+newmtl Atmosphere
+Ka  0.0 0.0 0.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  1.0
+illum 2
+#
+newmtl Volume
+Ka  0.0 0.0 0.0
+Kd  0.5 0.6 1.0
+Ks  1.0 1.0 1.0
+d  0.3
+Ns  0.0
+illum 2
+#
+# EOF

@@ -5,25 +5,26 @@
 		game.socket = game.network.connect();
 		game.network.setEventHandlers();
 
-		game.backgroundTexture = new PIXI.Texture.fromImage('background.png');
-		game.background = new PIXI.TilingSprite(game.backgroundTexture, game.width, game.height);
-		game.background.position.x = 0;
-		game.background.position.y = 0;
-		game.background.tilePosition.x = 0;
-		game.background.tilePosition.y = 0;
-		game.stage.addChild(game.background);
+		// game.backgroundTexture = new PIXI.Texture.fromImage('background.png');
+		// game.background = new PIXI.TilingSprite(game.backgroundTexture, game.width, game.height);
+		// game.background.position.x = 0;
+		// game.background.position.y = 0;
+		// game.background.tilePosition.x = 0;
+		// game.background.tilePosition.y = 0;
+		// game.stage.addChild(game.background);
 
-		game.midgroundTexture = new PIXI.Texture.fromImage('midground.png');
-		game.midground = new PIXI.TilingSprite(game.midgroundTexture, game.width, game.height);
-		game.midground.position.x = 0;
-		game.midground.position.y = 0;
-		game.midground.tilePosition.x = 0;
-		game.midground.tilePosition.y = 0;
-		game.stage.addChild(game.midground);
+		// game.midgroundTexture = new PIXI.Texture.fromImage('midground.png');
+		// game.midground = new PIXI.TilingSprite(game.midgroundTexture, game.width, game.height);
+		// game.midground.position.x = 0;
+		// game.midground.position.y = 0;
+		// game.midground.tilePosition.x = 0;
+		// game.midground.tilePosition.y = 0;
+		// game.stage.addChild(game.midground);
 
-		game.stage.addChild(game.level);
+		// game.stage.addChild(game.level);
 
-		game.ship = new PIXI.Sprite.fromImage('fighter.png');
+		// game.ship = new PIXI.Sprite.fromImage('fighter.png');
+		
 		game.ship.position.x = window.innerWidth / 2;
 		game.ship.position.y = window.innerHeight / 2;
 		game.ship.anchor.x = 0.5;

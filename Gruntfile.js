@@ -4,14 +4,15 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       options: {
-        separator: ';'
+        separator: ';\n'
       },
       dist: {
         src: [
-          'src/client/lib/**/*.js',
+          //'src/client/lib/**/*.js',
           'src/client/oldMath.js',
           'src/client/main.js',
-          'src/client/**/*.js'
+          'src/client/**/*.js',
+          '!**/*.min.js'
         ],
         dest: 'dist/client.min.js'
       }

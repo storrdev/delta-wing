@@ -8,12 +8,14 @@
 
 		init: function() {
 
-			game.loader = new PIXI.AssetLoader([
-				"Spritesheet.json",
-				"background.png"
-			]);
+			// game.loader = new PIXI.AssetLoader([
+			// 	"Spritesheet.json",
+			// 	"background.png"
+			// ]);
 
-			game.loader.onComplete = game.assetsLoaded;
+			game.loader = new THREE.JSONLoader();
+
+			// game.loader.onComplete = game.assetsLoaded;
 
 			game.mouse = {
 				position: {
@@ -22,20 +24,22 @@
 				}
 			};
 
-			var interactive = true;
-			game.stage = new PIXI.Stage(0x000000, interactive);
+			// var interactive = true;
+			// game.stage = new PIXI.Stage(0x000000, interactive);
+			game.scene = new THREE.Scene();
+			game.camera = new THREE.PerspectiveCamera(90, game.width / game.height, 0.1, 1000);
 
 			window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
 
-			game.stage.mousemove = function(data) {
+			game.scene.mousemove = function(data) {
 				var newPosition = data.getLocalPosition(this);
 				//console.log(newPosition.x + ', ' + newPosition.y);
 				game.mouse.position.x = newPosition.x;
 				game.mouse.position.y = newPosition.y;
 			};
 
-			game.stage.click = function(data) {
+			game.scene.click = function(data) {
 				if (game.ship.state == 'ready') {
 					game.aimLine.visible = false;
 					game.ship.state = 'launched';
@@ -52,7 +56,7 @@
 				}
 			};
 
-			game.stage.mousedown = function(data) {
+			game.scene.mousedown = function(data) {
 				if (game.ship.state == 'idle') {
 					game.dragging = true;
 				}
@@ -61,7 +65,7 @@
 				}
 			};
 
-			game.stage.mouseup = function(data) {
+			game.scene.mouseup = function(data) {
 				if (game.ship.state == 'idle') {
 					game.dragging = false;
 				}
@@ -71,17 +75,20 @@
 			};
 
 			// create a renderer instance.
-    		game.renderer = PIXI.autoDetectRenderer(game.width, game.height);
+    		// game.renderer = PIXI.autoDetectRenderer(game.width, game.height);
+    		game.renderer = new THREE.WebGLRenderer();
+    		game.renderer.setSize( game.width, game.height );
 
     		// add the renderer view element to the DOM
-    		document.body.appendChild(game.renderer.view);
+    		document.body.appendChild(game.renderer.domElement);
 
-    		game.level = new PIXI.DisplayObjectContainer();
-    		game.level.position.x = 0;
-    		game.level.position.y = 0;
-    		//game.stage.addChild(game.level);
+    		//game.level = new PIXI.DisplayObjectContainer();
+    		game.level = new THREE.Object3D();
+    		// game.level.position.x = 0;
+    		// game.level.position.y = 0;
+    		game.scene.add(game.level);
 
-    		game.loader.load();
+    		game.loader.load("assets/ship.js", game.assetsLoaded);
 		}
 	};
 
