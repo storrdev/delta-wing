@@ -80,7 +80,10 @@
 		if (game.ship.state === 'launched') {
 			for (var p = 0; p < game.planets.length; p++) {
 		 		//var distance = getDistance(game.planets[p], game.level);
-		 		var distance = Math.sqrt(Math.pow(game.planets[p].position.x + (-game.ship.position.x + game.level.position.x), 2) + Math.pow(game.planets[p].position.y + (-game.ship.position.y + game.level.position.y), 2));
+		 		var distance = Math.sqrt(
+		 			Math.pow(game.planets[p].position.x + (-game.ship.position.x + game.level.position.x), 2) +
+		 			Math.pow(game.planets[p].position.y + (-game.ship.position.y + game.level.position.y), 2)
+		 		);
 		 		if (p === 0) {
 		 			//console.log(distance);
 		 		}
