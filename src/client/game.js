@@ -55,10 +55,15 @@
 		game.background.tilePosition.y -= 0.2 * game.ship.vector.y;
 		game.midground.tilePosition.y -= 0.4 * game.ship.vector.y;
 
-		game.level.position.x -= 0.5 * game.ship.vector.x;
-		game.level.position.y -= 0.5 * game.ship.vector.y;
+		game.level.x = ( window.innerWidth/2 ) - game.ship.x;
+		game.level.y = ( window.innerHeight/2 ) - game.ship.y;
 
-		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.position.x, game.mouse.position.y, game.ship.position.y);
+		game.ship.screen = {
+			x: game.level.x + game.ship.x,
+			y: game.level.y + game.ship.y
+		};
+
+		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.screen.x, game.mouse.position.y, game.ship.screen.y);
 
 		if (game.ship.state === 'launched') {
 			for (var p = 0; p < game.planets.length; p++) {
@@ -107,8 +112,8 @@
 		// 		game.shadows[p].position.y -= game.ship.velocity.y;
 			}
 
-			var mouseVector = new Vector(game.ship.position.x, game.mouse.position.x,
-										game.ship.position.y, game.mouse.position.y);
+			var mouseVector = new Vector(game.ship.screen.x, game.mouse.position.x,
+										game.ship.screen.y, game.mouse.position.y);
 
 			var acceleration = 0.05;
 

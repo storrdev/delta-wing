@@ -1,5 +1,7 @@
 /*
 *	Ship Class
+*	
+*	Extends: PIXI.Sprite class
 */
 
 var Ship = function(x, y, image, focused) {
@@ -29,3 +31,7 @@ var Ship = function(x, y, image, focused) {
 Ship.prototype = Object.create(PIXI.Sprite.prototype);
 
 Ship.prototype.constructor = Ship;
+
+/*
+*	Methods
+*/
