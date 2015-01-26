@@ -23,26 +23,9 @@
 
 		game.stage.addChild(game.level);
 
-		game.ship = new PIXI.Sprite.fromImage('fighter.png');
-		game.ship.position.x = window.innerWidth / 2;
-		game.ship.position.y = window.innerHeight / 2;
-		game.ship.anchor.x = 0.5;
-		game.ship.anchor.y = 0.5;
-		game.ship.scale.x = 1;
-		game.ship.scale.y = 1;
-		game.ship.radius = 30 * game.ship.scale.x;
-		game.ship.mass = 1;
-		game.ship.thrust = 0.2;
-		game.ship.velocity = {
-			x: 0,
-			y: 0
-		};
-		game.ship.vector = {
-			x: 0,
-			y: 0
-		};
-		game.ship.state = 'launched';
-		game.stage.addChild(game.ship);
+		game.ship = new Ship(0, 0, 'fighter.png', true);
+
+		game.level.addChild(game.ship);
 
 		requestAnimFrame(game.run);
 
@@ -67,13 +50,13 @@
 	};
 
 	game.update = function() {
-		game.background.tilePosition.x -= 0.2 * game.ship.velocity.x;
-		game.midground.tilePosition.x -= 0.4 * game.ship.velocity.x;
-		game.background.tilePosition.y -= 0.2 * game.ship.velocity.y;
-		game.midground.tilePosition.y -= 0.4 * game.ship.velocity.y;
+		game.background.tilePosition.x -= 0.2 * game.ship.vector.x;
+		game.midground.tilePosition.x -= 0.4 * game.ship.vector.x;
+		game.background.tilePosition.y -= 0.2 * game.ship.vector.y;
+		game.midground.tilePosition.y -= 0.4 * game.ship.vector.y;
 
-		game.level.position.x -= 0.5 * game.ship.velocity.x;
-		game.level.position.y -= 0.5 * game.ship.velocity.y;
+		game.level.position.x -= 0.5 * game.ship.vector.x;
+		game.level.position.y -= 0.5 * game.ship.vector.y;
 
 		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.position.x, game.mouse.position.y, game.ship.position.y);
 
@@ -138,15 +121,12 @@
 				game.ship.vector.y -= mouseVector.y * acceleration;
 			}
 
-			game.ship.velocity.x = game.ship.vector.x;
-			game.ship.velocity.y = game.ship.vector.y;
-
 		}
 		else if (game.ship.state == 'colliding') {
 			if (!game.explosion.playing) {
 				game.ship.visible = false;
-				game.ship.velocity.x = 0;
-				game.ship.velocity.y = 0;
+				game.ship.vector.x = 0;
+				game.ship.vector.y = 0;
 				game.explosion.position.x = game.ship.position.x;
 				game.explosion.position.y = game.ship.position.y;
 				game.explosion.visible = true;

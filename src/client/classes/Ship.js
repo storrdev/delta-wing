@@ -15,7 +15,7 @@ var Ship = function(x, y, image, focused) {
 	this.radius = (texture.width / 2) * this.scale.x;
 	this.mass = 1;
 	this.thrust = 0.2;
-	this.velocity = {
+	this.vector = {
 		x: 0,
 		y: 0
 	};

@@ -10,6 +10,7 @@ module.exports = function(grunt) {
         src: [
           'src/client/lib/**/*.js',
           'src/client/oldMath.js',
+          'src/client/classes/**/*.js',
           'src/client/main.js',
           'src/client/**/*.js'
         ],
