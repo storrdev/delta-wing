@@ -46,6 +46,7 @@
 					planet.height = data.json.layers[c].objects[o].height;
 					planet.width = data.json.layers[c].objects[o].width;
 					planet.radius = data.json.layers[c].objects[o].width/2;
+					planet.mass = data.json.layers[c].objects[o].mass;
 					game.planets.push(planet);
 					game.level.addChild(planet);
 				}

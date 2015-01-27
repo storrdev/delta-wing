@@ -67,12 +67,12 @@
 		 			//console.log(distance);
 		 		}
 
-		 		var planetVector = new Vector(game.ship.position.x, game.planets[p].position.x,
-		 								game.ship.position.y, game.planets[p].position.y);
+		 		var planetVector = new Vector(game.ship.x, game.planets[p].x,
+		 								game.ship.y, game.planets[p].y);
 
 		// 		var topSpeed = 10;
 
-		// 		var gravitationalForce = (game.gravity * game.ship.mass * game.planets[p].mass)/Math.pow(distance,2);
+		 		var gravitationalForce = (game.gravity * game.ship.mass * game.planets[p].mass)/Math.pow(distance,2);
 
 				if (distance < game.ship.radius + game.planets[p].radius) {
 					//game.ship.state = 'colliding';
@@ -85,22 +85,10 @@
 					game.ship.vector.x = -planetVector.x;
 					game.ship.vector.y = -planetVector.y;
 				}
-		// 		else {
-		// 			game.ship.vector.x += planetVector.x * gravitationalForce;
-		// 			game.ship.vector.y += planetVector.y * gravitationalForce;
-		// 		}
-
-		// 		if (Math.abs(game.ship.vector.x) > topSpeed) {
-		// 			game.ship.vector.x = (Math.abs(game.ship.vector.x)/game.ship.vector.x) * topSpeed;
-		// 		}
-		// 		if (Math.abs(game.ship.vector.y) > topSpeed) {
-		// 			game.ship.vector.y = (Math.abs(game.ship.vector.y)/game.ship.vector.y) * topSpeed;
-		// 		}
-
-		// 		game.planets[p].position.x -= game.ship.velocity.x;
-		// 		game.planets[p].position.y -= game.ship.velocity.y;
-		// 		game.shadows[p].position.x -= game.ship.velocity.x;
-		// 		game.shadows[p].position.y -= game.ship.velocity.y;
+				else {
+					game.ship.vector.x += planetVector.x * gravitationalForce;
+					game.ship.vector.y += planetVector.y * gravitationalForce;
+				}
 			}
 
 			var mouseVector = new Vector(game.ship.screen.x, game.mouse.position.x,

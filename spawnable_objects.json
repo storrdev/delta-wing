@@ -11,7 +11,8 @@
 			"ellipse": true,
 			"visible": true,
 			"width": 200,
-			"height": 200
+			"height": 200,
+			"mass": 10
 		},
 		{
 			"name": "green_planet",
@@ -24,7 +25,8 @@
 			"ellipse": true,
 			"visible": true,
 			"width": 100,
-			"height": 100
+			"height": 100,
+			"mass": 10
 		}
 	]
 }

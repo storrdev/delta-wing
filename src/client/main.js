@@ -3,6 +3,7 @@
 		width: window.innerWidth,
 		height: window.innerHeight,
 		state: 'menu',
+		gravity: 10,
 		layers: {},
 		chunks: {},
 		planets: [],

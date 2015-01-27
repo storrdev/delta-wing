@@ -74,7 +74,7 @@
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
-        <uint>1</uint>
+        <uint>0</uint>
         <key>webpQualityLevel</key>
         <uint>101</uint>
         <key>textureSubPath</key>
@@ -180,7 +180,7 @@
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMode</key>
-            <enum type="SpriteSettings::TrimMode">Trim</enum>
+            <enum type="SpriteSettings::TrimMode">None</enum>
             <key>heuristicMask</key>
             <false/>
             <key>pivotPoint</key>
