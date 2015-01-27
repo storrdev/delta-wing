@@ -74,7 +74,7 @@
 
 		 		var gravitationalForce = (game.gravity * game.ship.mass * game.planets[p].mass)/Math.pow(distance,2);
 
-				if (distance < game.ship.radius + game.planets[p].radius) {
+				if (distance < game.ship.radius + (game.planets[p].radius * 0.825 )) {
 					//game.ship.state = 'colliding';
 					/*if (game.planets[p].target == 'true') {
 						game.explosion.onComplete = function() { game.win(); }
@@ -82,8 +82,8 @@
 
 					console.log('colliding');
 
-					game.ship.vector.x = -planetVector.x;
-					game.ship.vector.y = -planetVector.y;
+					game.ship.vector.x = -(planetVector.x * 0.1 );
+					game.ship.vector.y = -(planetVector.y * 0.1 );
 				}
 				else {
 					game.ship.vector.x += planetVector.x * gravitationalForce;
