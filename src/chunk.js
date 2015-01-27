@@ -26,7 +26,8 @@ exports.generate = function(x, y, cb) {
 			    	newObject[prop] = objectRef[prop];
 			    }
 			}
-			newObject.scale = Math.random().toFixed(2);
+			//newObject.scale = Math.random().toFixed(2);
+			newObject.scale = Math.random() * (5 - 0.75) + 0.75;
 			newObject.width = Math.ceil(newObject.width * newObject.scale);
 			newObject.height = Math.ceil(newObject.height * newObject.scale);
 

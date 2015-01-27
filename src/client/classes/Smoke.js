@@ -38,6 +38,20 @@ Smoke.prototype.update = function() {
 	this.scale.x += 0.005;
 	this.scale.y += 0.005;
 
+	var that = this;
+
+	game.planets.forEach(function(planet, index){
+		var distance = Math.sqrt(
+			Math.pow(planet.x - that.x, 2) +
+			Math.pow(planet.y - that.y, 2)
+		);
+
+		if ( distance < planet.radius ) {
+			that.vector.x = 0;
+			that.vector.y = 0;
+		}
+	});
+
 	this.x += this.vector.x;
 	this.y += this.vector.y;
 
