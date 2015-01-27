@@ -32,3 +32,15 @@ var Smoke = function(x, y, vector) {
 Smoke.prototype = Object.create(PIXI.Sprite.prototype);
 
 Smoke.prototype.constructor = Smoke;
+
+Smoke.prototype.update = function() {
+	this.alpha -= 0.005;
+	this.scale.x += 0.005;
+	this.scale.y += 0.005;
+
+	this.x += this.vector.x;
+	this.y += this.vector.y;
+
+	this.vector.x *= 0.95;
+	this.vector.y *= 0.95;
+};

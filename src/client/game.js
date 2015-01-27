@@ -59,10 +59,9 @@
 		if (game.ship.state === 'launched') {
 			game.ship.rotation = getAngle(game.mouse.position.x, game.ship.screen.x, game.mouse.position.y, game.ship.screen.y);
 			for (var p = 0; p < game.planets.length; p++) {
-		 		//var distance = getDistance(game.planets[p], game.level);
 		 		var distance = Math.sqrt(
-		 			Math.pow(game.planets[p].position.x + (-game.ship.position.x + game.level.position.x), 2) +
-		 			Math.pow(game.planets[p].position.y + (-game.ship.position.y + game.level.position.y), 2)
+		 			Math.pow(game.planets[p].x - game.ship.x, 2) +
+		 			Math.pow(game.planets[p].y - game.ship.y, 2)
 		 		);
 		 		if (p === 0) {
 		 			//console.log(distance);
@@ -177,20 +176,11 @@
 		}
 
 		game.particles.forEach(function(particle, index, object){
-			particle.alpha -= 0.005;
-			particle.scale.x += 0.005;
-			particle.scale.y += 0.005;
-
-			particle.x += particle.vector.x;
-			particle.y += particle.vector.y;
-
-			particle.vector.x *= 0.95;
-			particle.vector.y *= 0.95;
-
 			if (particle.alpha <= 0) {
 				game.layers.particles.removeChild( object[index] );
 				object.splice(index, 1);
 			}
+			particle.update();
 		});
 
 		game.background.tilePosition.x -= 0.2 * game.ship.vector.x;
