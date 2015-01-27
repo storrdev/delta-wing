@@ -24,6 +24,10 @@ var Ship = function(x, y, image, focused) {
 
 	this.x = x;
 	this.y = y;
+	this.screen = {
+		x: 0,
+		y: 0
+	};
 	this.image = image;
 	this.focused = typeof focused != 'undefined' ? focused : false;
 };

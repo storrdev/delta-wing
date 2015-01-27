@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Smoke Class Test</title>
+  <script src="/src/client/lib/pixi.js"></script>
+  <script src="/src/client/classes/Smoke.js"></script>
+</head>
+<body>
+</body>
+<script>
+	
+window.onload = function() {
+
+	/*
+	*	Testing for Ship class
+	*/
+
+	loader = new PIXI.AssetLoader([
+		"/Spritesheet.json"
+	]);
+
+	loader.load();
+
+	var smokeTest = function() {
+
+		var testSmoke = new Smoke(5, 9, "fighter.png", true);
+
+		console.log(testSmoke);
+		
+	};
+
+	loader.onComplete = smokeTest;
+
+}
+
+</script>
+</html>

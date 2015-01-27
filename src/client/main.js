@@ -3,8 +3,10 @@
 		width: window.innerWidth,
 		height: window.innerHeight,
 		state: 'menu',
+		layers: {},
 		chunks: {},
 		planets: [],
+		particles: [],
 
 		init: function() {
 
@@ -23,7 +25,7 @@
 			};
 
 			var interactive = true;
-			game.stage = new PIXI.Stage(0x000000, interactive);
+			game.stage = new PIXI.Stage(0xffffff, interactive);
 
 			window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
@@ -76,9 +78,13 @@
     		// add the renderer view element to the DOM
     		document.body.appendChild(game.renderer.view);
 
+    		game.layers.particles = new PIXI.DisplayObjectContainer();
+    		game.layers.particles.x = 0;
+    		game.layers.particles.y = 0;
+
     		game.level = new PIXI.DisplayObjectContainer();
-    		game.level.position.x = 0;
-    		game.level.position.y = 0;
+    		game.level.x = 0;
+    		game.level.y = 0;
     		//game.stage.addChild(game.level);
 
     		game.loader.load();

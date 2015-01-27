@@ -22,6 +22,7 @@
 		game.stage.addChild(game.midground);
 
 		game.stage.addChild(game.level);
+		game.stage.addChild(game.layers.particles);
 
 		game.ship = new Ship(0, 0, 'fighter.png', true);
 
@@ -50,22 +51,13 @@
 	};
 
 	game.update = function() {
-		game.background.tilePosition.x -= 0.2 * game.ship.vector.x;
-		game.midground.tilePosition.x -= 0.4 * game.ship.vector.x;
-		game.background.tilePosition.y -= 0.2 * game.ship.vector.y;
-		game.midground.tilePosition.y -= 0.4 * game.ship.vector.y;
-
-		game.level.x = ( window.innerWidth/2 ) - game.ship.x;
-		game.level.y = ( window.innerHeight/2 ) - game.ship.y;
-
 		game.ship.screen = {
 			x: game.level.x + game.ship.x,
 			y: game.level.y + game.ship.y
 		};
 
-		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.screen.x, game.mouse.position.y, game.ship.screen.y);
-
 		if (game.ship.state === 'launched') {
+			game.ship.rotation = getAngle(game.mouse.position.x, game.ship.screen.x, game.mouse.position.y, game.ship.screen.y);
 			for (var p = 0; p < game.planets.length; p++) {
 		 		//var distance = getDistance(game.planets[p], game.level);
 		 		var distance = Math.sqrt(
@@ -120,11 +112,25 @@
 			if (game.key.isDown(game.key.UP)) {
 				game.ship.vector.x += mouseVector.x * acceleration;
 				game.ship.vector.y += mouseVector.y * acceleration;
+
+				game.particles.push( new Smoke( game.ship.x, game.ship.y, mouseVector ) );
+				game.layers.particles.addChild( game.particles[ game.particles.length - 1 ] );
+
+				var max_particles = 500;
+				if (game.particles.length > max_particles) {
+					console.log('max particles reached. deleting particles');
+					game.layers.particles.removeChild( game.particles[0] );
+					game.particles.shift();
+				}
+
 			}
 			if (game.key.isDown(game.key.DOWN)) {
 				game.ship.vector.x -= mouseVector.x * acceleration;
 				game.ship.vector.y -= mouseVector.y * acceleration;
 			}
+
+			game.ship.x += game.ship.vector.x;
+			game.ship.y += game.ship.vector.y;
 
 		}
 		else if (game.ship.state == 'colliding') {
@@ -169,6 +175,33 @@
 		// 	game.reset();
 		
 		}
+
+		game.particles.forEach(function(particle, index, object){
+			particle.alpha -= 0.005;
+			particle.scale.x += 0.005;
+			particle.scale.y += 0.005;
+
+			particle.x += particle.vector.x;
+			particle.y += particle.vector.y;
+
+			particle.vector.x *= 0.95;
+			particle.vector.y *= 0.95;
+
+			if (particle.alpha <= 0) {
+				game.layers.particles.removeChild( object[index] );
+				object.splice(index, 1);
+			}
+		});
+
+		game.background.tilePosition.x -= 0.2 * game.ship.vector.x;
+		game.midground.tilePosition.x -= 0.4 * game.ship.vector.x;
+		game.background.tilePosition.y -= 0.2 * game.ship.vector.y;
+		game.midground.tilePosition.y -= 0.4 * game.ship.vector.y;
+
+		game.level.x = ( window.innerWidth/2 ) - game.ship.x;
+		game.level.y = ( window.innerHeight/2 ) - game.ship.y;
+		game.layers.particles.x = ( window.innerWidth/2 ) - game.ship.x;
+		game.layers.particles.y = ( window.innerHeight/2 ) - game.ship.y;
 	};
 
 })();
