@@ -80,7 +80,7 @@
 						game.explosion.onComplete = function() { game.win(); }
 					}*/
 
-					console.log('colliding');
+					//console.log('colliding');
 
 					game.ship.vector.x = -(planetVector.x * 0.1 );
 					game.ship.vector.y = -(planetVector.y * 0.1 );
@@ -100,6 +100,9 @@
 				game.ship.vector.x += mouseVector.x * acceleration;
 				game.ship.vector.y += mouseVector.y * acceleration;
 
+				game.ship.flame.visible = true;
+				game.ship.flame.play();
+
 				game.particles.push( new Smoke( game.ship.x, game.ship.y, mouseVector ) );
 				game.layers.particles.addChild( game.particles[ game.particles.length - 1 ] );
 
@@ -110,6 +113,10 @@
 					game.particles.shift();
 				}
 
+			}
+			else {
+				game.ship.flame.visible = false;
+				game.ship.flame.stop();
 			}
 			if (game.key.isDown(game.key.DOWN)) {
 				game.ship.vector.x -= mouseVector.x * acceleration;

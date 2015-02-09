@@ -17,7 +17,7 @@ var Smoke = function(x, y, vector) {
 	this.scale.y = 0.1;
 	this.radius = (texture.width / 2) * this.scale.x;
 	this.mass = 0.1;
-	this.alpha = 0.8;
+	this.alpha = 0.2;
 	this.rotation = Math.random() * 2;
 
 	this.vector = {
@@ -34,9 +34,9 @@ Smoke.prototype = Object.create(PIXI.Sprite.prototype);
 Smoke.prototype.constructor = Smoke;
 
 Smoke.prototype.update = function() {
-	this.alpha -= 0.005;
-	this.scale.x += 0.005;
-	this.scale.y += 0.005;
+	this.alpha -= 0.001;
+	this.scale.x += 0.01;
+	this.scale.y += 0.01;
 
 	var that = this;
 
