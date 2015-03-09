@@ -1,6 +1,7 @@
 var db = require('./db');
 var gameMath = require('./Math');
 var fs = require('fs');
+var planet = require('./planet');
 
 exports.generate = function(x, y, cb) {
 
@@ -13,6 +14,7 @@ exports.generate = function(x, y, cb) {
 	var newObject;
 	var newObjects = [];
 
+	// Open json file with spawnable objects
 	fs.readFile('../spawnable_objects.json', 'utf8', function (err, data) {
 		if (err) throw err;
 		var spawnable = JSON.parse(data);
@@ -21,13 +23,15 @@ exports.generate = function(x, y, cb) {
 		for (var o = 0; o < numObjects; o++) {
 			newObject = {"id": o};
 			objectRef = spawnable.objects[Math.ceil((Math.random() * spawnable.objects.length) - 1)];
+			if (objectRef.type == 'planet') {
+				var planetTexture = new planet.Generate(x, y, o);
+			}
 			for (var prop in objectRef) {
 				if(objectRef.hasOwnProperty(prop)){
 			    	newObject[prop] = objectRef[prop];
 			    }
 			}
-			//newObject.scale = Math.random().toFixed(2);
-			newObject.scale = Math.random() * (5 - 0.75) + 0.75;
+			newObject.scale = Math.random() * (1 - 0.25) + 1;
 			newObject.width = Math.ceil(newObject.width * newObject.scale);
 			newObject.height = Math.ceil(newObject.height * newObject.scale);
 

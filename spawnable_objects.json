@@ -3,11 +3,8 @@
 		{
 			"name": "blue_planet",
 			"type": "planet",
-			"properties":
-				{
-					"texture": "blue_planet.png",
-					"spawn_rate": 0.1
-				},
+			"texture": "blue_planet.png",
+			"spawn_rate": 0.1,
 			"ellipse": true,
 			"visible": true,
 			"width": 200,
@@ -17,11 +14,8 @@
 		{
 			"name": "green_planet",
 			"type": "planet",
-			"properties":
-				{
-					"texture": "green_planet.png",
-					"spawn_rate": 0.2
-				},
+			"texture": "green_planet.png",
+			"spawn_rate": 0.2,
 			"ellipse": true,
 			"visible": true,
 			"width": 100,

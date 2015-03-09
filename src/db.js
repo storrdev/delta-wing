@@ -23,7 +23,8 @@ var chunkSchema = new Schema({
   tilewidth: Number,
   orientation: String,
   tilesets: Array,
-  properties: Schema.Types.Mixed,
+  texture: String,
+  spawn_rate: Number,
   version: Number,
   layers: Array
 });
