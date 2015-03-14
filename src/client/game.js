@@ -48,6 +48,7 @@
 	game.run = function() {
 		requestAnimFrame(game.run);
 		game.update();
+		// console.log('game updated');
 		game.renderer.render(game.stage);
 	};
 

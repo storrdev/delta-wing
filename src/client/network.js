@@ -48,8 +48,12 @@
 					var xMultiplier = data.json.width * data.json.tilewidth * data.json.x;
 					console.log(data.json.layers[c].objects[0]);
 					var planet = new Planet(data.json.layers[c].objects[o]);
+					console.log('new planet created');
+					console.log(game.planets);
 					game.planets.push(planet);
+					console.log('new planet pushed into planet array');
 					game.level.addChild(planet);
+					console.log('new planet added to game.level');
 				}
 			}
 		},

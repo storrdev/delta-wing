@@ -38,7 +38,7 @@ var Planet = function(attributes) {
 
 	console.log('planet object container radius set');
 
-	this.mass = attributes.scale.x * attributes.density;
+	this.mass = attributes.scale * attributes.density;
 
 	console.log('planet object container mass set');
 
