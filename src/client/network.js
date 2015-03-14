@@ -26,19 +26,28 @@
 
 		onSpawn: function(data) {
 			console.log('spawn coordinates recieved at (' + data.x + ', ' + data.y + ')');
-			game.loadSurroudingChunks(data.x, data.y);
+			console.log('calling loadSurroundingChunks');
+			game.loadSurroundingChunks(data.x, data.y);
 		},
 
 		onChunk: function(data) {
+			console.log('chunk recieved');
 			var coords = data.x + ',' + data.y;
+
+			console.log('chunk coordinates: ' + coords);
+			console.log(data.json);
 
 			game.chunks[coords] = data.json;
 
+			console.log('chunk layers: ' + data.json.layers.length);
+
 			for (var c = 0; c < data.json.layers.length; c++) {
+				console.log('chunk objects: ' + data.json.layers[c].objects.length);
 				for (var o = 0; o < data.json.layers[c].objects.length; o++) {
 					var yMultiplier = data.json.height * data.json.tileheight * data.json.y;
 					var xMultiplier = data.json.width * data.json.tilewidth * data.json.x;
-					var planet = new Planet(data.json.objects[o]);
+					console.log(data.json.layers[c].objects[0]);
+					var planet = new Planet(data.json.layers[c].objects[o]);
 					game.planets.push(planet);
 					game.level.addChild(planet);
 				}

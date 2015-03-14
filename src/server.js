@@ -95,22 +95,22 @@ function onSocketConnection(client) {
 	client.on('request id', onRequestId);
 	client.on('get clients', onGetClients);
 	client.on('get chunk', onGetChunk);
-  client.on('get spawn', onGetSpawn);
+ 	client.on('get spawn', onGetSpawn);
 }
 
 function onClientDisconnect() {
 	console.log('player has disconnected: ' + this.id);
 
-	var removePlayer = playerById(this.id);
+	// var removePlayer = playerById(this.id);
 
-  console.log('Player Id to remove: ' + removePlayer);
+	//console.log('Player Id to remove: ' + removePlayer);
 
-	if(!removePlayer) {
-		console.log('Player not found: ' + this.id);
-		return;
-	}
+	// if(!removePlayer) {
+	// 	console.log('Player not found: ' + this.id);
+	// 	return;
+	// }
 
-	players.splice(players.indexOf(removePlayer), 1);
+	// players.splice(players.indexOf(removePlayer), 1);
 	// broadcast.emit sends a message to all clients except the one it's being called on
 	this.broadcast.emit('remove player', {id: this.id});
 }
@@ -120,13 +120,13 @@ function onRequestId() {
 }
 
 function onGetClients() {
-	console.log('connected clients requested.');
-	console.log('number of existing players: ' + players.length);
+	//console.log('connected clients requested.');
+	//console.log('number of existing players: ' + players.length);
 	var i, existingPlayer;
 	for(i = 0; i < players.length; i++) {
 		existingPlayer = players[i];
 		// .emit sends a message to all the clients
-		console.log('sent ' + existingPlayer.name + '\'s information.');
+		//console.log('sent ' + existingPlayer.name + '\'s information.');
 		this.emit('new player', {
 			id: existingPlayer.id,
 			x: existingPlayer.getX(),
@@ -142,7 +142,7 @@ function onNewPlayer(data) {
 	var newPlayer = new Player(data.x, data.y, data.name);
 	newPlayer.id = this.id;
 
-	console.log(data.name + ' has entered the game. ' + newPlayer);
+	//console.log(data.name + ' has entered the game. ' + newPlayer);
 
 	// broadcast.emit sends a message to all clients except the one it's being called on
 	this.broadcast.emit('new player', {
@@ -155,7 +155,7 @@ function onNewPlayer(data) {
 	});
 
 	players.push(newPlayer);
-	console.log('number of players: ' + players.length);
+	//console.log('number of players: ' + players.length);
 }
 
 function onMovePlayer(data) {
@@ -209,7 +209,7 @@ function onRemoveProjectile(data) {
 		return;
 	}
 
-	console.log('Projectile removed.');
+	//console.log('Projectile removed.');
 
 	projectiles.splice(projectiles.indexOf(removeProjectile), 1);
 	// broadcast.emit sends a message to all clients except the one it's being called on
@@ -221,7 +221,7 @@ function onDeath() {
 
 	deathPlayer.deaths++;
 
-	console.log(this.id + ' has died ' + deathPlayer.deaths + ' times.');
+	//console.log(this.id + ' has died ' + deathPlayer.deaths + ' times.');
 
 	io.sockets.emit('deaths', {id: this.id, deaths: deathPlayer.deaths});
 }
@@ -231,7 +231,7 @@ function onKills(data) {
 
 	killsPlayer.kills++;
 
-	console.log(data.playerId + ' has killed ' + killsPlayer.kills + ' players.');
+	//console.log(data.playerId + ' has killed ' + killsPlayer.kills + ' players.');
 
 	io.sockets.emit('kills', {id: data.playerId, kills: killsPlayer.kills});
 }
@@ -242,13 +242,14 @@ function onGetChunk(data) {
 	// db.deleteChunk(data.x, data.y, function() {
 	// 	console.log('chunk deleted');
 		db.getChunk(data.x, data.y, function(chunk) {
+			console.log('emitting chunk');
 	    	that.emit('chunk', { x: data.x, y: data.y, json: chunk });
 		});
 	// });
 }
 
 function onGetSpawn(data) {
-  console.log('spawn requested from ' + this.id);
+  //console.log('spawn requested from ' + this.id);
   this.emit('spawn', { x: 1, y: 1 });
 }
 

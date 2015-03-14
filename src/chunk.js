@@ -1,7 +1,7 @@
 var db = require('./db');
 var gameMath = require('./Math');
 var fs = require('fs');
-var planet = require('./planet');
+// var planet = require('./planet');
 
 exports.generate = function(x, y, cb) {
 
@@ -19,18 +19,20 @@ exports.generate = function(x, y, cb) {
 		if (err) throw err;
 		var spawnable = JSON.parse(data);
 		var numObjects = Math.ceil(Math.random()*3);
-		console.log('number of objects: ' + numObjects);
+		//console.log('number of objects: ' + numObjects);
 		for (var o = 0; o < numObjects; o++) {
+			var planetTexture;
 			newObject = {"id": o};
 			objectRef = spawnable.objects[Math.ceil((Math.random() * spawnable.objects.length) - 1)];
 			if (objectRef.type == 'planet') {
-				var planetTexture = new planet.Generate(x, y, o);
+				//planetTexture = new planet.Generate(x, y, o);
 			}
 			for (var prop in objectRef) {
 				if(objectRef.hasOwnProperty(prop)){
 			    	newObject[prop] = objectRef[prop];
 			    }
 			}
+			//newObject.texture = planetTexture;
 			newObject.scale = Math.random() * (1 - 0.25) + 1;
 			newObject.width = Math.ceil(newObject.width * newObject.scale);
 			newObject.height = Math.ceil(newObject.height * newObject.scale);
@@ -79,7 +81,7 @@ exports.generate = function(x, y, cb) {
 		newChunk.save(function(err, newChunk) {
 			if (err) return console.error(err);
 			else {
-				console.log('chunk created: ' + newChunk);
+				console.log('chunk created: ' + newChunk.id);
 				cb(newChunk);
 			}
 		});

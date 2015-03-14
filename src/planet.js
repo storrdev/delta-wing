@@ -31,9 +31,13 @@ exports.Generate = function(chunkx, chunky, n) {
 	// Get low level image object with buffer from the 'pngjs' package 
 	var pngjs = image.getImage();
 	 
-	image.writeImage('../assets/planets/' + chunkx + 'x' + chunky + '-' + n + '.png', function () {
+	var fileName = chunkx + 'x' + chunky + '-' + n + '.png';
+
+	image.writeImage('../assets/planets/' + fileName, function () {
 	    console.log('Written to the file');
 	});
+
+	return fileName;
 };
 
 //exports.Generate(1, 1, 1);

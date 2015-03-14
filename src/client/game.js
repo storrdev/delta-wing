@@ -32,7 +32,8 @@
 
 	};
 
-	game.loadSurroudingChunks = function(x, y) {
+	game.loadSurroundingChunks = function(x, y) {
+		console.log('requesting surrounding chunks.');
 		game.chunkBuffer = 1;
 
 		for (var xx = -game.chunkBuffer; xx <= game.chunkBuffer; xx++) {
