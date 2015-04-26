@@ -4,8 +4,12 @@
 
 	game.network = {
 
+		peer: null,
+
 		connect: function() {
 			socket = io.connect(window.location.href);
+			this.peer = new Peer( { key: 'ownnvv2opm5z5mi' } );
+			//console.log(this.peer);
 			return socket;
 		},
 
@@ -22,51 +26,56 @@
 			socket.on('kills', this.onKills);
 			socket.on('chunk', this.onChunk);
 			socket.on('spawn', this.onSpawn);
+			this.peer.on('open', this.onPeerOpen);
+		},
+
+		onPeerOpen: function(peerid) {
+			console.log('this is my id' + peerid);
 		},
 
 		onSpawn: function(data) {
-			console.log('spawn coordinates recieved at (' + data.x + ', ' + data.y + ')');
-			console.log('calling loadSurroundingChunks');
+			//console.log('spawn coordinates recieved at (' + data.x + ', ' + data.y + ')');
+			//console.log('calling loadSurroundingChunks');
 			game.loadSurroundingChunks(data.x, data.y);
 		},
 
 		onChunk: function(data) {
-			console.log('chunk recieved');
+			//console.log('chunk recieved');
 			var coords = data.x + ',' + data.y;
 
-			console.log('chunk coordinates: ' + coords);
-			console.log(data.json);
+			//console.log('chunk coordinates: ' + coords);
+			//console.log(data.json);
 
 			game.chunks[coords] = data.json;
 
-			console.log('chunk layers: ' + data.json.layers.length);
+			//console.log('chunk layers: ' + data.json.layers.length);
 
 			for (var c = 0; c < data.json.layers.length; c++) {
-				console.log('chunk objects: ' + data.json.layers[c].objects.length);
+				//console.log('chunk objects: ' + data.json.layers[c].objects.length);
 				for (var o = 0; o < data.json.layers[c].objects.length; o++) {
 					var yMultiplier = data.json.height * data.json.tileheight * data.json.y;
 					var xMultiplier = data.json.width * data.json.tilewidth * data.json.x;
-					console.log(data.json.layers[c].objects[0]);
+					//console.log(data.json.layers[c].objects[0]);
 					var planet = new Planet(data.json.layers[c].objects[o]);
-					console.log('new planet created');
-					console.log(game.planets);
+					//console.log('new planet created');
+					//console.log(game.planets);
 					game.planets.push(planet);
-					console.log('new planet pushed into planet array');
+					//console.log('new planet pushed into planet array');
 					game.level.addChild(planet);
-					console.log('new planet added to game.level');
+					//console.log('new planet added to game.level');
 				}
 			}
 		},
 
 		onSocketConnected: function() {
-			console.log('Connected to socket server, requesting client id');
+			//console.log('Connected to socket server, requesting client id');
 			game.socket.emit('request id', {});
 			//game.loadChunks();
 		},
 
 		onClientId: function(data) {
 			game.clientId = data.id;
-			console.log('network id acquired: ' + game.clientId);
+			//console.log('network id acquired: ' + game.clientId);
 
 			/*game.entities[game.clientId] = game.createEntity({
 				playerId: game.clientId,
@@ -86,20 +95,20 @@
 
 
 
-			console.log('requesting already connected players.');
+			//console.log('requesting already connected players.');
 			game.socket.emit('get clients', {});
-			console.log('requesting spawn coordinates');
+			//console.log('requesting spawn coordinates');
 			game.socket.emit('get spawn', {});
 			game.lastUpdate = Date.now();
 			//game.run();
 		},
 
 		onSocketDisconnect: function() {
-			console.log('Disconnected from socket server');
+			//console.log('Disconnected from socket server');
 		},
 
 		onNewPlayer: function(data) {
-			console.log('New player connected: ' + data.id + ':' + data.name);
+			//console.log('New player connected: ' + data.id + ':' + data.name);
 
 			game.entities[data.id] = game.createEntity({
 				playerId: data.id,
@@ -138,14 +147,14 @@
 
 		onRemovePlayer: function(data) {
 			if (!game.entities[data.id]) {
-				console.log('Player not found: ' + data.id);
+				//console.log('Player not found: ' + data.id);
 				return;
 			}
 
 			game.removePlayerFromScoreboard(game.entities[data.id]);
 			delete game.entities[data.id];
 			game.nPlayers--;
-			console.log('player has been disconnected: ' + data.id);
+			//console.log('player has been disconnected: ' + data.id);
 		},
 
 		onNewProjectile: function(data) {
@@ -170,7 +179,7 @@
 			var removeProjectile = projectileById(data.id);
 
 			if (!removeProjectile) {
-				console.log('Projectile not found: ' + this.id);
+				//console.log('Projectile not found: ' + this.id);
 			}
 
 			game.projectiles.splice(game.projectiles.indexOf(removeProjectile));

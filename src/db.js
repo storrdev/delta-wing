@@ -34,7 +34,7 @@ exports.Chunk = mongoose.model('Chunk', chunkSchema);
 exports.getChunk = function(x, y, fn) {
 
   // This will create new chunks everytime you reconnect to the server, useful for testing
-  // this.deleteChunk(x, y);
+  this.deleteChunk(x, y);
 
   this.Chunk.findOne({ x: x, y: y }, function(err, oldChunk) {
     if (err) {

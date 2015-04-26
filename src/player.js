@@ -1,11 +1,13 @@
-var Player = function(startX, startY, name) {
+//var Player = function(startX, startY, name) {
 
-	var x = startX,
-		y = startY,
+var Player = function(attr) {
+
+	var x = attr.x,
+		y = attr.y,
 		velX = 0,
 		velY = 0,
 		angle = 0,
-		id,
+		id = attr.id,
 		kills = 0,
 		deaths = 0;
 

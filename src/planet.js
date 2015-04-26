@@ -1,3 +1,4 @@
+var server = require('./server');
 var PNGImage = require('pngjs-image');
 var gameMath = require('./Math');
 
@@ -35,9 +36,8 @@ exports.Generate = function(chunkx, chunky, n) {
 
 	image.writeImage('../assets/planets/' + fileName, function () {
 	    console.log('Written to the file');
+	    console.log(server.sockets);
 	});
-
-	return fileName;
 };
 
 //exports.Generate(1, 1, 1);

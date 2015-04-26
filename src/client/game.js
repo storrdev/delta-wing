@@ -33,7 +33,7 @@
 	};
 
 	game.loadSurroundingChunks = function(x, y) {
-		console.log('requesting surrounding chunks.');
+		//console.log('requesting surrounding chunks.');
 		game.chunkBuffer = 1;
 
 		for (var xx = -game.chunkBuffer; xx <= game.chunkBuffer; xx++) {
@@ -101,7 +101,7 @@
 
 				var max_particles = 500;
 				if (game.particles.length > max_particles) {
-					console.log('max particles reached. deleting particles');
+					//console.log('max particles reached. deleting particles');
 					game.layers.particles.removeChild( game.particles[0] );
 					game.particles.shift();
 				}

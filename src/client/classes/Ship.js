@@ -40,7 +40,7 @@ var Ship = function(x, y, image, focused) {
 		y: 0
 	};
 
-	console.log('ship coords: ' + x + ', ' + y);
+	//console.log('ship coords: ' + x + ', ' + y);
 
 	this.x = x;
 	this.y = y;

@@ -139,8 +139,13 @@ function onGetClients() {
 }
 
 function onNewPlayer(data) {
-	var newPlayer = new Player(data.x, data.y, data.name);
-	newPlayer.id = this.id;
+	var newPlayer = new Player({
+		id: this.id,
+		peerId: data.peerId,
+		x: data.x,
+		y: data.y,
+		name: data.name
+	});
 
 	//console.log(data.name + ' has entered the game. ' + newPlayer);
 
@@ -274,3 +279,11 @@ function projectileById(id) {
 
 	return false;
 }
+
+/*
+*	Export http.Server object so other files can use it
+*/
+
+exports.server = function() {
+	return io;
+};
