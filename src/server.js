@@ -96,6 +96,9 @@ function onSocketConnection(client) {
 	client.on('get clients', onGetClients);
 	client.on('get chunk', onGetChunk);
  	client.on('get spawn', onGetSpawn);
+ 	client.on('error', function(err) {
+ 		console.log(err);
+ 	});
 }
 
 function onClientDisconnect() {
@@ -139,6 +142,14 @@ function onGetClients() {
 }
 
 function onNewPlayer(data) {
+	
+	/*
+	*	The player's x and y locations should probably be
+	*	determined on the server side. Either by querying the
+	*	database for the user's last known location, or figuring
+	*	out a safe place for the user to spawn.
+	*/
+
 	var newPlayer = new Player({
 		id: this.id,
 		peerId: data.peerId,
@@ -147,7 +158,7 @@ function onNewPlayer(data) {
 		name: data.name
 	});
 
-	console.log(data.name + ' has entered the game. ' + newPlayer);
+	console.log(data.name + ' has entered the game.');
 	console.log('new player peer id: ' + newPlayer.peerId);
 
 	// broadcast.emit sends a message to all clients except the one it's being called on

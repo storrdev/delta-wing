@@ -121,10 +121,28 @@
 
 	window.onload = function() {
 
+		document.getElementById('userName').focus();
+
 		// Initialize login form functions
 		document.getElementById('login-form').addEventListener('submit', function(e) {
 			e.preventDefault();
 			document.getElementById('login-box').style.display = 'none';
+
+			/*
+			*	This is where the 'new player' message should be sent
+			*	via websockets to the server.
+			*/
+
+			var userName = document.getElementById('userName').value;
+
+			game.socket.emit('new player', {
+				name: userName,
+				id: game.clientId,
+				peerId: game.peerId
+			});
+
+			game.ship.state = 'launched';
+
 		});
 
 		// Start the Game

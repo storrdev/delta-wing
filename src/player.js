@@ -2,7 +2,8 @@
 
 var Player = function(attr) {
 
-	var x = attr.x,
+	var name = attr.name,
+		x = attr.x,
 		y = attr.y,
 		velX = 0,
 		velY = 0,
@@ -85,6 +86,7 @@ var Player = function(attr) {
 		setDeaths: setDeaths,
 		name: name,
 		id: id,
+		peerId: peerId,
 		kills: kills,
 		deaths: deaths
 	};

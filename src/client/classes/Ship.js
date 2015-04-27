@@ -27,7 +27,7 @@ var Ship = function(x, y, image, focused) {
 
 	this.addChild(this.sprite);
 
-	this.state = 'launched';
+	this.state = 'hidden';
 	this.sprite.anchor.x = 0.5;
 	this.sprite.anchor.y = 0.5;
 	this.sprite.scale.x = 1;
