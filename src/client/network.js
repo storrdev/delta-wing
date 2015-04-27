@@ -6,12 +6,22 @@
 
 		peer: null,
 
+		/*
+		*	Makes websocket connection to node server using socket.io
+		*	Makes connection to PeerJS
+		*/
+
 		connect: function() {
 			socket = io.connect(window.location.href);
 			this.peer = new Peer( { key: 'ownnvv2opm5z5mi' } );
 			//console.log(this.peer);
 			return socket;
 		},
+
+		/*
+		*	Sets up all the network events including:
+		*	socket.io events
+		*/
 
 		setEventHandlers: function() {
 			socket.on('connect', this.onSocketConnected);
@@ -30,7 +40,8 @@
 		},
 
 		onPeerOpen: function(peerid) {
-			console.log('this is my id' + peerid);
+			console.log('this is my id ' + peerid);
+			game.peerId = peerid;
 		},
 
 		onSpawn: function(data) {
@@ -70,6 +81,7 @@
 		onSocketConnected: function() {
 			//console.log('Connected to socket server, requesting client id');
 			game.socket.emit('request id', {});
+
 			//game.loadChunks();
 		},
 
@@ -93,9 +105,7 @@
 				game.component.moveable,
 				game.component.damageable]);*/
 
-
-
-			//console.log('requesting already connected players.');
+			console.log('requesting already connected players.');
 			game.socket.emit('get clients', {});
 			//console.log('requesting spawn coordinates');
 			game.socket.emit('get spawn', {});

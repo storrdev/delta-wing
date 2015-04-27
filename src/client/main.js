@@ -120,6 +120,13 @@
 	};
 
 	window.onload = function() {
+
+		// Initialize login form functions
+		document.getElementById('login-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			document.getElementById('login-box').style.display = 'none';
+		});
+
 		// Start the Game
 		game.init();
 	};

@@ -26,8 +26,8 @@ exports.generate = function(x, y, cb) {
 			objectRef = spawnable.objects[Math.ceil((Math.random() * spawnable.objects.length) - 1)];
 			if (objectRef.type == 'planet') {
 				planetTexture = new planet.Generate(x, y, o);
-				console.log('planet generated');
-				console.log(planetTexture);
+				//console.log('planet generated');
+				//console.log(planetTexture);
 			}
 			for (var prop in objectRef) {
 				if(objectRef.hasOwnProperty(prop)){
@@ -83,8 +83,8 @@ exports.generate = function(x, y, cb) {
 		newChunk.save(function(err, newChunk) {
 			if (err) return console.error(err);
 			else {
-				console.log('chunk created: ' + newChunk.id);
-				cb(newChunk);
+				//console.log('chunk created: ' + newChunk.id);
+				//cb(newChunk);
 			}
 		});
 

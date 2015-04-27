@@ -8,6 +8,7 @@ var Player = function(attr) {
 		velY = 0,
 		angle = 0,
 		id = attr.id,
+		peerId = attr.peerId,
 		kills = 0,
 		deaths = 0;
 

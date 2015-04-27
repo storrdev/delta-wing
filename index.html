@@ -9,11 +9,50 @@
 			display:block; /* To remove the scrollbars */
 			/*cursor: none;*/
 		}
+		.login-box {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-left: -175px;
+			margin-top: -150px;
+			width: 350px;
+			height: 300px;
+			z-index: 1000;
+			background: #202020;
+			text-align: center;
+			display: table;
+			color: #95CDFC;
+			border-radius: 47px 0px 74px 0px;
+			-moz-border-radius: 47px 0px 74px 0px;
+			-webkit-border-radius: 47px 0px 74px 0px;
+			border: 8px outset #17e4ff;
+		}
+
+			.login-box .inner-wrap {
+				padding: 5%;
+				display: table-cell;
+				vertical-align: middle;
+				text-align: left;
+			}
+
+			.login-box label {
+				display: block;
+			}
 	</style>
 	<script src="http://cdn.peerjs.com/0.3/peer.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/dist/client.min.js"></script>
 </head>
 <body>
+	<div class="login-box" id="login-box">
+		<div class="inner-wrap">
+			<h1>Delta Wing</h1>
+			<form action="#" id="login-form">
+				<label for="userName">Name:</label>
+				<input type="text" name="userName" id="userName" />
+				<button id="playGame">Play</button>
+			</form>
+		</div>
+	</div>
 </body>
 </html>

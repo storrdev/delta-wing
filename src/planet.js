@@ -35,8 +35,8 @@ exports.Generate = function(chunkx, chunky, n) {
 	var fileName = chunkx + 'x' + chunky + '-' + n + '.png';
 
 	image.writeImage('../assets/planets/' + fileName, function () {
-	    console.log('Written to the file');
-	    console.log(server.sockets);
+	    //console.log('Written to the file');
+	    //console.log(server.sockets);
 	});
 };
 

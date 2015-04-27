@@ -120,8 +120,8 @@ function onRequestId() {
 }
 
 function onGetClients() {
-	//console.log('connected clients requested.');
-	//console.log('number of existing players: ' + players.length);
+	console.log('connected clients requested.');
+	console.log('number of existing players: ' + players.length);
 	var i, existingPlayer;
 	for(i = 0; i < players.length; i++) {
 		existingPlayer = players[i];
@@ -147,7 +147,8 @@ function onNewPlayer(data) {
 		name: data.name
 	});
 
-	//console.log(data.name + ' has entered the game. ' + newPlayer);
+	console.log(data.name + ' has entered the game. ' + newPlayer);
+	console.log('new player peer id: ' + newPlayer.peerId);
 
 	// broadcast.emit sends a message to all clients except the one it's being called on
 	this.broadcast.emit('new player', {
@@ -242,12 +243,12 @@ function onKills(data) {
 }
 
 function onGetChunk(data) {
-  console.log('chunk(' + data.x + ', ' + data.y + ') requested from ' + this.id);
+	//console.log('chunk(' + data.x + ', ' + data.y + ') requested from ' + this.id);
 	var that = this;
 	// db.deleteChunk(data.x, data.y, function() {
 	// 	console.log('chunk deleted');
 		db.getChunk(data.x, data.y, function(chunk) {
-			console.log('emitting chunk');
+			//console.log('emitting chunk');
 	    	that.emit('chunk', { x: data.x, y: data.y, json: chunk });
 		});
 	// });

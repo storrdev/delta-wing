@@ -38,15 +38,15 @@ exports.getChunk = function(x, y, fn) {
 
   this.Chunk.findOne({ x: x, y: y }, function(err, oldChunk) {
     if (err) {
-      console.log('chunk error: ' + err);
+      //console.log('chunk error: ' + err);
     }
     else {
       if (oldChunk) {
-        console.log('chunk found: ' + oldChunk._id);
+        //console.log('chunk found: ' + oldChunk._id);
         fn(oldChunk);
       }
       else {
-        console.log('no chunk found. generating chunk.');
+        //console.log('no chunk found. generating chunk.');
         chunk.generate(x, y, fn);
       }
     }
