@@ -8,6 +8,9 @@
 		chunks: {},
 		planets: [],
 		particles: [],
+		peers: [],
+		peerConnected: false,
+		socketConnected: false,
 
 		init: function() {
 

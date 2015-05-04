@@ -119,6 +119,13 @@
 			game.ship.x += game.ship.vector.x;
 			game.ship.y += game.ship.vector.y;
 
+			game.peers.forEach(function(element, index){
+				element.send({
+					x: game.ship.x,
+					y: game.ship.y
+				});
+			});
+
 		}
 		else if (game.ship.state == 'colliding') {
 			if (!game.explosion.playing) {

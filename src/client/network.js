@@ -13,7 +13,7 @@
 
 		connect: function() {
 			socket = io.connect(window.location.href);
-			this.peer = new Peer( { key: 'ownnvv2opm5z5mi' } );
+			game.network.peer = new Peer( { key: 'ownnvv2opm5z5mi' } );
 			//console.log(this.peer);
 			return socket;
 		},
@@ -36,12 +36,26 @@
 			socket.on('kills', this.onKills);
 			socket.on('chunk', this.onChunk);
 			socket.on('spawn', this.onSpawn);
+			//this.peer.on('connection', this.onPeerConnection);
 			this.peer.on('open', this.onPeerOpen);
 		},
 
 		onPeerOpen: function(peerid) {
 			console.log('this is my id ' + peerid);
 			game.peerId = peerid;
+
+			// game.peerConnected = true;
+
+			// if (game.socketConnected === true) {
+			// 	game.socket.emit('peerId', { peerId: game.peerid });
+			// 	console.log('sent peerid via onPeerOpen');
+			// }
+		},
+
+		onPeerConnection: function(conn) {
+			conn.on('data', function(data) {
+				console.log(data);
+			});
 		},
 
 		onSpawn: function(data) {
@@ -82,6 +96,13 @@
 			//console.log('Connected to socket server, requesting client id');
 			game.socket.emit('request id', {});
 
+			// game.socketConnected = true;
+
+			// if (game.peerConnected === true) {
+			// 	game.socket.emit('peerId', { peerId: game.peerid });
+			// 	console.log('sent peerid via onSocketConnected');
+			// }
+
 			//game.loadChunks();
 		},
 
@@ -118,31 +139,41 @@
 		},
 
 		onNewPlayer: function(data) {
-			//console.log('New player connected: ' + data.id + ':' + data.name);
+			console.log(data.name + ' connected.');
+			console.log('peerid: ' + data.peerId);
 
-			game.entities[data.id] = game.createEntity({
-				playerId: data.id,
-				name: data.name,
-				image: game.assetManager.getAsset('fighter.png'),
-				x: data.x,
-				y: data.y,
-				r: 20,
-				angle: 0,
-				offsetX: -game.assetManager.getAsset('fighter.png').width/2,
-				offsetY: -game.assetManager.getAsset('fighter.png').height/2,
-				width: game.assetManager.getAsset('fighter.png').width,
-				height: game.assetManager.getAsset('fighter.png').height,
-				collision: 'circle',
-				zIndex: 2,
-				kills: data.kills,
-				deaths: data.deaths
-			}, [game.component.entity,
-				game.component.moveable,
-				game.component.drawable]);
+			// Creates webrtc connection between two clients
+			var conn = game.network.peer.connect(data.peerId);
 
-			game.nPlayers++;
+			conn.on('open', function() {
+				conn.send('hi!');
+			});
 
-			game.addPlayerToScoreboard(game.entities[data.id]);
+			game.peers.push(conn);
+
+			// game.entities[data.id] = game.createEntity({
+			// 	playerId: data.id,
+			// 	name: data.name,
+			// 	image: game.assetManager.getAsset('fighter.png'),
+			// 	x: data.x,
+			// 	y: data.y,
+			// 	r: 20,
+			// 	angle: 0,
+			// 	offsetX: -game.assetManager.getAsset('fighter.png').width/2,
+			// 	offsetY: -game.assetManager.getAsset('fighter.png').height/2,
+			// 	width: game.assetManager.getAsset('fighter.png').width,
+			// 	height: game.assetManager.getAsset('fighter.png').height,
+			// 	collision: 'circle',
+			// 	zIndex: 2,
+			// 	kills: data.kills,
+			// 	deaths: data.deaths
+			// }, [game.component.entity,
+			// 	game.component.moveable,
+			// 	game.component.drawable]);
+
+			// game.nPlayers++;
+
+			// game.addPlayerToScoreboard(game.entities[data.id]);
 		},
 
 		onMovePlayer: function(data) {

@@ -164,6 +164,7 @@ function onNewPlayer(data) {
 	// broadcast.emit sends a message to all clients except the one it's being called on
 	this.broadcast.emit('new player', {
 		id: newPlayer.id,
+		peerId: newPlayer.peerId,
 		name: newPlayer.name,
 		x: newPlayer.getX(),
 		y: newPlayer.getY(),
