@@ -15,6 +15,7 @@ var Player = require('./Player').Player;
   Declare Variables
 */
 
+var clients = [];
 var players = [];
 var projectiles = [];
 var projId = 0;
@@ -84,7 +85,13 @@ function setEventHandlers() {
 }
 
 function onSocketConnection(client) {
+
+	//console.log(client);
+
 	console.log('new player connected: ' + client.id);
+
+	clients.push( client );
+
 	client.on('disconnect', onClientDisconnect);
 	client.on('new player', onNewPlayer);
 	client.on('move player', onMovePlayer);
@@ -102,18 +109,18 @@ function onSocketConnection(client) {
 }
 
 function onClientDisconnect() {
-	console.log('player has disconnected: ' + this.id);
+	console.log('client has disconnected: ' + this.id);
 
-	// var removePlayer = playerById(this.id);
+	var removePlayer = clientById(this.id);
 
-	//console.log('Player Id to remove: ' + removePlayer);
+	console.log('Player Id to remove: ' + removePlayer);
 
-	// if(!removePlayer) {
-	// 	console.log('Player not found: ' + this.id);
-	// 	return;
-	// }
+	if(!removePlayer) {
+		console.log('Player not found: ' + this.id);
+		return;
+	}
 
-	// players.splice(players.indexOf(removePlayer), 1);
+	players.splice(players.indexOf(removePlayer), 1);
 	// broadcast.emit sends a message to all clients except the one it's being called on
 	this.broadcast.emit('remove player', {id: this.id});
 }
@@ -123,22 +130,13 @@ function onRequestId() {
 }
 
 function onGetClients() {
+	var socket = this;
 	console.log('connected clients requested.');
 	console.log('number of existing players: ' + players.length);
-	var i, existingPlayer;
-	for(i = 0; i < players.length; i++) {
-		existingPlayer = players[i];
-		// .emit sends a message to all the clients
-		//console.log('sent ' + existingPlayer.name + '\'s information.');
-		this.emit('new player', {
-			id: existingPlayer.id,
-			x: existingPlayer.getX(),
-			y: existingPlayer.getY(),
-			name: existingPlayer.name,
-			kills: existingPlayer.kills,
-			deaths: existingPlayer.deaths
-		});
-	}
+	players.forEach(function(player, index) {
+		//console.log(player);
+		socket.emit('new player', player);
+	});
 }
 
 function onNewPlayer(data) {
@@ -151,33 +149,34 @@ function onNewPlayer(data) {
 	*/
 
 	var newPlayer = new Player({
-		id: this.id,
 		peerId: data.peerId,
-		x: data.x,
-		y: data.y,
-		name: data.name
+		socketId: data.socketId
+		//x: data.x,
+		//y: data.y,
+		//name: data.name
 	});
 
-	console.log(data.name + ' has entered the game.');
+	//console.log(data.name + ' has entered the game.');
 	console.log('new player peer id: ' + newPlayer.peerId);
+	console.log('new player socket id: ' + newPlayer.socketId);
+
+	players.push(newPlayer);
+	console.log('number of players: ' + players.length);
 
 	// broadcast.emit sends a message to all clients except the one it's being called on
 	this.broadcast.emit('new player', {
-		id: newPlayer.id,
+		socketId: newPlayer.socketId,
 		peerId: newPlayer.peerId,
-		name: newPlayer.name,
-		x: newPlayer.getX(),
-		y: newPlayer.getY(),
-		kills: newPlayer.kills,
-		deaths: newPlayer.deaths
+		//name: newPlayer.name,
+		//x: newPlayer.getX(),
+		//y: newPlayer.getY(),
+		//kills: newPlayer.kills,
+		//deaths: newPlayer.deaths
 	});
-
-	players.push(newPlayer);
-	//console.log('number of players: ' + players.length);
 }
 
 function onMovePlayer(data) {
-	var movePlayer = playerById(this.id);
+	var movePlayer = clientById(this.id);
 
 	if (!movePlayer) {
 		//console.log("(onMovePlayer) Player not found: " + this.id);
@@ -235,7 +234,7 @@ function onRemoveProjectile(data) {
 }
 
 function onDeath() {
-	var deathPlayer = playerById(this.id);
+	var deathPlayer = clientById(this.id);
 
 	deathPlayer.deaths++;
 
@@ -245,7 +244,7 @@ function onDeath() {
 }
 
 function onKills(data) {
-	var killsPlayer = playerById(data.playerId);
+	var killsPlayer = clientById(data.playerId);
 
 	killsPlayer.kills++;
 
@@ -272,11 +271,11 @@ function onGetSpawn(data) {
 }
 
 
-function playerById(id) {
+function clientById(id) {
     var i;
-    for (i = 0; i < players.length; i++) {
-        if (players[i].id == id)
-            return players[i];
+    for (i = 0; i < clients.length; i++) {
+        if (clients[i].id == id)
+            return clients[i];
     }
 
     return false;

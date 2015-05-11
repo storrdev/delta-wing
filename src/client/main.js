@@ -138,11 +138,11 @@
 
 			var userName = document.getElementById('userName').value;
 
-			game.socket.emit('new player', {
-				name: userName,
-				id: game.clientId,
-				peerId: game.peerId
-			});
+			// game.socket.emit('new player', {
+			// 	name: userName,
+			// 	id: game.clientId,
+			// 	peerId: game.network.peer.id
+			// });
 
 			game.ship.state = 'launched';
 

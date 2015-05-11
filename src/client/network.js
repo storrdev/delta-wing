@@ -8,22 +8,18 @@
 
 		/*
 		*	Makes websocket connection to node server using socket.io
-		*	Makes connection to PeerJS
 		*/
 
 		connect: function() {
-			socket = io.connect(window.location.href);
-			game.network.peer = new Peer( { key: 'ownnvv2opm5z5mi' } );
-			//console.log(this.peer);
+			socket = io();
 			return socket;
 		},
 
 		/*
-		*	Sets up all the network events including:
-		*	socket.io events
+		*	Sets up all the socket.io event handlers
 		*/
 
-		setEventHandlers: function() {
+		setSocketEventHandlers: function() {
 			socket.on('connect', this.onSocketConnected);
 			socket.on('client id', this.onClientId);
 			socket.on('disconnect', this.onSocketDisconnect);
@@ -36,25 +32,35 @@
 			socket.on('kills', this.onKills);
 			socket.on('chunk', this.onChunk);
 			socket.on('spawn', this.onSpawn);
-			//this.peer.on('connection', this.onPeerConnection);
-			this.peer.on('open', this.onPeerOpen);
+		},
+
+		setPeerEventHandlers: function() {
+			console.log('setpeereventhandlers');
+			game.network.peer.on('open', this.onPeerOpen);
+			game.network.peer.on('connection', this.onPeerConnection);
+			game.network.peer.on('close', this.onPeerClose);
 		},
 
 		onPeerOpen: function(peerid) {
 			console.log('this is my id ' + peerid);
-			game.peerId = peerid;
 
-			// game.peerConnected = true;
+			game.socket.emit('new player', {
+				peerId: peerid,
+				socketId: game.clientId
+			});
+		},
 
-			// if (game.socketConnected === true) {
-			// 	game.socket.emit('peerId', { peerId: game.peerid });
-			// 	console.log('sent peerid via onPeerOpen');
-			// }
+		onPeerClose: function(peerid) {
+			console.log('peer connection closed with id: ' + peerid);
 		},
 
 		onPeerConnection: function(conn) {
 			conn.on('data', function(data) {
-				console.log(data);
+
+				if ( data.id.length > 0 ) {
+					console.log(data);
+				}
+
 			});
 		},
 
@@ -92,50 +98,29 @@
 			}
 		},
 
-		onSocketConnected: function() {
-			//console.log('Connected to socket server, requesting client id');
+		onSocketConnected: function(data) {
 			game.socket.emit('request id', {});
-
-			// game.socketConnected = true;
-
-			// if (game.peerConnected === true) {
-			// 	game.socket.emit('peerId', { peerId: game.peerid });
-			// 	console.log('sent peerid via onSocketConnected');
-			// }
-
-			//game.loadChunks();
 		},
 
 		onClientId: function(data) {
 			game.clientId = data.id;
-			//console.log('network id acquired: ' + game.clientId);
+			console.log('socket id acquired: ' + game.clientId);
 
-			/*game.entities[game.clientId] = game.createEntity({
-				playerId: game.clientId,
-				image: game.loader.getAsset('fighter.png'),
-				x: game.entities['map'].width/2,
-				y: game.entities['map'].height/2,
-				screenX: game.width/2,
-				screenY: game.height/2,
-				angle: 0,
-				offsetX: -game.assetManager.getAsset('fighter.png').width/2,
-				offsetY: -game.assetManager.getAsset('fighter.png').height/2,
-				collision: 'circle',
-				zIndex: 2
-			}, [game.component.entity,
-				game.component.moveable,
-				game.component.damageable]);*/
+			game.network.peer = new Peer( { key: 'ownnvv2opm5z5mi' } );
+
+			//console.log(game.network.peer);
+
+			game.network.setPeerEventHandlers();
 
 			console.log('requesting already connected players.');
 			game.socket.emit('get clients', {});
 			//console.log('requesting spawn coordinates');
 			game.socket.emit('get spawn', {});
 			game.lastUpdate = Date.now();
-			//game.run();
 		},
 
 		onSocketDisconnect: function() {
-			//console.log('Disconnected from socket server');
+			console.log('Disconnected from socket server');
 		},
 
 		onNewPlayer: function(data) {
@@ -145,35 +130,13 @@
 			// Creates webrtc connection between two clients
 			var conn = game.network.peer.connect(data.peerId);
 
+			//console.log(conn);
+
 			conn.on('open', function() {
-				conn.send('hi!');
+				console.log('connected to ' + data.name);
 			});
 
 			game.peers.push(conn);
-
-			// game.entities[data.id] = game.createEntity({
-			// 	playerId: data.id,
-			// 	name: data.name,
-			// 	image: game.assetManager.getAsset('fighter.png'),
-			// 	x: data.x,
-			// 	y: data.y,
-			// 	r: 20,
-			// 	angle: 0,
-			// 	offsetX: -game.assetManager.getAsset('fighter.png').width/2,
-			// 	offsetY: -game.assetManager.getAsset('fighter.png').height/2,
-			// 	width: game.assetManager.getAsset('fighter.png').width,
-			// 	height: game.assetManager.getAsset('fighter.png').height,
-			// 	collision: 'circle',
-			// 	zIndex: 2,
-			// 	kills: data.kills,
-			// 	deaths: data.deaths
-			// }, [game.component.entity,
-			// 	game.component.moveable,
-			// 	game.component.drawable]);
-
-			// game.nPlayers++;
-
-			// game.addPlayerToScoreboard(game.entities[data.id]);
 		},
 
 		onMovePlayer: function(data) {
@@ -187,14 +150,18 @@
 		},
 
 		onRemovePlayer: function(data) {
-			if (!game.entities[data.id]) {
-				//console.log('Player not found: ' + data.id);
-				return;
-			}
+			
+			console.log('request to remove player');
+			console.log(data);
 
-			game.removePlayerFromScoreboard(game.entities[data.id]);
-			delete game.entities[data.id];
-			game.nPlayers--;
+			// if (!game.entities[data.id]) {
+			// 	//console.log('Player not found: ' + data.id);
+			// 	return;
+			// }
+
+			// game.removePlayerFromScoreboard(game.entities[data.id]);
+			// delete game.entities[data.id];
+			// game.nPlayers--;
 			//console.log('player has been disconnected: ' + data.id);
 		},
 

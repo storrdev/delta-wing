@@ -3,7 +3,7 @@
 	game.assetsLoaded = function() {
 		// Connect to server
 		game.socket = game.network.connect();
-		game.network.setEventHandlers();
+		game.network.setSocketEventHandlers();
 
 		game.backgroundTexture = new PIXI.Texture.fromImage('background.png');
 		game.background = new PIXI.TilingSprite(game.backgroundTexture, game.width, game.height);
@@ -121,6 +121,7 @@
 
 			game.peers.forEach(function(element, index){
 				element.send({
+					id: game.network.peer.id,
 					x: game.ship.x,
 					y: game.ship.y
 				});
