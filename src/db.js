@@ -1,18 +1,27 @@
-var mongoose = require('mongoose').connect('mongodb://localhost/ds');
+//var mongoose = require('mongoose').connect('mongodb://localhost/ds');
+var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var chunk = require('./chunk');
 
-var _db = mongoose.connection;
-_db.on('error', console.error.bind(console, 'connection error:'));
-_db.once('open', function callback () {
-  console.log('connected to database successfully');
+var uristring =
+process.env.MONGOLAB_URI ||
+process.env.MONGOHQ_URL ||
+'mongodb://localhost/ds';
+
+mongoose.connect(uristring, function(err, res) {
+  if (err) {
+    console.log ('ERROR connecting to: ' + uristring + '. ' + err);
+  }
+  else {
+    console.log('connected to database successfully');
+  }
 });
 
-// var chunkHeight = 10;
-// var chunkWidth = 10;
-// var tileHeight = 10;
-// var tileWidth = 10;
-// var orientation = 'orthogonal';
+// var _db = mongoose.connection;
+// _db.on('error', console.error.bind(console, 'connection error:'));
+// _db.once('open', function callback () {
+//   console.log('connected to database successfully');
+// });
 
 var chunkSchema = new Schema({
   x: Number,
