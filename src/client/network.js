@@ -65,13 +65,13 @@
 		},
 
 		onSpawn: function(data) {
-			//console.log('spawn coordinates recieved at (' + data.x + ', ' + data.y + ')');
-			//console.log('calling loadSurroundingChunks');
+			console.log('spawn coordinates recieved at (' + data.x + ', ' + data.y + ')');
+			console.log('calling loadSurroundingChunks');
 			game.loadSurroundingChunks(data.x, data.y);
 		},
 
 		onChunk: function(data) {
-			//console.log('chunk recieved');
+			console.log('chunk recieved');
 			var coords = data.x + ',' + data.y;
 
 			//console.log('chunk coordinates: ' + coords);
@@ -88,7 +88,7 @@
 					var xMultiplier = data.json.width * data.json.tilewidth * data.json.x;
 					//console.log(data.json.layers[c].objects[0]);
 					var planet = new Planet(data.json.layers[c].objects[o]);
-					//console.log('new planet created');
+					console.log('new planet created');
 					//console.log(game.planets);
 					game.planets.push(planet);
 					//console.log('new planet pushed into planet array');

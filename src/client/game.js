@@ -33,14 +33,18 @@
 	};
 
 	game.loadSurroundingChunks = function(x, y) {
-		//console.log('requesting surrounding chunks.');
 		game.chunkBuffer = 1;
 
 		for (var xx = -game.chunkBuffer; xx <= game.chunkBuffer; xx++) {
 			for (var yy = -game.chunkBuffer; yy <= game.chunkBuffer; yy++) {
 				var chunkX = xx + x;
 				var chunkY = yy + y;
-				game.socket.emit('get chunk', { x: chunkX, y: chunkY });
+
+				var coords = chunkX + ',' + chunkY;
+				if ( typeof game.chunks[ coords ] == 'undefined') {
+					//game.socket.emit( 'get chunk', { x: chunkX, y: chunkY } );
+					//console.log('requesting chunk: ' + coords);
+				}
 			}
 		}
 	};
@@ -54,6 +58,8 @@
 	game.update = function() {
 
 		game.ship.update();
+
+		game.loadSurroundingChunks( game.ship.x, game.ship.y );
 
 		game.particles.forEach(function(particle, index, object){
 			if (particle.alpha <= 0) {

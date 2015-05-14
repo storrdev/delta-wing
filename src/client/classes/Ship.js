@@ -99,8 +99,6 @@ Ship.prototype.update = function() {
 
 			game.ship.flame.visible = true;
 			game.ship.flame.play();
-
-			console.log(game.ship.screen.x);
 			
 			game.particles.push( new Smoke( game.ship.x, game.ship.y, mouseVector ) );
 			game.layers.particles.addChild( game.particles[ game.particles.length - 1 ] );
