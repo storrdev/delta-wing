@@ -29,7 +29,7 @@
 		game.level.addChild(game.ship);
 
 		requestAnimFrame(game.run);
-
+		document.getElementsByTagName('canvas')[0].style.opacity = "1";
 	};
 
 	game.loadSurroundingChunks = function(x, y) {
