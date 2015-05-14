@@ -24,7 +24,9 @@ var projId = 0;
   Start server and listen on port 80
 */
 
-app.listen(80);
+var port = process.env.PORT || 3000; // Heroku Only
+
+app.listen(port);
 
 setEventHandlers();
 
