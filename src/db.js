@@ -17,12 +17,6 @@ mongoose.connect(uristring, function(err, res) {
   }
 });
 
-// var _db = mongoose.connection;
-// _db.on('error', console.error.bind(console, 'connection error:'));
-// _db.once('open', function callback () {
-//   console.log('connected to database successfully');
-// });
-
 var chunkSchema = new Schema({
   x: Number,
   y: Number,
