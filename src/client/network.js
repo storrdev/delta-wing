@@ -58,7 +58,7 @@
 			conn.on('data', function(data) {
 
 				if ( data.id.length > 0 ) {
-					console.log(data);
+					//console.log(data);
 				}
 
 			});

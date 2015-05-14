@@ -45,8 +45,8 @@ var Ship = function(x, y, image, focused) {
 	this.x = x;
 	this.y = y;
 	this.screen = {
-		x: 0,
-		y: 0
+		x: game.width / 2,
+		y: game.height / 2
 	};
 	this.image = image;
 	this.focused = typeof focused != 'undefined' ? focused : false;
@@ -61,5 +61,119 @@ Ship.prototype.constructor = Ship;
 */
 
 Ship.prototype.update = function() {
+
+	if (game.ship.state === 'launched') {
+		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.screen.x, game.mouse.position.y, game.ship.screen.y);
+		for (var p = 0; p < game.planets.length; p++) {
+	 		var distance = Math.sqrt(
+	 			Math.pow(game.planets[p].x - game.ship.x, 2) +
+	 			Math.pow(game.planets[p].y - game.ship.y, 2)
+	 		);
+	 		if (p === 0) {
+	 			//console.log(distance);
+	 		}
+
+	 		var planetVector = new Vector(game.ship.x, game.planets[p].x,
+	 								game.ship.y, game.planets[p].y);
+
+	 		var gravitationalForce = (game.gravity * game.ship.mass * game.planets[p].mass)/Math.pow(distance,2);
+
+			if (distance < game.ship.radius + (game.planets[p].radius * 0.825 )) {
+				game.ship.vector.x = -(planetVector.x * 0.1 );
+				game.ship.vector.y = -(planetVector.y * 0.1 );
+			}
+			else {
+				game.ship.vector.x += planetVector.x * gravitationalForce;
+				game.ship.vector.y += planetVector.y * gravitationalForce;
+			}
+		}
+
+		var mouseVector = new Vector(game.ship.screen.x, game.mouse.position.x,
+									game.ship.screen.y, game.mouse.position.y);
+
+		var acceleration = 0.05;
+
+		if (game.key.isDown(game.key.UP)) {
+			game.ship.vector.x += mouseVector.x * acceleration;
+			game.ship.vector.y += mouseVector.y * acceleration;
+
+			game.ship.flame.visible = true;
+			game.ship.flame.play();
+
+			console.log(game.ship.screen.x);
+			
+			game.particles.push( new Smoke( game.ship.x, game.ship.y, mouseVector ) );
+			game.layers.particles.addChild( game.particles[ game.particles.length - 1 ] );
+
+			var max_particles = 500;
+			if (game.particles.length > max_particles) {
+				//console.log('max particles reached. deleting particles');
+				game.layers.particles.removeChild( game.particles[0] );
+				game.particles.shift();
+			}
+
+		}
+		else {
+			game.ship.flame.visible = false;
+			game.ship.flame.stop();
+		}
+		if (game.key.isDown(game.key.DOWN)) {
+			game.ship.vector.x -= mouseVector.x * acceleration;
+			game.ship.vector.y -= mouseVector.y * acceleration;
+		}
+
+		game.ship.x += game.ship.vector.x;
+		game.ship.y += game.ship.vector.y;
+
+		game.peers.forEach(function(element, index){
+			element.send({
+				id: game.network.peer.id,
+				x: game.ship.x,
+				y: game.ship.y
+			});
+		});
+
+	}
+	else if (game.ship.state == 'colliding') {
+		if (!game.explosion.playing) {
+			game.ship.visible = false;
+			game.ship.vector.x = 0;
+			game.ship.vector.y = 0;
+			game.explosion.position.x = game.ship.position.x;
+			game.explosion.position.y = game.ship.position.y;
+			game.explosion.visible = true;
+			game.explosion.gotoAndPlay(0);
+		}
+	}
+	else {
+		
+	// 	if (game.dragging === true && game.level.position.x <= 0) {
+	// 		game.level.position.x -= (game.lastMousePosition - game.mouse.position.x) * 2;
+	// 		if (game.level.position.x > 0) {
+	// 			game.level.position.x = 0;
+	// 		}
+			
+	// 	}
+	// 	game.lastMousePosition = game.mouse.position.x;
+
+	// 	game.ship.click = function(data) {
+	// 		if (game.ship.state == 'idle') {
+	// 			game.aimLine.visible = true;
+	// 			game.ship.state = 'ready';
+	// 		}
+	// 		else if (game.ship.state == 'ready') {
+	// 			game.aimLine.visible = false;
+	// 			game.ship.state = 'idle';
+	// 		}
+	// 	}
+	// }
+
+	// game.gutter = 200;
+
+	// if (game.ship.position.x < -game.gutter || game.ship.position.x > (game.level.json.width * game.level.json.tilewidth) + game.gutter ||
+	// 	game.ship.position.y < -game.gutter || game.ship.position.y > (game.level.json.height * game.level.json.tileheight) + game.gutter) {
+		
+	// 	game.reset();
 	
+	}
 };

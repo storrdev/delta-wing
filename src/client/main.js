@@ -76,6 +76,14 @@
 				}
 			};
 
+			document.addEventListener('mousewheel', function(e) {
+				var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+				//console.log(delta);
+				game.level.scale.x += delta / 100;
+				game.level.scale.y += delta / 100;
+				//console.log(game.level.scale);
+			});
+
 			// create a renderer instance.
     		game.renderer = PIXI.autoDetectRenderer(game.width, game.height);
 
