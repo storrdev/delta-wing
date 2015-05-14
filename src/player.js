@@ -1,5 +1,3 @@
-//var Player = function(startX, startY, name) {
-
 var Player = function(attr) {
 
 	var name = attr.name,
