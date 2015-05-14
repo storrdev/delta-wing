@@ -9,7 +9,7 @@ var path = require('path');
 var mmm = require('mmmagic');
 var fs = require('fs');
 var db = require('./db');
-var Player = require('./Player').Player;
+var Player = require('./player').Player;
 
 /*
   Declare Variables
