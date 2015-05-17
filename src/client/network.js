@@ -92,8 +92,8 @@
 					//console.log(game.planets);
 					game.planets.push(planet);
 					//console.log('new planet pushed into planet array');
-					game.level.addChild(planet);
-					//console.log('new planet added to game.level');
+					game.level.addChild(planet.graphics);
+					console.log('new planet added to game.level');
 				}
 			}
 		},
