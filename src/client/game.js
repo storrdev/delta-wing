@@ -42,8 +42,8 @@
 
 				var coords = chunkX + ',' + chunkY;
 				if ( typeof game.chunks[ coords ] == 'undefined') {
-					//game.socket.emit( 'get chunk', { x: chunkX, y: chunkY } );
-					//console.log('requesting chunk: ' + coords);
+					game.socket.emit( 'get chunk', { x: chunkX, y: chunkY } );
+					console.log('requesting chunk: ' + coords);
 				}
 			}
 		}
@@ -59,7 +59,7 @@
 
 		game.ship.update();
 
-		game.loadSurroundingChunks( game.ship.x, game.ship.y );
+		//game.loadSurroundingChunks( game.ship.x, game.ship.y );
 
 		game.particles.forEach(function(particle, index, object){
 			if (particle.alpha <= 0) {

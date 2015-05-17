@@ -5,7 +5,7 @@
 		state: 'menu',
 		gravity: 10,
 		layers: {},
-		chunks: {},
+		chunks: [],
 		planets: [],
 		particles: [],
 		peers: [],

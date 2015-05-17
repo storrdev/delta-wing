@@ -6,8 +6,8 @@ var planet = require('./planet');
 exports.generate = function(x, y, cb) {
 
 	// Hard coded chunk variables.. I know it's wrong I just can't help myself!
-	var chunkHeight = 100;
-	var chunkWidth = 100;
+	var chunkHeight = 1000;
+	var chunkWidth = 1000;
 	var tileHeight = 10;
 	var tileWidth = 10;
 	var orientation = 'orthogonal';
@@ -25,7 +25,7 @@ exports.generate = function(x, y, cb) {
 			newObject = {"id": o};
 			objectRef = spawnable.objects[Math.ceil((Math.random() * spawnable.objects.length) - 1)];
 			if (objectRef.type == 'planet') {
-				planetTexture = new planet.Generate(x, y, o);
+				//planetTexture = new planet.Generate(x, y, o);
 				//console.log('planet generated');
 				//console.log(planetTexture);
 			}
@@ -83,8 +83,8 @@ exports.generate = function(x, y, cb) {
 		newChunk.save(function(err, newChunk) {
 			if (err) return console.error(err);
 			else {
-				//console.log('chunk created: ' + newChunk.id);
-				//cb(newChunk);
+				console.log('chunk created: ' + newChunk.id);
+				cb(newChunk);
 			}
 		});
 

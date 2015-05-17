@@ -77,25 +77,12 @@
 			//console.log('chunk coordinates: ' + coords);
 			//console.log(data.json);
 
-			game.chunks[coords] = data.json;
+			var chunk = new Chunk(data);
+			console.log(chunk);
 
-			//console.log('chunk layers: ' + data.json.layers.length);
+			game.chunks.push(chunk);
 
-			for (var c = 0; c < data.json.layers.length; c++) {
-				//console.log('chunk objects: ' + data.json.layers[c].objects.length);
-				for (var o = 0; o < data.json.layers[c].objects.length; o++) {
-					var yMultiplier = data.json.height * data.json.tileheight * data.json.y;
-					var xMultiplier = data.json.width * data.json.tilewidth * data.json.x;
-					//console.log(data.json.layers[c].objects[0]);
-					var planet = new Planet(data.json.layers[c].objects[o]);
-					console.log('new planet created');
-					//console.log(game.planets);
-					game.planets.push(planet);
-					//console.log('new planet pushed into planet array');
-					game.level.addChild(planet);
-					//console.log('new planet added to game.level');
-				}
-			}
+			//game.chunks[coords] = data.json;
 		},
 
 		onSocketConnected: function(data) {

@@ -78,7 +78,7 @@ Ship.prototype.update = function() {
 
 	 		var gravitationalForce = (game.gravity * game.ship.mass * game.planets[p].mass)/Math.pow(distance,2);
 
-			if (distance < game.ship.radius + (game.planets[p].radius * 0.825 )) {
+			if (distance < game.ship.radius + (game.planets[p].radius)) {
 				game.ship.vector.x = -(planetVector.x * 0.1 );
 				game.ship.vector.y = -(planetVector.y * 0.1 );
 			}
