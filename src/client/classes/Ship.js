@@ -63,32 +63,41 @@ Ship.prototype.constructor = Ship;
 Ship.prototype.update = function() {
 
 	if (game.ship.state === 'launched') {
+
+		// GET SHIP'S CURRENT CHUNK
+		var chunkX = Math.floor( game.ship.x / game.chunkSize );
+		var chunkY = Math.floor( game.ship.y / game.chunkSize );
+
+		var currentChunk = game.getChunk( chunkX, chunkY );
+
 		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.screen.x, game.mouse.position.y, game.ship.screen.y);
-		for (var p = 0; p < game.planets.length; p++) {
-	 		var distance = Math.sqrt(
-	 			Math.pow(game.planets[p].x - game.ship.x, 2) +
-	 			Math.pow(game.planets[p].y - game.ship.y, 2)
-	 		);
-	 		if (p === 0) {
-	 			//console.log(distance);
-	 		}
 
-	 		var planetVector = new Vector(game.ship.x, game.planets[p].x,
-	 								game.ship.y, game.planets[p].y);
+	 	game.chunks.forEach(function(chunk, index) {
+	 		chunk.planets.forEach(function(planet, index) {
 
-	 		var gravitationalForce = (game.gravity * game.ship.mass * game.planets[p].mass)/Math.pow(distance,2);
+		 		// get real position on map
+		 		planetX = planet.x + chunk.x;
+		 		planetY = planet.y + chunk.y;
 
-			//console.log(gravitationalForce);
+		 		var distance = Math.sqrt(
+		 			Math.pow(game.ship.x - planetX, 2) + Math.pow(game.ship.y - planetY, 2)
+		 		);
 
-			if (distance < game.ship.radius + (game.planets[p].radius)) {
-				game.ship.vector.x = -(planetVector.x * 0.1 );
-				game.ship.vector.y = -(planetVector.y * 0.1 );
-			}
-			else {
-				// game.ship.vector.x += planetVector.x * gravitationalForce;
-				// game.ship.vector.y += planetVector.y * gravitationalForce;
-			}
-		}
+		 		var planetVector = new Vector(game.ship.x, planetX,
+		 								game.ship.y, planetY);
+
+		 		var gravitationalForce = (game.gravity * game.ship.mass * planet.mass)/Math.pow(distance,2);
+
+				if (distance < game.ship.radius + (planet.radius)) {
+					game.ship.vector.x = -(planetVector.x * 0.1 );
+					game.ship.vector.y = -(planetVector.y * 0.1 );
+				}
+				else {
+					game.ship.vector.x += planetVector.x * gravitationalForce;
+					game.ship.vector.y += planetVector.y * gravitationalForce;
+				}
+	 		});
+	 	});
 
 		var mouseVector = new Vector(game.ship.screen.x, game.mouse.position.x,
 									game.ship.screen.y, game.mouse.position.y);

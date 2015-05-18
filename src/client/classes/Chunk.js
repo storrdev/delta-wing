@@ -1,17 +1,24 @@
 /*
 *	Chunk Class
 *	
-*	Extends: Nothing currently
+*	Extends: PIXI.DisplayObjectContainer class
 */
 
 var Chunk = function(data) {
 
-	console.log(data);
+	PIXI.DisplayObjectContainer.call(this);
+
+	//console.log(data);
 
 	this.height = data.json.height;
 	this.width = data.json.width;
+	this.coords = {
+		x: data.x,
+		y: data.y
+	};
 	this.x = data.x * this.width;
 	this.y = data.y * this.height;
+	this.planets = [];
 
 	var border = new PIXI.Graphics();
 	border.lineStyle(2, 0xFF0000, 1);
@@ -26,16 +33,25 @@ var Chunk = function(data) {
 	// 		//console.log(data.json.layers[c].objects[0]);
 	 		var planet = new Planet(data.json.layers[c].objects[o]);
 	// 		console.log('new planet created');
-	 		console.log(planet);
-			console.log(game.planets);
+	 		//console.log(planet);
+			//console.log(game.planets);
 			game.planets.push(planet);
+			this.planets.push(planet);
 	// 		//console.log('new planet pushed into planet array');
-	 		game.level.addChild(planet.graphics);
-	 		console.log('new planet added to game.level');
+	 		this.addChild(planet.graphics);
+	 		//console.log('new planet added to game.level');
 	 	}
 	}
 
 };
+
+Chunk.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+
+Chunk.prototype.constructor = Chunk;
+
+/*
+*	Methods
+*/
 
 Chunk.prototype.update = function() {
 	

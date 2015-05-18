@@ -71,16 +71,18 @@
 		},
 
 		onChunk: function(data) {
-			console.log('chunk recieved');
+			//console.log('chunk recieved');
 			var coords = data.x + ',' + data.y;
 
 			//console.log('chunk coordinates: ' + coords);
 			//console.log(data.json);
 
 			var chunk = new Chunk(data);
+
+			game.level.addChild(chunk);
 			//console.log(chunk);
 
-			//game.chunks.push(chunk);
+			game.chunks.push(chunk);
 
 			//game.chunks[coords] = data.json;
 		},
