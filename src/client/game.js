@@ -49,6 +49,15 @@
 		}
 	};
 
+	game.getChunk = function(x, y) {
+		game.chunks.forEach(function(chunk, index) {
+			if (chunk.coords.x == x && chunk.coords.y == y) {
+				//console.log('getChunk chunk found for coords: ' + x + ', ' + y);
+				return chunk;
+			}
+		});
+	};
+
 	game.run = function() {
 		requestAnimFrame(game.run);
 		game.update();
