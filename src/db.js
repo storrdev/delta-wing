@@ -22,13 +22,6 @@ var chunkSchema = new Schema({
   y: Number,
   height: Number,
   width: Number,
-  tileheight: Number,
-  tilewidth: Number,
-  orientation: String,
-  tilesets: Array,
-  texture: String,
-  spawn_rate: Number,
-  version: Number,
   layers: Array
 });
 

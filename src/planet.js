@@ -1,10 +1,34 @@
 var server = require('./server');
 var PNGImage = require('pngjs-image');
 var gameMath = require('./Math');
+var objects = require('./objects');
+	objects.load();
 
 exports.Generate = function(chunkx, chunky, n) {
-	var radius = 100;
 
+	var params = objects.Params();
+
+	var radius = gameMath.getRandomInt(
+		params.planet.minRadius,
+		params.planet.maxRadius
+	);
+
+	var density = gameMath.getRandomInt(
+		params.planet.minDensity,
+		params.planet.maxDensity
+	);
+
+	console.log( 'radius: ' + radius);
+	console.log( 'density: ' + density);
+
+	return {
+		radius: radius,
+		density: density
+	};
+	
+};
+
+exports.CreateTexture = function() {
 	var image = PNGImage.createImage(radius * 2, radius * 2);
 	var alpha = 0;
 
