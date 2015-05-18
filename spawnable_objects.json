@@ -1,26 +1,11 @@
 {
-	"objects": [
+	"planet":
 		{
-			"name": "blue_planet",
 			"type": "planet",
-			"texture": "blue_planet.png",
 			"spawn_rate": 0.1,
-			"ellipse": true,
-			"visible": true,
-			"width": 200,
-			"height": 200,
-			"density": 1
-		},
-		{
-			"name": "green_planet",
-			"type": "planet",
-			"texture": "green_planet.png",
-			"spawn_rate": 0.2,
-			"ellipse": true,
-			"visible": true,
-			"width": 100,
-			"height": 100,
-			"density": 1
+			"maxRadius": 750,
+			"minRadius": 50,
+			"maxDensity": 4,
+			"minDensity": 0.5
 		}
-	]
 }

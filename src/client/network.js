@@ -78,9 +78,9 @@
 			//console.log(data.json);
 
 			var chunk = new Chunk(data);
-			console.log(chunk);
+			//console.log(chunk);
 
-			game.chunks.push(chunk);
+			//game.chunks.push(chunk);
 
 			//game.chunks[coords] = data.json;
 		},

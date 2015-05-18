@@ -258,13 +258,10 @@ function onKills(data) {
 function onGetChunk(data) {
 	//console.log('chunk(' + data.x + ', ' + data.y + ') requested from ' + this.id);
 	var that = this;
-	// db.deleteChunk(data.x, data.y, function() {
-	// 	console.log('chunk deleted');
-		db.getChunk(data.x, data.y, function(chunk) {
-			//console.log('emitting chunk');
-	    	that.emit('chunk', { x: data.x, y: data.y, json: chunk });
-		});
-	// });
+	db.getChunk(data.x, data.y, function(chunk) {
+		//console.log('emitting chunk');
+    	that.emit('chunk', { x: data.x, y: data.y, json: chunk });
+	});
 }
 
 function onGetSpawn(data) {
