@@ -3,7 +3,7 @@
 		width: window.innerWidth,
 		height: window.innerHeight,
 		state: 'menu',
-		gravity: 10,
+		gravity: 20,
 		layers: {},
 		chunks: [],
 		planets: [],
@@ -78,10 +78,14 @@
 
 			document.addEventListener('mousewheel', function(e) {
 				var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-				//console.log(delta);
-				game.level.scale.x += delta / 100;
-				game.level.scale.y += delta / 100;
-				//console.log(game.level.scale);
+				var scaleMin = 0.02;
+				var scaleMax = 1.5;
+				var scrollMod = 150;
+
+				if ( ( delta < 0 && game.level.scale.x > scaleMin ) || ( delta > 0 && game.level.scale.x < scaleMax ) ) {
+					game.level.scale.x += delta / scrollMod;
+					game.level.scale.y += delta / scrollMod;
+				}
 			});
 
 			// create a renderer instance.

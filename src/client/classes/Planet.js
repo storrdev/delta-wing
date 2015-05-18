@@ -20,7 +20,7 @@ var Planet = function(attributes) {
 
 	//console.log('planet texture: ' + texture);
 
-	this.graphics.beginFill(0xFF3300);
+	this.graphics.beginFill(0x3399FF);
 
 	//this.sprite = new PIXI.Sprite(texture);
 

@@ -34,7 +34,7 @@ exports.generate = function(x, y, cb) {
 			    	newObject[prop] = objectRef[prop];
 			    }
 			}
-			newObject.texture = planetTexture;
+			//newObject.texture = planetTexture;
 			newObject.scale = Math.random() * (1 - 0.25) + 1;
 			newObject.width = Math.ceil(newObject.width * newObject.scale);
 			newObject.height = Math.ceil(newObject.height * newObject.scale);

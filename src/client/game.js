@@ -73,10 +73,10 @@
 			//console.log(game.particles[0].x);
 		}
 
-		game.background.tilePosition.x -= 0.2 * game.ship.vector.x;
-		game.midground.tilePosition.x -= 0.4 * game.ship.vector.x;
-		game.background.tilePosition.y -= 0.2 * game.ship.vector.y;
-		game.midground.tilePosition.y -= 0.4 * game.ship.vector.y;
+		game.background.tilePosition.x -= (game.level.scale.x * 0.2) * game.ship.vector.x;
+		game.midground.tilePosition.x -= (game.level.scale.x * 0.4) * game.ship.vector.x;
+		game.background.tilePosition.y -= (game.level.scale.x * 0.2) * game.ship.vector.y;
+		game.midground.tilePosition.y -= (game.level.scale.x * 0.4) * game.ship.vector.y;
 
 		game.level.x = ( window.innerWidth/2 ) - ( game.ship.x * game.level.scale.x );
 		game.level.y = ( window.innerHeight/2 ) - ( game.ship.y * game.level.scale.y );
