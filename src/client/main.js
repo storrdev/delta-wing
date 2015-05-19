@@ -15,12 +15,12 @@
 
 		init: function() {
 
-			game.loader = new PIXI.AssetLoader([
-				"Spritesheet.json",
-				"background.png"
-			]);
+			game.loader = new PIXI.loaders.Loader();
 
-			game.loader.onComplete = game.assetsLoaded;
+			game.loader.add('spritesheet', 'Spritesheet.json');
+			game.loader.add('background', 'background.png');
+
+			game.loader.once('complete', game.assetsLoaded);
 
 			game.mouse = {
 				position: {
@@ -30,7 +30,7 @@
 			};
 
 			var interactive = true;
-			game.stage = new PIXI.Stage(0xffffff, interactive);
+			game.stage = new PIXI.Container();
 
 			window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
@@ -95,11 +95,11 @@
     		// add the renderer view element to the DOM
     		document.body.appendChild(game.renderer.view);
 
-    		game.layers.particles = new PIXI.DisplayObjectContainer();
+    		game.layers.particles = new PIXI.Container();
     		game.layers.particles.x = 0;
     		game.layers.particles.y = 0;
 
-    		game.level = new PIXI.DisplayObjectContainer();
+    		game.level = new PIXI.Container();
     		game.level.x = 0;
     		game.level.y = 0;
     		//game.stage.addChild(game.level);

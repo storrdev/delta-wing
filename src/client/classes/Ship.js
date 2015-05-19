@@ -1,12 +1,12 @@
 /*
 *	Ship Class
 *	
-*	Extends: PIXI.DisplayObjectContainer class
+*	Extends: PIXI.Container class
 */
 
 var Ship = function(x, y, image, focused) {
 
-	PIXI.DisplayObjectContainer.call(this);
+	PIXI.Container.call(this);
 
 	this.flame = new Flame();
 	this.flame.x = 0;
@@ -52,7 +52,7 @@ var Ship = function(x, y, image, focused) {
 	this.focused = typeof focused != 'undefined' ? focused : false;
 };
 
-Ship.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Ship.prototype = Object.create(PIXI.Container.prototype);
 
 Ship.prototype.constructor = Ship;
 
@@ -68,7 +68,10 @@ Ship.prototype.update = function() {
 		var chunkX = Math.floor( game.ship.x / game.chunkSize );
 		var chunkY = Math.floor( game.ship.y / game.chunkSize );
 
-		var currentChunk = game.getChunk( chunkX, chunkY );
+		//var currentChunk = game.getChunk( chunkX, chunkY );
+
+		//console.log( 'loadSurroundingChunks: ' + chunkX + ', ' + chunkY );
+		//game.loadSurroundingChunks(chunkX, chunkY);
 
 		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.screen.x, game.mouse.position.y, game.ship.screen.y);
 

@@ -1,12 +1,12 @@
 /*
 *	Chunk Class
 *	
-*	Extends: PIXI.DisplayObjectContainer class
+*	Extends: PIXI.Container class
 */
 
 var Chunk = function(data) {
 
-	PIXI.DisplayObjectContainer.call(this);
+	PIXI.Container.call(this);
 
 	//console.log(data);
 
@@ -45,7 +45,7 @@ var Chunk = function(data) {
 
 };
 
-Chunk.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Chunk.prototype = Object.create(PIXI.Container.prototype);
 
 Chunk.prototype.constructor = Chunk;
 
