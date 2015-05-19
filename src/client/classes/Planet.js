@@ -26,7 +26,7 @@ var Planet = function(attributes) {
 	this.y = attributes.y;
 
 	this.graphics.drawCircle( this.x, this.y, this.radius );
-	this.graphics.blendMode = PIXI.BLEND_MODES.ADD;
+	this.graphics.blendMode = PIXI.BLEND_MODES.HARD_LIGHT;
 	this.graphics.endFill();
 
 	this.screen = {
