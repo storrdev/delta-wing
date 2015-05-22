@@ -20,7 +20,7 @@ var Planet = function(attributes) {
 
 	this.mass = this.radius * attributes.density;
 
-	console.log(this.mass);
+	//console.log(this.mass);
 
 	this.x = attributes.x;
 	this.y = attributes.y;

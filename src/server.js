@@ -260,7 +260,7 @@ function onGetChunk(data) {
 	var that = this;
 	db.getChunk(data.x, data.y, function(chunk) {
 		//console.log('emitting chunk');
-    	that.emit('chunk', { x: data.x, y: data.y, json: chunk });
+    	that.emit('chunk', chunk);
 	});
 }
 
