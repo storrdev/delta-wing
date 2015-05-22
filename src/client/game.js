@@ -6,7 +6,7 @@
 		game.network.setSocketEventHandlers();
 
 		game.backgroundTexture = new PIXI.Texture.fromImage('background.png');
-		game.background = new PIXI.TilingSprite(game.backgroundTexture, game.width, game.height);
+		game.background = new PIXI.extras.TilingSprite(game.backgroundTexture, game.width, game.height);
 		game.background.position.x = 0;
 		game.background.position.y = 0;
 		game.background.tilePosition.x = 0;
@@ -14,7 +14,7 @@
 		game.stage.addChild(game.background);
 
 		game.midgroundTexture = new PIXI.Texture.fromImage('midground.png');
-		game.midground = new PIXI.TilingSprite(game.midgroundTexture, game.width, game.height);
+		game.midground = new PIXI.extras.TilingSprite(game.midgroundTexture, game.width, game.height);
 		game.midground.position.x = 0;
 		game.midground.position.y = 0;
 		game.midground.tilePosition.x = 0;
@@ -28,7 +28,7 @@
 
 		game.level.addChild(game.ship);
 
-		requestAnimFrame(game.run);
+		game.run();
 		document.getElementsByTagName('canvas')[0].style.opacity = "1";
 	};
 
@@ -41,9 +41,19 @@
 				var chunkY = yy + y;
 
 				var coords = chunkX + ',' + chunkY;
-				if ( typeof game.chunks[ coords ] == 'undefined') {
+				if ( typeof game.getChunk(chunkX, chunkY) == 'undefined') {
 					game.socket.emit( 'get chunk', { x: chunkX, y: chunkY } );
 					console.log('requesting chunk: ' + coords);
+
+					// create the chunk so that it doesn't request it again
+					// until a certain amount of time has passed.
+					// assign a time it was requested and then check it on
+					// an else statement of this IF statement, and if enough
+					// time has passed since it was requested, we request it
+					// again.
+
+					// var temp_chunk = new Chunk();
+					// Chunk.coords.x 
 				}
 			}
 		}
@@ -59,7 +69,7 @@
 	};
 
 	game.run = function() {
-		requestAnimFrame(game.run);
+		requestAnimationFrame(game.run);
 		game.update();
 		game.renderer.render(game.stage);
 	};
@@ -67,8 +77,6 @@
 	game.update = function() {
 
 		game.ship.update();
-
-		//game.loadSurroundingChunks( game.ship.x, game.ship.y );
 
 		game.particles.forEach(function(particle, index, object){
 			if (particle.alpha <= 0) {

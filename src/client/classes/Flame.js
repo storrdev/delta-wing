@@ -1,7 +1,7 @@
 /*
 *	Flame Class
 *	
-*	Extends: PIXI.MovieClip class
+*	Extends: PIXI.extras.MovieClip class
 */
 
 var Flame = function() {
@@ -12,11 +12,11 @@ var Flame = function() {
 		textures.push(texture);
 	}
 
-	PIXI.MovieClip.call(this, textures);
+	PIXI.extras.MovieClip.call(this, textures);
 
 	this.animationSpeed = 0.5;
 };
 
-Flame.prototype = Object.create(PIXI.MovieClip.prototype);
+Flame.prototype = Object.create(PIXI.extras.MovieClip.prototype);
 
 Flame.prototype.constructor = Flame;

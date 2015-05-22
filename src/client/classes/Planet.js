@@ -1,12 +1,12 @@
 /*
 *	Planet Class
 *	
-*	Extends: PIXI.DisplayObjectContainer class
+*	Extends: PIXI.Container class
 */
 
 var Planet = function(attributes) {
 
-	PIXI.DisplayObjectContainer.call(this);
+	PIXI.Container.call(this);
 
 	this.graphics = new PIXI.Graphics();
 	this.graphics.beginFill(0x3399FF);
@@ -20,12 +20,13 @@ var Planet = function(attributes) {
 
 	this.mass = this.radius * attributes.density;
 
-	console.log(this.mass);
+	//console.log(this.mass);
 
 	this.x = attributes.x;
 	this.y = attributes.y;
 
 	this.graphics.drawCircle( this.x, this.y, this.radius );
+	this.graphics.blendMode = PIXI.BLEND_MODES.HARD_LIGHT;
 	this.graphics.endFill();
 
 	this.screen = {
@@ -34,7 +35,7 @@ var Planet = function(attributes) {
 	};
 };
 
-Planet.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Planet.prototype = Object.create(PIXI.Container.prototype);
 
 Planet.prototype.constructor = Planet;
 

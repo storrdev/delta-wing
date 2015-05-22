@@ -15,12 +15,12 @@
 
 		init: function() {
 
-			game.loader = new PIXI.AssetLoader([
-				"Spritesheet.json",
-				"background.png"
-			]);
+			game.loader = new PIXI.loaders.Loader();
 
-			game.loader.onComplete = game.assetsLoaded;
+			game.loader.add('spritesheet', 'Spritesheet.json');
+			game.loader.add('background', 'background.png');
+
+			game.loader.once('complete', game.assetsLoaded);
 
 			game.mouse = {
 				position: {
@@ -29,18 +29,16 @@
 				}
 			};
 
-			var interactive = true;
-			game.stage = new PIXI.Stage(0xffffff, interactive);
+			game.stage = new PIXI.Container();
+			game.stage.interactive = true;
 
 			window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
 
-			game.stage.mousemove = function(data) {
-				var newPosition = data.getLocalPosition(this);
-				//console.log(newPosition.x + ', ' + newPosition.y);
-				game.mouse.position.x = newPosition.x;
-				game.mouse.position.y = newPosition.y;
-			};
+			game.stage.on('mousemove', function(mouseData) {
+				game.mouse.position.x = mouseData.data.originalEvent.x;
+				game.mouse.position.y = mouseData.data.originalEvent.y;
+			});
 
 			game.stage.click = function(data) {
 				if (game.ship.state == 'ready') {
@@ -95,11 +93,11 @@
     		// add the renderer view element to the DOM
     		document.body.appendChild(game.renderer.view);
 
-    		game.layers.particles = new PIXI.DisplayObjectContainer();
+    		game.layers.particles = new PIXI.Container();
     		game.layers.particles.x = 0;
     		game.layers.particles.y = 0;
 
-    		game.level = new PIXI.DisplayObjectContainer();
+    		game.level = new PIXI.Container();
     		game.level.x = 0;
     		game.level.y = 0;
     		//game.stage.addChild(game.level);
