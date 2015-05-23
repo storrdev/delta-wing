@@ -71,20 +71,28 @@
 		},
 
 		onChunk: function(data) {
-			//console.log('chunk recieved');
+			console.log('chunk %d, %d recieved', data.x, data.y);
 			var coords = data.x + ',' + data.y;
 
 			//console.log('chunk coordinates: ' + coords);
 			//console.log(data.json);
 
 			var chunk = new Chunk(data);
+			chunk.loaded = true;
+
+			// need to remove the temp chunk from the
+			// game.chunks array and the game.level pixi container
+			var oldChunk = game.getChunk(data.x, data.y);
+			game.level.removeChild(oldChunk);
+			var oldChunkIndex = game.getChunk(data.x, data.y, true);
+			game.chunks.splice(oldChunkIndex, 1, chunk);
+
+			console.log(chunk.loaded);
 
 			game.level.addChild(chunk);
 			//console.log(chunk);
 
 			game.chunks.push(chunk);
-
-			//game.chunks[coords] = data.json;
 		},
 
 		onSocketConnected: function(data) {
