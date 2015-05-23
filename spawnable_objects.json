@@ -4,7 +4,7 @@
 			"type": "planet",
 			"spawn_rate": 0.1,
 			"maxRadius": 750,
-			"minRadius": 50,
+			"minRadius": 250,
 			"maxDensity": 3,
 			"minDensity": 0.5
 		}

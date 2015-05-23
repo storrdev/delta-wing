@@ -68,10 +68,17 @@ Ship.prototype.update = function() {
 		var chunkX = Math.floor( game.ship.x / game.chunkSize );
 		var chunkY = Math.floor( game.ship.y / game.chunkSize );
 
+
+
 		//var currentChunk = game.getChunk( chunkX, chunkY );
 
 		//console.log( 'loadSurroundingChunks: ' + chunkX + ', ' + chunkY );
-		game.loadSurroundingChunks(chunkX, chunkY);
+		if (!isNaN(chunkX) && !isNaN(chunkY)) {
+			game.loadSurroundingChunks(chunkX, chunkY);
+		}
+		else {
+			console.log(game.ship.x);
+		}
 
 		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.screen.x, game.mouse.position.y, game.ship.screen.y);
 

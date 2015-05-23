@@ -42,8 +42,9 @@
 
 				var coords = chunkX + ',' + chunkY;
 				var chunk = game.getChunk( chunkX, chunkY );
+				//console.log(chunk);
 				if ( chunk === false ) {
-					//game.socket.emit( 'get chunk', { x: chunkX, y: chunkY } );
+					game.socket.emit( 'get chunk', { x: chunkX, y: chunkY } );
 					console.log('requesting chunk: %d, %d', chunkX, chunkY);
 
 					// create the chunk so that it doesn't request it again
@@ -58,7 +59,7 @@
 						width: 0,
 						x: chunkX,
 						y: chunkY,
-						reqTime: Date.now()
+						reqTime: new Date()
 					};
 					var tempChunk = new Chunk(chunkData);
 					//console.log(tempChunk);
@@ -66,31 +67,49 @@
 				}
 				else {
 					//console.log('chunk %d, %d has been requested', chunkX, chunkY);
+					//console.log('loadSurroundingChunks chunk.loaded %s', chunk.loaded);
 					if ( chunk.loaded === false ) {
-						var timeSinceRequest = Date.now();
+						var timeSinceRequest = Math.abs(new Date() - chunk.reqTime);
 						//console.log('time since request: %d', timeSinceRequest);
+						if ( timeSinceRequest > game.maxChunkReqTime ) {
+							game.socket.emit( 'get chunk', { x: chunk.x, y: chunk.y } );
+							console.log('requesting chunk: %d, %d again', chunkX, chunkY);
+							chunk.reqTime = new Date();
+							console.log(chunk.reqTime);
+						}
 					}
 				}
 			}
 		}
 	};
 
-	game.getChunk = function(x, y) {
+	game.getChunk = function(x, y, index) {
 		var foundChunk = false;
+		var foundIndex = 0;
 		for ( i = 0; i < game.chunks.length; i++ ) {
 			var chunk = game.chunks[i];
 			if (chunk.coords.x == x && chunk.coords.y == y) {
 				//console.log('getChunk chunk found for coords: ' + x + ', ' + y);
 				foundChunk = chunk;
+				foundIndex = i;
 				break;
 			}
 		}
 		if ( foundChunk !== false ) {
-			return foundChunk;
+			if (index === true) {
+				return foundIndex;
+			}
+			else {
+				return foundChunk;
+			}
 		}
 		else {
 			return false;
 		}
+	};
+
+	game.removeChunk = function(x, y) {
+
 	};
 
 	game.run = function() {
