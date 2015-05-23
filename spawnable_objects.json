@@ -5,7 +5,7 @@
 			"spawn_rate": 0.1,
 			"maxRadius": 750,
 			"minRadius": 250,
-			"maxDensity": 3,
+			"maxDensity": 2,
 			"minDensity": 0.5
 		}
 }

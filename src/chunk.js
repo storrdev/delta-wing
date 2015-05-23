@@ -5,8 +5,8 @@ var Planet = require('./planet');
 exports.generate = function(x, y, cb) {
 
 	// Hard coded chunk variables.. I know it's wrong I just can't help myself!
-	var chunkHeight = 2000;
-	var chunkWidth = 2000;
+	var chunkHeight = 10000;
+	var chunkWidth = 10000;
 	var newObject;
 	var newObjects = [];
 	var maxObjects = 2;

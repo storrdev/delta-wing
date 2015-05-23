@@ -4,7 +4,7 @@
 		height: window.innerHeight,
 		state: 'menu',
 		gravity: 10,
-		chunkSize: 2000,
+		chunkSize: 10000,
 		maxChunkReqTime: 5000,
 		layers: {},
 		chunks: [],
@@ -22,6 +22,11 @@
 			game.loader.add('background', 'background.png');
 
 			game.loader.once('complete', game.assetsLoaded);
+
+			game.loader.on('progress', function(loader) {
+				console.log('progress! %s', game.loader.progress);
+
+			});
 
 			game.mouse = {
 				position: {
