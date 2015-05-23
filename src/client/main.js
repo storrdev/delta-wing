@@ -5,6 +5,7 @@
 		state: 'menu',
 		gravity: 10,
 		chunkSize: 2000,
+		maxChunkReqTime: 5000,
 		layers: {},
 		chunks: [],
 		planets: [],

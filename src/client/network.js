@@ -71,20 +71,19 @@
 		},
 
 		onChunk: function(data) {
-			//console.log('chunk recieved');
+			//console.log('chunk %d, %d recieved', data.x, data.y);
 			var coords = data.x + ',' + data.y;
 
 			//console.log('chunk coordinates: ' + coords);
 			//console.log(data.json);
 
 			var chunk = new Chunk(data);
+			chunk.loaded = true;
 
 			game.level.addChild(chunk);
 			//console.log(chunk);
 
 			game.chunks.push(chunk);
-
-			//game.chunks[coords] = data.json;
 		},
 
 		onSocketConnected: function(data) {

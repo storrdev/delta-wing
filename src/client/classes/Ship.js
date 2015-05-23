@@ -71,7 +71,7 @@ Ship.prototype.update = function() {
 		//var currentChunk = game.getChunk( chunkX, chunkY );
 
 		//console.log( 'loadSurroundingChunks: ' + chunkX + ', ' + chunkY );
-		//game.loadSurroundingChunks(chunkX, chunkY);
+		game.loadSurroundingChunks(chunkX, chunkY);
 
 		game.ship.rotation = getAngle(game.mouse.position.x, game.ship.screen.x, game.mouse.position.y, game.ship.screen.y);
 
