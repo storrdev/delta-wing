@@ -33,7 +33,7 @@
 	};
 
 	game.loadSurroundingChunks = function(x, y) {
-		game.chunkBuffer = 5;
+		game.chunkBuffer = 2;
 
 		for (var xx = -game.chunkBuffer; xx <= game.chunkBuffer; xx++) {
 			for (var yy = -game.chunkBuffer; yy <= game.chunkBuffer; yy++) {
@@ -62,12 +62,9 @@
 						reqTime: new Date()
 					};
 					var tempChunk = new Chunk(chunkData);
-					//console.log(tempChunk);
 					game.chunks.push(tempChunk);
 				}
 				else {
-					//console.log('chunk %d, %d has been requested', chunkX, chunkY);
-					//console.log('loadSurroundingChunks chunk.loaded %s', chunk.loaded);
 					if ( chunk.loaded === false ) {
 						var timeSinceRequest = Math.abs(new Date() - chunk.reqTime);
 						//console.log('time since request: %d', timeSinceRequest);
