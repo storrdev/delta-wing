@@ -33,7 +33,7 @@
 	};
 
 	game.loadSurroundingChunks = function(x, y) {
-		game.chunkBuffer = 1;
+		game.chunkBuffer = 5;
 
 		for (var xx = -game.chunkBuffer; xx <= game.chunkBuffer; xx++) {
 			for (var yy = -game.chunkBuffer; yy <= game.chunkBuffer; yy++) {
