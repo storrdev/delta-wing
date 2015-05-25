@@ -168,4 +168,16 @@
 		// Start the Game
 		game.init();
 	};
+
+	window.addEventListener('resize', function() {
+		game.height = window.innerHeight;
+		game.width = window.innerWidth;
+		game.renderer.resize( game.width, game.height );
+		
+		// Tiling sprites require separate height and width change
+		game.background.width = game.width;
+		game.background.height = game.height;
+		game.midground.width = game.width;
+		game.midground.height = game.height;
+	});
 })();

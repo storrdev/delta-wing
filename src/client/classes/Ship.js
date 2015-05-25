@@ -32,6 +32,12 @@ var Ship = function(x, y, image, focused) {
 	this.sprite.anchor.y = 0.5;
 	this.sprite.scale.x = 1;
 	this.sprite.scale.y = 1;
+	this.sprite.interactive = true;
+	this.sprite.on('mousedown', function() {
+		console.log('clicked');
+	});
+
+
 	this.radius = (texture.width / 2) * this.scale.x;
 	this.mass = 1;
 	this.thrust = 0.2;
@@ -67,12 +73,7 @@ Ship.prototype.update = function() {
 		// GET SHIP'S CURRENT CHUNK
 		var chunkX = Math.floor( game.ship.x / game.chunkSize );
 		var chunkY = Math.floor( game.ship.y / game.chunkSize );
-
-
-
-		//var currentChunk = game.getChunk( chunkX, chunkY );
-
-		//console.log( 'loadSurroundingChunks: ' + chunkX + ', ' + chunkY );
+		
 		if (!isNaN(chunkX) && !isNaN(chunkY)) {
 			game.loadSurroundingChunks(chunkX, chunkY);
 		}
@@ -99,8 +100,13 @@ Ship.prototype.update = function() {
 		 		var gravitationalForce = (game.gravity * game.ship.mass * planet.mass)/Math.pow(distance,2);
 
 				if (distance < game.ship.radius + (planet.radius)) {
-					game.ship.vector.x = -(planetVector.x * 0.1 );
-					game.ship.vector.y = -(planetVector.y * 0.1 );
+					// game.ship.vector.x = -(planetVector.x * 0.1 );
+					// game.ship.vector.y = -(planetVector.y * 0.1 );
+					game.ship.vector.x = 0;
+					game.ship.vector.y = 0;
+					game.ship.state = 'landed';
+					game.ship.flame.visible = false;
+					game.ship.flame.stop();
 				}
 				else {
 					game.ship.vector.x += planetVector.x * gravitationalForce;
@@ -175,16 +181,17 @@ Ship.prototype.update = function() {
 	// 	}
 	// 	game.lastMousePosition = game.mouse.position.x;
 
-	// 	game.ship.click = function(data) {
-	// 		if (game.ship.state == 'idle') {
-	// 			game.aimLine.visible = true;
-	// 			game.ship.state = 'ready';
-	// 		}
-	// 		else if (game.ship.state == 'ready') {
-	// 			game.aimLine.visible = false;
-	// 			game.ship.state = 'idle';
-	// 		}
-	// 	}
+		// game.ship.click = function(data) {
+		// 	// if (game.ship.state == 'idle') {
+		// 	// 	game.aimLine.visible = true;
+		// 	// 	game.ship.state = 'ready';
+		// 	// }
+		// 	// else if (game.ship.state == 'ready') {
+		// 	// 	game.aimLine.visible = false;
+		// 	// 	game.ship.state = 'idle';
+		// 	// }
+		// 	console.log('ship clicked');
+		// };
 	// }
 
 	// game.gutter = 200;
