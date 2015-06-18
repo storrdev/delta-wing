@@ -8,6 +8,16 @@ var Ship = function(x, y, image, focused) {
 
 	PIXI.Container.call(this);
 
+	this.menu = new Menu(
+		'ship',
+		[
+			{ 'text': 'Testing' },
+			{ 'text': 'One' },
+			{ 'text': 'Two' }
+		], 
+		false
+	);
+
 	this.flame = new Flame();
 	this.flame.x = 0;
 	this.flame.y = 0;
@@ -16,7 +26,6 @@ var Ship = function(x, y, image, focused) {
 	this.flame.rotation = Math.PI;
 	this.flame.scale.x = 0.1;
 	this.flame.scale.y = 0.1;
-	//this.flame.play();
 	this.flame.visible = false;
 
 	this.addChild(this.flame);
@@ -25,18 +34,20 @@ var Ship = function(x, y, image, focused) {
 
 	this.sprite = new PIXI.Sprite(texture);
 
-	this.addChild(this.sprite);
-
 	this.state = 'hidden';
 	this.sprite.anchor.x = 0.5;
 	this.sprite.anchor.y = 0.5;
 	this.sprite.scale.x = 1;
 	this.sprite.scale.y = 1;
 	this.sprite.interactive = true;
-	this.sprite.on('mousedown', function() {
+	this.sprite.on('mousedown', function(e) {
 		console.log('clicked');
 	});
-
+	var that = this;
+	this.sprite.on('rightdown', function() {
+		that.state = 'menu';
+		that.menu.show();
+	});
 
 	this.radius = (texture.width / 2) * this.scale.x;
 	this.mass = 1;
@@ -46,8 +57,6 @@ var Ship = function(x, y, image, focused) {
 		y: 0
 	};
 
-	//console.log('ship coords: ' + x + ', ' + y);
-
 	this.x = x;
 	this.y = y;
 	this.screen = {
@@ -56,6 +65,10 @@ var Ship = function(x, y, image, focused) {
 	};
 	this.image = image;
 	this.focused = typeof focused != 'undefined' ? focused : false;
+
+	this.addChild(this.sprite);
+
+	this.menu.setPosition(this.screen.x, this.screen.y);
 };
 
 Ship.prototype = Object.create(PIXI.Container.prototype);
@@ -100,13 +113,8 @@ Ship.prototype.update = function() {
 		 		var gravitationalForce = (game.gravity * game.ship.mass * planet.mass)/Math.pow(distance,2);
 
 				if (distance < game.ship.radius + (planet.radius)) {
-					// game.ship.vector.x = -(planetVector.x * 0.1 );
-					// game.ship.vector.y = -(planetVector.y * 0.1 );
-					game.ship.vector.x = 0;
-					game.ship.vector.y = 0;
+					game.ship.rotation = getAngle(game.ship.x, planetX, game.ship.y, planetY);
 					game.ship.state = 'landed';
-					game.ship.flame.visible = false;
-					game.ship.flame.stop();
 				}
 				else {
 					game.ship.vector.x += planetVector.x * gravitationalForce;
@@ -169,6 +177,12 @@ Ship.prototype.update = function() {
 			});
 		});
 
+	}
+	else if (game.ship.state == 'landed') {
+		game.ship.vector.x = 0;
+		game.ship.vector.y = 0;
+		game.ship.flame.visible = false;
+		game.ship.flame.stop();
 	}
 	else if (game.ship.state == 'colliding') {
 		if (!game.explosion.playing) {

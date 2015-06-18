@@ -180,4 +180,11 @@
 		game.midground.width = game.width;
 		game.midground.height = game.height;
 	});
+
+	// Disable regular right click action so we can
+	// override and show our own menu system.
+	window.addEventListener('contextmenu', function(e) {
+		e.preventDefault();
+		return false;
+	});
 })();
