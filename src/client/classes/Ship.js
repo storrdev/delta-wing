@@ -142,6 +142,17 @@ Ship.prototype.update = function() {
 			game.ship.flame.visible = false;
 			game.ship.flame.stop();
 		}
+
+		if (game.key.isDown(game.key.LEFT)) {
+			game.ship.vector.x += mouseVector.y * acceleration;
+			game.ship.vector.y -= mouseVector.x * acceleration;
+		}
+
+		if (game.key.isDown(game.key.RIGHT)) {
+			game.ship.vector.x -= mouseVector.y * acceleration;
+			game.ship.vector.y += mouseVector.x * acceleration;
+		}
+
 		if (game.key.isDown(game.key.DOWN)) {
 			game.ship.vector.x -= mouseVector.x * acceleration;
 			game.ship.vector.y -= mouseVector.y * acceleration;

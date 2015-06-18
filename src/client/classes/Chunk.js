@@ -25,10 +25,10 @@ var Chunk = function(data) {
 
 	this.planets = [];
 
-	this.border = new PIXI.Graphics();
-	this.border.lineStyle(2, 0xFF0000, 1);
-	this.border.drawRect(0, 0, this._width, this._height);
-	this.addChild(this.border);
+	// this.border = new PIXI.Graphics();
+	// this.border.lineStyle(2, 0xFF0000, 1);
+	// this.border.drawRect(0, 0, this._width, this._height);
+	// this.addChild(this.border);
 
 	if ( typeof data.layers != 'undefined' ) {
 		for (var c = 0; c < data.layers.length; c++) {
