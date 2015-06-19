@@ -2,68 +2,7 @@
 <html>
 <head>
   <title>DS</title>
-  <style type="text/css" media="screen" src="style.css">
-		* { margin:0; padding:0; } /* to remove the top and left whitespace */
-		html, body {
-			width:100%;
-			height:100%;
-			background:black;
-		} /* just to be sure these are full screen*/
-		canvas {
-			display:block; /* To remove the scrollbars */
-			/*cursor: none;*/
-			opacity: 0;
-			transition: opacity 3s ease-in-out;
-			   -moz-transition: opacity 3s ease-in-out;
-			   -webkit-transition: opacity 3s ease-in-out;
-		}
-		.login-box {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			margin-left: -175px;
-			margin-top: -150px;
-			width: 350px;
-			height: 300px;
-			z-index: 1000;
-			background: #202020;
-			text-align: center;
-			display: table;
-			color: #95CDFC;
-			border-radius: 47px 0px 74px 0px;
-			-moz-border-radius: 47px 0px 74px 0px;
-			-webkit-border-radius: 47px 0px 74px 0px;
-			border: 8px outset #17e4ff;
-		}
-
-			.login-box .inner-wrap {
-				padding: 5%;
-				display: table-cell;
-				vertical-align: middle;
-				text-align: left;
-			}
-
-			.login-box label {
-				display: block;
-			}
-
-		.hover-menu {
-			position: fixed;
-			background: #fff;
-			opacity: 0.3;
-			cursor: pointer;
-		}
-
-			.hover-menu > li {
-				padding: 3px;
-			}
-
-			.hover-menu > li:hover {
-				background: #00ffff;
-			}
-	</style>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="/dist/client.min.js"></script>
+  <link rel="stylesheet" href="css/game.css">
 </head>
 <body>
 	<div class="login-box" id="login-box">
@@ -76,5 +15,7 @@
 			</form>
 		</div>
 	</div>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/dist/client.min.js"></script>
 </body>
 </html>

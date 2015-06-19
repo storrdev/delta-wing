@@ -48,6 +48,15 @@ function handler(req, res) {
       fs.createReadStream('../' + reqPath).pipe(res);
     });
   }
+  else if (ext === '.css') {
+  	fs.readFile('../' + reqPath, 'utf-8', function(error, content) {
+  		res.writeHead(200, {'Content-Type': 'text/css'});
+  		if (error) {
+  		  res.write(error);
+  		}
+  		res.end(content);
+  	});
+  }
   else if (!ext) {
     fs.readFile('../index.html', 'utf-8', function(error, content) {
       res.writeHead(200, {'Content-Type' : 'text/html'});
@@ -58,8 +67,10 @@ function handler(req, res) {
     });
   }
   else {
-    magic.detectFile("../" + reqPath, function(err, result) {
+    magic.detectFile('../' + reqPath, function(err, result) {
       if (err) throw err;
+
+      console.log('%s request mime type: %s', req.url, result);
 
       if (ext === '.wav') {
         fs.readFile('../' + reqPath, function(error, content) {
