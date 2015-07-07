@@ -13,7 +13,11 @@ var Ship = function(x, y, image, focused) {
 		[
 			{ 'text': 'Testing' },
 			{ 'text': 'One' },
-			{ 'text': 'Two' }
+			{ 'text': 'Two' },
+			{
+				'text': 'Take off',
+				'state': 'landed'
+			}
 		], 
 		false
 	);
@@ -45,7 +49,6 @@ var Ship = function(x, y, image, focused) {
 	});
 	var that = this;
 	this.sprite.on('rightdown', function() {
-		that.state = 'menu';
 		that.menu.show();
 	});
 
@@ -81,7 +84,7 @@ Ship.prototype.constructor = Ship;
 
 Ship.prototype.update = function() {
 
-	if (game.ship.state === 'launched') {
+	if (game.state === 'ship') {
 
 		// GET SHIP'S CURRENT CHUNK
 		var chunkX = Math.floor( game.ship.x / game.chunkSize );
@@ -114,7 +117,7 @@ Ship.prototype.update = function() {
 
 				if (distance < game.ship.radius + (planet.radius)) {
 					game.ship.rotation = getAngle(game.ship.x, planetX, game.ship.y, planetY);
-					game.ship.state = 'landed';
+					game.state = 'landed';
 				}
 				else {
 					game.ship.vector.x += planetVector.x * gravitationalForce;
@@ -178,13 +181,17 @@ Ship.prototype.update = function() {
 		});
 
 	}
-	else if (game.ship.state == 'landed') {
+	else if (game.state == 'landed') {
 		game.ship.vector.x = 0;
 		game.ship.vector.y = 0;
 		game.ship.flame.visible = false;
 		game.ship.flame.stop();
+
+		if (game.key.isDown(game.key.UP)) {
+			game.state = 'ship';
+		}
 	}
-	else if (game.ship.state == 'colliding') {
+	else if (game.state == 'colliding') {
 		if (!game.explosion.playing) {
 			game.ship.visible = false;
 			game.ship.vector.x = 0;

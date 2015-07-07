@@ -28,6 +28,15 @@
 
 		game.level.addChild(game.ship);
 
+		// game.radar = new Radar();
+		// game.stage.addChild(game.radar);
+
+		// game.radar = new PIXI.Graphics();
+		// game.radar.beginFill(0xFFFFFF);
+		// game.radar.drawRect(game.width - 100, game.height - 100, 100, 100);
+		// game.radar.endFill();
+		// game.stage.addChild(game.radar);
+
 		game.run();
 		document.getElementsByTagName('canvas')[0].style.opacity = "1";
 	};
