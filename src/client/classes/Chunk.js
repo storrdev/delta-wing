@@ -35,6 +35,7 @@ var Chunk = function(data) {
 			for (var o = 0; o < data.layers[c].objects.length; o++) {
 		 		var planet = new Planet(data.layers[c].objects[o]);
 				game.planets.push(planet);
+				game.radar.addObject(planet);
 				this.planets.push(planet);
 		 		this.addChild(planet.graphics);
 		 	}

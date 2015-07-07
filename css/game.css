@@ -47,6 +47,7 @@ canvas {
 	background: #fff;
 	opacity: 0.3;
 	cursor: pointer;
+	list-style-type: none;
 }
 
 	.hover-menu > li {

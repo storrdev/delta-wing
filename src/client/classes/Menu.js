@@ -11,6 +11,7 @@ var Menu = function(id, options, visible) {
 		this.id = id;
 	}
 
+	this.oldState = '';
 	this.node = document.createElement('ul');
 	this.node.id = this.id;
 	this.node.className = 'hover-menu';
@@ -32,15 +33,17 @@ var Menu = function(id, options, visible) {
 
 	var that = this;
 	this.options.forEach(function(element, index){
-		var item = document.createElement('li');
-		var text = document.createTextNode(element.text);
+		if (typeof(element.state) == 'undefined' || element.state == game.state) {
+			var item = document.createElement('li');
+			var text = document.createTextNode(element.text);
 
-		item.appendChild(text);
+			item.appendChild(text);
 
-		item.addEventListener('click', function() {
-			that.hide();
-		});
-		that.node.appendChild(item);
+			item.addEventListener('click', function() {
+				that.hide();
+			});
+			that.node.appendChild(item);
+		}
 	});
 
 	document.body.appendChild(this.node);
@@ -58,8 +61,12 @@ Menu.prototype.setPosition = function(x, y) {
 
 Menu.prototype.show = function() {
 	this.node.style.visibility = 'visible';
+	this.oldState = game.state;
+	game.state = 'menu';
 };
 
 Menu.prototype.hide = function() {
 	this.node.style.visibility = 'hidden';
+	console.log(this.oldState);
+	game.state = this.oldState;
 };

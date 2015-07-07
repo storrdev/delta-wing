@@ -2,7 +2,7 @@
 	window.game = {
 		width: window.innerWidth,
 		height: window.innerHeight,
-		state: 'menu',
+		state: 'login',
 		gravity: 10,
 		chunkSize: 10000,
 		maxChunkReqTime: 5000,
@@ -37,6 +37,8 @@
 
 			game.stage = new PIXI.Container();
 			game.stage.interactive = true;
+
+			game.radar = new Radar();
 
 			window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
@@ -161,7 +163,10 @@
 			// 	peerId: game.network.peer.id
 			// });
 
-			game.ship.state = 'launched';
+			game.state = 'ship';
+
+			// Initialize GUI
+			game.stage.addChild(game.radar);
 
 		});
 
