@@ -14,19 +14,34 @@
 		peerConnected: false,
 		socketConnected: false,
 
+		createScene: function() {
+			var scene = new BABYLON.Scene(game.engine);
+
+			game.camera = new BABYLON.ArcRotateCamera('Camera', 1.0, 1.0, 12, BABYLON.Vector3.Zero(), scene);
+			game.camera.attachControl(game.canvas, false);
+
+			game.light = new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0, 1, 0), scene);
+			game.light.groundColor = new BABYLON.Color3(0.5, 0, 0.5);
+
+			game.box = BABYLON.Mesh.CreateBox('mesh', 3, scene);
+			game.box.showBoundingBox = true;
+
+			game.material = new BABYLON.StandardMaterial('std', scene);
+			game.material.diffuseColor = new BABYLON.Color3(0.5, 0, 0.5);
+
+			game.box.material = game.material;
+
+			console.log('scene created');
+
+			return scene;
+		},
+
 		init: function() {
 
-			game.loader = new PIXI.loaders.Loader();
+			game.canvas = document.getElementById('renderCanvas');
+			game.engine = new BABYLON.Engine(game.canvas, true);
 
-			game.loader.add('spritesheet', 'Spritesheet.json');
-			game.loader.add('background', 'background.png');
-
-			game.loader.once('complete', game.assetsLoaded);
-
-			game.loader.on('progress', function(loader) {
-				console.log('progress! %s', game.loader.progress);
-
-			});
+			game.scene = game.createScene();
 
 			game.mouse = {
 				position: {
@@ -35,53 +50,15 @@
 				}
 			};
 
-			game.stage = new PIXI.Container();
-			game.stage.interactive = true;
-
-			game.radar = new Radar();
+			//game.radar = new Radar();
 
 			window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
 			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
 
-			game.stage.on('mousemove', function(mouseData) {
-				game.mouse.position.x = mouseData.data.originalEvent.x;
-				game.mouse.position.y = mouseData.data.originalEvent.y;
+			window.addEventListener('mousemove', function(mouseData) {
+				// game.mouse.position.x = mouseData.data.originalEvent.x;
+				// game.mouse.position.y = mouseData.data.originalEvent.y;
 			});
-
-			game.stage.click = function(data) {
-				if (game.ship.state == 'ready') {
-					game.aimLine.visible = false;
-					game.ship.state = 'launched';
-
-					game.ship.thrust = getDistance(game.mouse, game.aimLine) / 50;
-
-					var vector = new Vector(game.aimLine.position.x, game.mouse.position.x,
-											game.aimLine.position.y, game.mouse.position.y);
-
-					game.ship.velocity.x = vector.x * game.ship.thrust;
-					game.ship.velocity.y = vector.y * game.ship.thrust;
-
-					mag = Math.sqrt(this.deltaX * this.deltaX + this.deltaY * this.deltaY);
-				}
-			};
-
-			game.stage.mousedown = function(data) {
-				if (game.ship.state == 'idle') {
-					game.dragging = true;
-				}
-				else if (game.ship.state == 'launched') {
-					//game.ship.rocketThrust = 10;
-				}
-			};
-
-			game.stage.mouseup = function(data) {
-				if (game.ship.state == 'idle') {
-					game.dragging = false;
-				}
-				else if (game.ship.state == 'launched') {
-					//game.ship.rocketThrust = 0;
-				}
-			};
 
 			document.addEventListener('mousewheel', function(e) {
 				var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
@@ -95,22 +72,9 @@
 				}
 			});
 
-			// create a renderer instance.
-    		game.renderer = PIXI.autoDetectRenderer(game.width, game.height);
-
-    		// add the renderer view element to the DOM
-    		document.body.appendChild(game.renderer.view);
-
-    		game.layers.particles = new PIXI.Container();
-    		game.layers.particles.x = 0;
-    		game.layers.particles.y = 0;
-
-    		game.level = new PIXI.Container();
-    		game.level.x = 0;
-    		game.level.y = 0;
-    		//game.stage.addChild(game.level);
-
-    		game.loader.load();
+    		game.engine.runRenderLoop(function() {
+    			game.scene.render();
+    		});
 		}
 	};
 
@@ -166,7 +130,7 @@
 			game.state = 'ship';
 
 			// Initialize GUI
-			game.stage.addChild(game.radar);
+			//game.stage.addChild(game.radar);
 
 		});
 
@@ -175,15 +139,7 @@
 	};
 
 	window.addEventListener('resize', function() {
-		game.height = window.innerHeight;
-		game.width = window.innerWidth;
-		game.renderer.resize( game.width, game.height );
-		
-		// Tiling sprites require separate height and width change
-		game.background.width = game.width;
-		game.background.height = game.height;
-		game.midground.width = game.width;
-		game.midground.height = game.height;
+		game.engine.resize();
 	});
 
 	// Disable regular right click action so we can
