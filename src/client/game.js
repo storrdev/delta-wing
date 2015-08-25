@@ -147,6 +147,8 @@
 
 		game.level.x = ( window.innerWidth/2 ) - ( game.ship.x * game.level.scale.x );
 		game.level.y = ( window.innerHeight/2 ) - ( game.ship.y * game.level.scale.y );
+
+		game.radar.update();
 		// game.layers.particles.x = ( window.innerWidth/2 ) - game.ship.x;
 		// game.layers.particles.y = ( window.innerHeight/2 ) - game.ship.y;
 	};

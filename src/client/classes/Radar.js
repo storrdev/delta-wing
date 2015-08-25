@@ -10,6 +10,8 @@ var Radar = function() {
 
 	this.objects = [];
 
+	this.zoom = 0.1;
+
 	// this.width = 300;
 	// this.height = 300;
 
@@ -36,12 +38,16 @@ var Radar = function() {
 	this.view.drawRect(0, 0, width, height);
 	this.view.endFill();
 
-	// var mask = new PIXI.Graphics();
-	// mask.drawRect(0, 0, width, height);
+	this.mask = new PIXI.Graphics();
+	this.mask.beginFill();
+	this.mask.drawRect(0, 0, width, height);
+	this.mask.endFill();
+
+	this.addChild(this.mask);
 
 	this.addChild(this.view);
 
-	// this.mask = mask;
+	// this.view = mask;
 };
 
 Radar.prototype = Object.create(PIXI.Container.prototype);
@@ -59,10 +65,15 @@ Radar.prototype.update = function() {
 Radar.prototype.addObject = function(object) {
 	this.objects.push(object);
 
+	console.log(object instanceof Planet);
+	console.log(object.radius);
+
 	var graphics = new PIXI.Graphics();
 	graphics.beginFill(0xFFFFFF);
-	graphics.drawCircle(0, 0, 10);
+	graphics.drawCircle(object.position.x * this.zoom, object.position.y * this.zoom, 15);
 	graphics.endFill();
 
 	this.addChild(graphics);
+
+	graphics.mask = this.mask;
 };
