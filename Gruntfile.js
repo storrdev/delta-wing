@@ -8,10 +8,15 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-          'src/client/lib/**/*.js',
+          //'src/client/lib/**/*.js',
+          'src/client/lib/hand.min.1.3.8.js',
+          'src/client/lib/cannon.js',
+          'src/client/lib/Oimo.js',
+          'src/client/lib/babylon.2.1.js',
           'src/client/oldMath.js',
           //'src/client/classes/**/*.js',
-          'src/client/main.js',
+          //'src/client/main.js',
+          'src/client/babylon_test.js',
           //'src/client/**/*.js'
         ],
         dest: 'dist/client.min.js'

@@ -17,14 +17,23 @@
 		createScene: function() {
 			var scene = new BABYLON.Scene(game.engine);
 
-			game.camera = new BABYLON.ArcRotateCamera('Camera', 1.0, 1.0, 12, BABYLON.Vector3.Zero(), scene);
-			game.camera.attachControl(game.canvas, false);
+			
+			game.camera = new BABYLON.FreeCamera('Camera', BABYLON.Vector3(0, 4, -10), scene);
+			game.camera.setTarget(new BABYLON.Vector3.Zero());
+			game.camera.attachControl(game.canvas, true);
+
+			// game.camera = new BABYLON.ArcRotateCamera('Camera', 1.0, 1.0, 12, BABYLON.Vector3.Zero(), scene);
+			// game.camera.attachControl(game.canvas, false);
+
 
 			game.light = new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0, 1, 0), scene);
 			game.light.groundColor = new BABYLON.Color3(0.5, 0, 0.5);
 
 			game.box = BABYLON.Mesh.CreateBox('mesh', 3, scene);
 			game.box.showBoundingBox = true;
+
+
+			scene.activeCamera = game.camera;
 
 			game.material = new BABYLON.StandardMaterial('std', scene);
 			game.material.diffuseColor = new BABYLON.Color3(0.5, 0, 0.5);
@@ -52,8 +61,8 @@
 
 			//game.radar = new Radar();
 
-			window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
-			window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
+			// window.addEventListener('keyup', function(event) { game.key.onKeyup(event); }, false);
+			// window.addEventListener('keydown', function(event) { game.key.onKeydown(event); }, false);
 
 			window.addEventListener('mousemove', function(mouseData) {
 				// game.mouse.position.x = mouseData.data.originalEvent.x;
@@ -78,32 +87,32 @@
 		}
 	};
 
-	game.key = {
-		_pressed: {},
+	// game.key = {
+	// 	_pressed: {},
 
-		LEFT: 65,
-		UP: 87,
-		RIGHT: 68,
-		DOWN: 83,
-		TAB: 9,
-		ENTER: 13,
+	// 	LEFT: 65,
+	// 	UP: 87,
+	// 	RIGHT: 68,
+	// 	DOWN: 83,
+	// 	TAB: 9,
+	// 	ENTER: 13,
 
-		isDown: function(keyCode) {
-			return this._pressed[keyCode];
-		},
+	// 	isDown: function(keyCode) {
+	// 		return this._pressed[keyCode];
+	// 	},
 
-		onKeydown: function(event) {
-			this._pressed[event.keyCode] = true;
-			if (event.keyCode == game.key.TAB) {
-				event.preventDefault();
-				return false;
-			}
-		},
+	// 	onKeydown: function(event) {
+	// 		this._pressed[event.keyCode] = true;
+	// 		if (event.keyCode == game.key.TAB) {
+	// 			event.preventDefault();
+	// 			return false;
+	// 		}
+	// 	},
 
-		onKeyup: function(event) {
-			delete this._pressed[event.keyCode];
-		}
-	};
+	// 	onKeyup: function(event) {
+	// 		delete this._pressed[event.keyCode];
+	// 	}
+	// };
 
 	window.onload = function() {
 
