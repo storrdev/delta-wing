@@ -4,6 +4,9 @@
   "description": "Procedurally generating deep space multiplayer game.",
   "main": "src/ds.js",
   "scripts": {
+    "prestart": "mongod --dbpath data/db --fork --logpath /dev/null",
+    "start": "node src/server.js",
+    "poststop": "mongo admin --eval 'db.shutdownServer()' > /dev/null",
     "test": "test"
   },
   "author": "Stephen Orr",

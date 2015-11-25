@@ -8,13 +8,13 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-          'src/client/lib/**/*.js',
-          'src/client/oldMath.js',
-          'src/client/classes/**/*.js',
-          'src/client/main.js',
-          'src/client/**/*.js'
+          'public/js/vendor/**/*.js',
+          'public/js/oldMath.js',
+          'public/js/classes/**/*.js',
+          'public/js/main.js',
+          'public/js/**/*.js'
         ],
-        dest: 'dist/client.min.js'
+        dest: 'public/js/dist/client.min.js'
       }
     },
     uglify: {
@@ -23,16 +23,17 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/client.min.js': ['<%= concat.dist.dest %>']
+          'public/js/dist/client.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
     jshint: {
       files: [
         'Gruntfile.js',
-        'src/**/*.js',
+        'public/js/**/*.js',
         'test/**/*.js',
-        '!src/client/lib/**/*.js'
+        '!public/js/vendor/**/*.js',
+        '!public/js/dist/**/*.js'
       ],
       options: {
         // options here to override JSHint defaults
