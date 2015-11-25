@@ -55,10 +55,16 @@
 		},
 
 		onPeerConnection: function(conn) {
+
 			conn.on('data', function(data) {
 
 				if ( data.id.length > 0 ) {
-					//console.log(data);
+					// console.log('%d, %d', data.x, data.y);
+					var peer = game.getPeerById(data.id);
+
+					peer.x = data.x;
+					peer.y = data.y;
+					//setPlayerPosition(data);
 				}
 
 			});
@@ -90,6 +96,14 @@
 			console.log(chunk.loaded);
 
 			game.level.addChild(chunk);
+
+			//console.log(game.radar);
+
+			//game.radar.objectContainer.addChild(chunk);
+
+			//console.log(game.radar);
+
+			//game.radar.objectContainer.addChild(chunk);
 			//console.log(chunk);
 
 			game.chunks.push(chunk);
@@ -127,7 +141,7 @@
 			// Creates webrtc connection between two clients
 			var conn = game.network.peer.connect(data.peerId);
 
-			//console.log(conn);
+			console.log(conn);
 
 			conn.on('open', function() {
 				console.log('connected to ' + data.name);
@@ -144,6 +158,8 @@
 			game.entities[data.id].velX = data.velX;
 			game.entities[data.id].velY = data.velY;
 			game.entities[data.id].angle = data.angle;
+
+
 		},
 
 		onRemovePlayer: function(data) {

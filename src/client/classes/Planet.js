@@ -4,7 +4,7 @@
 *	Extends: PIXI.Container class
 */
 
-var Planet = function(attributes) {
+var Planet = function(attributes, screenX, screenY) {
 
 	PIXI.Container.call(this);
 
@@ -24,6 +24,9 @@ var Planet = function(attributes) {
 
 	this.x = attributes.x;
 	this.y = attributes.y;
+
+	this.screenX = screenX;
+	this.screenY = screenY;
 
 	this.graphics.drawCircle( this.x, this.y, this.radius );
 	this.graphics.blendMode = PIXI.BLEND_MODES.HARD_LIGHT;

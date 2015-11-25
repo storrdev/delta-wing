@@ -33,7 +33,7 @@ var Chunk = function(data) {
 	if ( typeof data.layers != 'undefined' ) {
 		for (var c = 0; c < data.layers.length; c++) {
 			for (var o = 0; o < data.layers[c].objects.length; o++) {
-		 		var planet = new Planet(data.layers[c].objects[o]);
+		 		var planet = new Planet(data.layers[c].objects[o], this.x, this.y);
 				game.planets.push(planet);
 				game.radar.addObject(planet);
 				this.planets.push(planet);

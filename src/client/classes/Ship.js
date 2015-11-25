@@ -87,9 +87,12 @@ Ship.prototype.update = function() {
 	if (game.state === 'ship') {
 
 		// GET SHIP'S CURRENT CHUNK
-		var chunkX = Math.floor( game.ship.x / game.chunkSize );
-		var chunkY = Math.floor( game.ship.y / game.chunkSize );
+		// var chunkX = Math.floor( game.ship.x / game.chunkSize );
+		// var chunkY = Math.floor( game.ship.y / game.chunkSize );
 		
+		var chunkX = 0;
+		var chunkY = 0;
+
 		if (!isNaN(chunkX) && !isNaN(chunkY)) {
 			game.loadSurroundingChunks(chunkX, chunkY);
 		}
@@ -172,9 +175,9 @@ Ship.prototype.update = function() {
 		game.ship.x += game.ship.vector.x;
 		game.ship.y += game.ship.vector.y;
 
-		game.peers.forEach(function(element, index){
-			element.send({
-				id: game.network.peer.id,
+		game.peers.forEach(function(peer, index){
+			peer.send({
+				id: game.network.peer.id,	// Current player's peer id
 				x: game.ship.x,
 				y: game.ship.y
 			});

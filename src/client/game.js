@@ -42,7 +42,7 @@
 	};
 
 	game.loadSurroundingChunks = function(x, y) {
-		game.chunkBuffer = 3;
+		game.chunkBuffer = 0;
 
 		for (var xx = -game.chunkBuffer; xx <= game.chunkBuffer; xx++) {
 			for (var yy = -game.chunkBuffer; yy <= game.chunkBuffer; yy++) {
@@ -149,8 +149,17 @@
 		game.level.y = ( window.innerHeight/2 ) - ( game.ship.y * game.level.scale.y );
 
 		game.radar.update();
+		// game.peers.forEach(function(peer, index){
+		// 	peer.update;
+		// });
 		// game.layers.particles.x = ( window.innerWidth/2 ) - game.ship.x;
 		// game.layers.particles.y = ( window.innerHeight/2 ) - game.ship.y;
+	};
+
+	game.getPeerById = function(id) {
+		for (var i=0; i < game.peers.length; i++) {
+			if (game.peers[i].id == id) return game.peers[i];
+		}
 	};
 
 })();

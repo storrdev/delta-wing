@@ -12,6 +12,7 @@ exports.generate = function(x, y, cb) {
 	var maxObjects = 2;
 
 	var numObjects = gameMath.getRandomInt(0, maxObjects);
+	numObjects = 1;
 
 	for (var o = 0; o < numObjects; o++) {
 

@@ -85,7 +85,7 @@
 
 			document.addEventListener('mousewheel', function(e) {
 				var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-				var scaleMin = 0.02;
+				var scaleMin = 0.01;
 				var scaleMax = 1.5;
 				var scrollMod = 150;
 
